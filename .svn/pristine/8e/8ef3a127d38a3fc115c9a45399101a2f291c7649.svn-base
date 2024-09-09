@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="pmisModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="OfficeDescription">
+    <Key>
+      <PropertyRef Name="OfficeID" />
+    </Key>
+    <Property Name="OfficeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OfficeName" Type="nvarchar(max)" />
+    <Property Name="OfficeAbbr" Type="nvarchar" MaxLength="250" />
+    <Property Name="OfficeMedium" Type="nvarchar(max)" />
+    <Property Name="OfficeCode" Type="nvarchar" MaxLength="10" />
+    <Property Name="OfficeHead" Type="nvarchar" MaxLength="50" />
+    <Property Name="OfficeHeadID" Type="nvarchar" MaxLength="50" />
+    <Property Name="OfficeDesignation" Type="nvarchar" MaxLength="150" />
+    <Property Name="Fund" Type="nvarchar" MaxLength="5" />
+    <Property Name="Order" Type="int" />
+    <Property Name="OfficeCodeGSIS" Type="nvarchar" MaxLength="50" />
+    <Property Name="SectorCode" Type="int" />
+    <Property Name="NationalAgency" Type="bit" />
+    <Property Name="project" Type="bit" />
+    <Property Name="locatedinCapitol" Type="bit" />
+    <Property Name="HeadCelNo" Type="nvarchar" MaxLength="100" />
+    <Property Name="isActiveOffice" Type="int" />
+    <Property Name="Plantilla_Ordering" Type="int" />
+    <Property Name="isMain" Type="int" />
+    <Property Name="IsPhysical" Type="smallint" />
+    <Property Name="email_admin" Type="varchar" MaxLength="50" />
+    <Property Name="email_emp_grouped" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'pmis.dbo.vwLoginParameter' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwLoginParameter">
+    <Key>
+      <PropertyRef Name="euid" />
+    </Key>
+    <Property Name="euid" Type="int" Nullable="false" />
+    <Property Name="eid" Type="bigint" />
+    <Property Name="SwipEmployeeID" Type="nvarchar" MaxLength="10" />
+    <Property Name="passcode" Type="varchar" MaxLength="500" />
+    <Property Name="RoleId" Type="int" />
+    <Property Name="emailaddress" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'pmis.dbo.vwMergeAllEmployee' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwMergeAllEmployee">
+    <Key>
+      <PropertyRef Name="eid" />
+      <PropertyRef Name="trNo" />
+      <PropertyRef Name="Department" />
+      <PropertyRef Name="AppointCoverage" />
+      <PropertyRef Name="Telephone" />
+      <PropertyRef Name="bloodtype" />
+      <PropertyRef Name="CanHaveTravel" />
+      <PropertyRef Name="Concurrent" />
+    </Key>
+    <Property Name="SwipeId" Type="nvarchar" MaxLength="10" />
+    <Property Name="eid" Type="bigint" Nullable="false" />
+    <Property Name="trNo" Type="bigint" Nullable="false" />
+    <Property Name="RowNo" Type="bigint" />
+    <Property Name="EmpName" Type="nvarchar" MaxLength="77" />
+    <Property Name="Position" Type="nvarchar" MaxLength="250" />
+    <Property Name="Department" Type="int" Nullable="false" />
+    <Property Name="OfficeAbbr" Type="nvarchar" MaxLength="250" />
+    <Property Name="OfficeName" Type="nvarchar(max)" />
+    <Property Name="EmailAdd" Type="nvarchar" MaxLength="100" />
+    <Property Name="Status" Type="nvarchar" MaxLength="50" />
+    <Property Name="employmentstatus_id" Type="tinyint" />
+    <Property Name="AppointCoverage" Type="datetime" Nullable="false" />
+    <Property Name="Cause" Type="nvarchar" MaxLength="100" />
+    <Property Name="Telephone" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="bloodtype" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="TimeCode" Type="tinyint" />
+    <Property Name="CanHaveTravel" Type="int" Nullable="false" />
+    <Property Name="Concurrent" Type="int" Nullable="false" />
+    <Property Name="BirthD" Type="nvarchar" MaxLength="13" />
+    <Property Name="Salary" Type="money" />
+    <Property Name="EmpNameFull" Type="nvarchar" MaxLength="76" />
+  </EntityType>
+  <EntityContainer Name="pmisModelStoreContainer">
+    <EntitySet Name="OfficeDescription" EntityType="Self.OfficeDescription" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="vwLoginParameter" EntityType="Self.vwLoginParameter" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwLoginParameter].[euid] AS [euid], 
+[vwLoginParameter].[eid] AS [eid], 
+[vwLoginParameter].[SwipEmployeeID] AS [SwipEmployeeID], 
+[vwLoginParameter].[passcode] AS [passcode], 
+[vwLoginParameter].[RoleId] AS [RoleId], 
+[vwLoginParameter].[emailaddress] AS [emailaddress]
+FROM [dbo].[vwLoginParameter] AS [vwLoginParameter]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwMergeAllEmployee" EntityType="Self.vwMergeAllEmployee" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwMergeAllEmployee].[SwipeId] AS [SwipeId], 
+[vwMergeAllEmployee].[eid] AS [eid], 
+[vwMergeAllEmployee].[trNo] AS [trNo], 
+[vwMergeAllEmployee].[RowNo] AS [RowNo], 
+[vwMergeAllEmployee].[EmpName] AS [EmpName], 
+[vwMergeAllEmployee].[Position] AS [Position], 
+[vwMergeAllEmployee].[Department] AS [Department], 
+[vwMergeAllEmployee].[OfficeAbbr] AS [OfficeAbbr], 
+[vwMergeAllEmployee].[OfficeName] AS [OfficeName], 
+[vwMergeAllEmployee].[EmailAdd] AS [EmailAdd], 
+[vwMergeAllEmployee].[Status] AS [Status], 
+[vwMergeAllEmployee].[employmentstatus_id] AS [employmentstatus_id], 
+[vwMergeAllEmployee].[AppointCoverage] AS [AppointCoverage], 
+[vwMergeAllEmployee].[Cause] AS [Cause], 
+[vwMergeAllEmployee].[Telephone] AS [Telephone], 
+[vwMergeAllEmployee].[bloodtype] AS [bloodtype], 
+[vwMergeAllEmployee].[TimeCode] AS [TimeCode], 
+[vwMergeAllEmployee].[CanHaveTravel] AS [CanHaveTravel], 
+[vwMergeAllEmployee].[Concurrent] AS [Concurrent], 
+[vwMergeAllEmployee].[BirthD] AS [BirthD], 
+[vwMergeAllEmployee].[Salary] AS [Salary], 
+[vwMergeAllEmployee].[EmpNameFull] AS [EmpNameFull]
+FROM [dbo].[vwMergeAllEmployee] AS [vwMergeAllEmployee]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

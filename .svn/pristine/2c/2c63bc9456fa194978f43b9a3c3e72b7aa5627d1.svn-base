@@ -1,0 +1,65 @@
+﻿
+<script>
+    function printall() {
+        window.open("@Url.Content("~/Reports/newreport.aspx?repID=")" + 2, "Report", "status=1", "location=1");
+    };
+    function printbyoffice() {
+        window.open("@Url.Content("~/Reports/newreport.aspx?repID=")" + 3, "Report", "status=1", "location=1");
+    };
+
+</script>
+
+
+<div style="float:left;padding:6% 10% 10% 10%">
+
+    <div id="cel" class="ani-hover-heartbeat" onclick="printall()">
+        <i style="width:50px;font-size:35px" class="fa fa-print ani-hover-bounce"> </i>
+        <label id="loi">Summary all offices</label>
+    </div>
+
+    <div class="ani-hover-heartbeat" id="cel" onclick="printbyoffice">
+        <i style="width:50px;font-size:35px" class="fa fa-print ani-hover-bounce"> </i>
+        <label id="loi">Available</label>
+    </div>
+
+    <div id="cel" class="ani-hover-heartbeat" onclick="">
+        <i style="width:50px;font-size:35px" class="fa fa-print ani-hover-bounce"> </i>
+        <label id="loi">Released</label>
+    </div>
+
+    <div class="spot" id="noise" style="text-align:center">
+        <label style="color:white"> Select above options to print </label>
+    </div>
+
+</div>
+
+
+<style>
+    #cel {
+        background-color: #f1f9f7;
+        margin-left: 10px;
+        width: 80px;
+        height: 80px;
+        border: 1px solid #e0f1e9;
+        float: left;
+        text-align: center;
+        padding-top: 20px;
+    }
+
+    #loi {
+        font-size: 14px;
+        line-height: 1.42857143;
+        font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+        color: #09aa8d;
+    }
+
+    .spot {
+        width: 250px;
+        height: 40px;
+        border: 1px solid #09aa8d;
+        float: left;
+        margin-top: 15px;
+        border-radius: 20px;
+        margin-left: 20px;
+    }
+</style>

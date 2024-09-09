@@ -1,0 +1,213 @@
+﻿<script>
+    function getitem() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var id = rowData.itemid;
+        var unit = rowData.unit;
+        var unitcost = rowData.unitCost;
+
+        document.getElementById("unit").value = unit;
+    }
+
+    $(document).ready(function () {
+
+        $(".blink").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+
+    });
+</script>
+
+<div style="width:100%;height:auto">
+    <div style="margin-top:20px;margin-bottom:20px;">
+        <div style="margin-top:20px;padding:0px 5% 0px 5%">
+            <div class="bk" style="height:30px;width:100%"><label style="color:white;font-size:15px;text-align:center;"><span id="errmsg"></span></label> </div>
+         
+            <div style="display:inline;width:100%;float:left">
+                <div style="float:left;width:220px">
+                    <label class="sm">ITEMS</label>
+
+                    @(Html.Kendo().ComboBox()
+                .Name("ITEM")
+                .DataTextField("itemName")
+                .DataValueField("itemid")
+                .Placeholder("Search item here...")
+                .HtmlAttributes(new { @style = "width: 200px;margin-right:-20px" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                        .DataSource(source => source.Read(read => read.Action("itembyoffice", "Home", new { officeid = ViewBag.id })))
+                        .Events(e => e.Change("getitem"))
+                    )
+                </div>
+
+                <div style="float:left;width:70px">
+                    <label class="sm">UNIT</label>
+                    <input disabled="disabled" style="width:45px;height:25px;" type="text" name="unit" id="unit">
+                </div>
+
+                <div style="float:left">
+                    <label class="sm">QUANTITY</label>
+                    <input style="width:45px;height:25px;" type="text" id="quantity" name="quantity" class="blink" placeholder="0" />
+                </div>
+            </div>
+
+
+            <div style="margin-top:15px;float:left;width:100%" >
+                <div style="float:left;width:220px">
+                    <label class="sm">TYPE</label>
+                    @(Html.Kendo().ComboBox()
+                .Name("obj")
+                .Placeholder("Select here...")
+                .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "MOOE", Value = "2" }, new SelectListItem() { Text = "NON-OFFICE", Value = "43" } })
+                    )
+                </div>
+                <div style="float:left;width:60px">
+                    <label class="sm">UNIT COST</label>
+                    @(Html.Kendo().NumericTextBox<decimal>()
+                             .Name("unitcost")
+                             .Min(0)
+                             .Max(100000)
+                             .Value(0)
+                             .HtmlAttributes(new { style = "width: 120px" })
+                    )
+                </div>
+            </div>
+            
+            
+          <div style="float:left;margin-top:15px;">
+            <label class="sm">SOURCE</label>
+            @(Html.Kendo().ComboBox()
+                .Name("srcid")
+                .Placeholder("Select Source...")
+                .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "APR", Value = "1" }, new SelectListItem() { Text = "BULK BIDDING", Value = "0" } })
+            )
+          </div>
+        </div>
+        <button style="float:right;margin-top:100px" class="k-button" onclick="insave()">
+            <i style="font-size:25px" class="fa fa-save fa-20px"></i> &nbsp;Save
+        </button>
+        <br>
+        <br>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var id = $('#mgaopis1').data('kendoComboBox').value();
+        $('#ITEM').data('kendoComboBox').dataSource.read({ officeid: id })
+    });
+</script>
+
+<script>
+    function insave() {
+
+        var office = $('#mgaopis1').data('kendoComboBox').value();
+        var quantity = $('#quantity').val();
+        var item = $('#ITEM').data('kendoComboBox').value();
+        var srcid = $('#srcid').data('kendoComboBox').value();
+        var obj = $('#obj').data('kendoComboBox').value();
+        var unitcost = $('#unitcost').data('kendoNumericTextBox').value();
+        var itemname = $('#ITEM').data('kendoComboBox').text();
+        var unit = $('#unit').val();
+      
+
+        if (quantity == '0') {
+            swal('', 'Enter quantity!', 'error');
+        }
+        if (item == "") {
+            swal('', 'Select item first!', 'error');
+        }
+        if (quantity == "") {
+            swal('', 'Enter quantity!', 'error');
+        }
+        if (srcid == "") {
+            swal('', 'Please try again', 'error');
+        };
+        if (obj == "") {
+            swal('', 'Please try again', 'error');
+        };
+
+
+        if (item != "" && quantity != '0' && quantity != "") {
+            var dataload = {
+                "itemid": item,
+                "quantity": quantity,
+                "officeid": office,
+                "in_out": 'IN',
+                "descript": '',
+                "srcid": srcid,
+                "obj": obj,
+                "unitcost": unitcost,
+                "itemname": itemname,
+                "accountid": 336,
+                "tid": 37,
+                "unit" : unit,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveNew", "Home")',
+                data: JSON.stringify(dataload),
+
+                contentType: "application/json;charset=utf-8",
+                processData: true,
+                success: function (data) {
+
+                    if (data == 1) {
+                        swal('', 'Entry Successfully Save!', 'success');
+                        $("#byoffice").data("kendoGrid").dataSource.read({ officeid: office });
+                        $('#quantity').val('');
+                        $('ITEM').categories.text('');
+                    }
+                    else {
+                        swal('', data, 'error')
+                    }
+                },
+            })
+        }
+        else {
+            swal('', 'Please try again!', 'error');
+        }
+    }
+</script>
+
+<style>
+    th {
+        font-size: 15px;
+        font-weight: normal;
+        border: solid 1px #b7b6b6;
+        border-collapse: collapse;
+        height: 30px;
+        text-align: center;
+    }
+
+    td {
+        border: solid 1px #cecece;
+    }
+
+    table {
+        margin-top: -5px;
+    }
+
+    #errmsg {
+        color: #047853;
+    }
+
+    .sm {
+        font-size: 12px;
+        color:#047853;
+    }
+    .bk {
+        background-color: #f1f9f7;
+        border: 1px solid #e0f1e9;
+        color: #1d9d74;
+        /*border: 5px solid transparent;*/
+        border-radius: 4px;
+    }
+</style>

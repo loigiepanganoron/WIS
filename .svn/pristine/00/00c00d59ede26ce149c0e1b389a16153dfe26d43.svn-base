@@ -1,0 +1,362 @@
+﻿ 
+
+
+<script>
+    function receive(e) {
+
+        swal({ title: "Receive?", text: "", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Yes", showLoaderOnConfirm: true, closeOnConfirm: false }, function (isConfirm) {
+            if (isConfirm) {
+
+                $.post("@Url.Content("~/Responsive/receive")", {e}, function (r) {
+                    if(r == "1")
+                    {  $(".my_audio").trigger('play');
+                        $(".sweet-overlay, .sweet-alert").remove();
+                        swal("Receive!","", "success");
+                        $('#ListViewManual').data("kendoListView").dataSource.read();
+                    }
+                    else
+                    {
+                        $(".sweet-overlay, .sweet-alert").remove();
+                        swal("Opps ",r, "success");
+                    }
+                })
+            }
+
+                //swal("Loading", "done", "success"); $(".sweet-overlay, .sweet-alert").remove();
+            else {
+                $(".sweet-overlay, .sweet-alert").remove();
+            }
+        });
+    }
+    function submit_request() {
+
+        var grid = $("#sai_items").data("kendoGrid");
+
+        // Get selected rows
+        var sel = $("input:checked", grid.tbody).closest('tr');
+        var zero = 0;
+        var itemnames = [];
+        var items = [];
+
+        $.each(sel, function (idx, row) {
+            var item = grid.dataItem(row);
+            var itemid = item.itemid;
+            var itemname = item.itemname;
+            var unit = item.unit;
+            var available = item.running_balance;
+            var request_quantity = item.request_quantity;
+            var remaining = item.remaining;
+            if(request_quantity == 0 || request_quantity < 0)
+            {
+                zero+=1;
+                itemnames.push({itemname: itemname})
+            }
+            if(request_quantity > available)
+            {
+                zero+=1;
+                itemnames.push({itemname: itemname})
+            } 
+            items.push({ itemid: itemid, itemname: itemname,unit:unit,request_quantity:request_quantity})
+        });
+
+       
+        if(items == "")
+        {
+            swal("Select Item!","", "error");
+        }
+        else
+        {
+            if(zero == 0)
+            {
+                swal({ title: "Submit Request?", text: "", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Yes", showLoaderOnConfirm: true, closeOnConfirm: false }, function (isConfirm) {
+                    if (isConfirm) {
+                        $.post("@Url.Content("~/Responsive/submit_request")", {items}, function (r) {
+                    if(r == "1")
+                    {  
+                        $(".my_audio").trigger('play');
+                        $(".sweet-overlay, .sweet-alert").remove();
+                        swal("Request Submitted","", "success");
+                        $("#sai_items").data("kendoGrid").dataSource.read();
+                        $("#ListViewManual").data("kendoListView").dataSource.read();
+                    }
+                    else
+                    {
+                        $(".sweet-overlay, .sweet-alert").remove();
+                        swal("Opps ",r, "error");
+                        $("#sai_items").data("kendoGrid").dataSource.read();
+                        $("#ListViewManual").data("kendoListView").dataSource.read();
+                    }
+                })
+            }
+
+                        //swal("Loading", "done", "success"); $(".sweet-overlay, .sweet-alert").remove();
+            else {
+                $(".sweet-overlay, .sweet-alert").remove();
+            }
+                });
+    }
+    else
+    {
+        swal("Please Check Quantity",JSON.stringify(itemnames), "error");
+    }
+}
+}
+function agree(controlno) {
+    swal({ title: "Agree?", text: "", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Yes", showLoaderOnConfirm: true, closeOnConfirm: false }, function (isConfirm) {
+        if (isConfirm) {
+            $.post("@Url.Content("~/Responsive/agree")", {"controlno":controlno}, function (r) {
+                if(r=="1")
+                {  $(".my_audio").trigger('play');
+                    swal('','Agreed!','success')
+                    $("#ListViewManual").data("kendoListView").dataSource.read();
+                }
+                else
+                {
+                    swal('',r,'error')
+                }
+            })
+        }
+        else {
+            $(".sweet-overlay, .sweet-alert").remove();
+        }
+    });
+}
+</script>
+
+<script>
+    function edited(e) {
+        var grid = $("#view_ris").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].prev_quantity > 0) {
+                grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("highlighted-row");
+
+            }
+            else if (gridData[i].accepted == 0) {
+                //grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("hapitna");
+            }
+        }
+    }
+
+
+
+    $(document).ready(function () {
+        $("#filter").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#sai_items").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "itemname", operator: "contains", value: value });
+                orfilter.filters.push({ field: "itemname", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+
+
+    })
+    $(function () {
+        $('#sai_items').on('click', '.chkbx', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#sai_items').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('stat_id', checked);
+        })
+    })
+
+    function checkAll(ele) {
+
+        var state = $(ele).is(':checked');
+        var grid = $('#sai_items').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['stat_id'] != state)
+                this.dirty = true;
+            this['stat_id'] = state;
+        });
+        grid.refresh();
+    }
+</script>
+
+<script>
+    function view(controlno)
+    {
+        $('#cn').text(controlno);
+        $('#view_ris').data('kendoGrid').dataSource.read({controlno:controlno})
+        $('#modal-form').modal('toggle');
+    }
+    function print(controlno)
+    {
+        window.open("@Url.Content("~/Reports/print_ris.aspx?repID=")" + 3 + "&controlno=" + controlno);
+        //window.open("~/Reports/print_ris.aspx?repID="+3,"&controlno="+controlno);
+    }
+    function hide() {
+        var grid = $("#sai_items").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].remaining == 0 ) {
+                grid.tbody.find("tr[data-uid=" + gridData[i].uid + "]").hide()
+            }
+            //else if (gridData[i].accepted == 0) {
+            //    //grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("hapitna");
+            //}
+        }
+    }
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInRight">
+          
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox  float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Available Items</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="ibox-content" style="display:block">
+                                <div class="col row">
+                                    <div class="col col-sm-6 col-lg-6 col-md-6">
+                                        <input placeholder="Search Item" id="filter" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px ">
+                                    </div>
+                                    <div class="col col-sm-6 col-lg-6 col-md-6">
+                                        <button class="btn btn-sm btn-primary" onclick="submit_request()"><strong>Submit Request</strong></button>
+                                    </div>
+                                    <br>
+                                    <br>
+                                           <div class="col  col-lg-12 col-md-12 col-sm-12">
+
+                    @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("sai_items")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemid").Hidden();
+                        columns.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= stat_id ? checked='checked':'' # class='chkbx' />")
+                    .HeaderTemplate("<input type='checkbox' id='masterCheckBox' class='masterCheckBox' onclick='checkAll(this)' />").Width(50);
+                        columns.Bound("itemname").Title("Item Name").Width(250);
+                        columns.Bound("unit").Title("Unit").Width(100);
+                   //   columns.Bound("remaining").Title("Allocation").Width(100);
+                        columns.Bound("running_balance").Title("Item Available (PGSO)").Width(100);
+                //      columns.Bound("totalout").Title("").Width(100).Hidden();
+                   //   columns.Bound("quantity").Title("").Width(100).Hidden();
+                        columns.Bound("request_quantity").Title("Request Quantity").Width(100).HtmlAttributes(new { @style = "color:black;font-weight:bold" });
+                    })
+                                                                                  .Pageable()
+                                                                                  .Navigatable()
+                                                                                  .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                                                                  .Selectable()
+                                                                                  .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                                                                                  .DataSource(dataSource => dataSource
+                                                                                  .Ajax()
+                                                                                  .AutoSync(true)
+                                                                                  .ServerOperation(false)
+                                                                                  .PageSize(10000)
+                                                                                            .Model(model =>
+                                                                                            {
+                                                                                                model.Id("itemid");
+                                                                                                model.Field(a => a.itemname).Editable(false);
+                                                                                                model.Field(a => a.quantity).Editable(false);
+                                                                                                model.Field(a => a.unit).Editable(false);
+                                                                                                model.Field(a => a.running_balance).Editable(false);
+                                                                                                model.Field(a => a.remaining).Editable(false);
+                                                                                                model.Field(a => a.recieve_quantity).Editable(true);
+                                                                                            })
+                                                                      .Read(read => read.Action("returned_items", "Responsive"))
+                                                                                  .Sort(a => a.Add("itemname").Ascending())
+                                                                                  )
+                                                                                 //.Events(c => c.DataBound("hide"))
+                                        )
+                                    </div>
+                                    <br>
+                                    <br>
+
+                                    <br>
+                                    <br>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .lv {
+        float: left;
+        position: relative;
+        width: 130px;
+        height: 120px;
+        margin: 0 5px;
+        padding: 0;
+        float: left;
+    }
+</style>
+ 
+<script>
+    $(document).ready(function () {
+        var url = "@Url.Action("get_notedby","Responsive")";
+        $.get(url,function (d) {
+            $("#nn").html(d);
+        })
+        var number_link = "@Url.Action("get_phone_number", "Responsive")";
+        $.get(number_link,function (d) {
+            $("#phone_number_text").val(d);
+        })
+    })
+    function show_note() {
+        $('#modal-note').modal('toggle');
+    }
+    function show_add_contact() {
+        $('#modal-number').modal('toggle');
+    }
+    function save_notedby() {
+            var eid = $('#notedby').val();
+            $.post("@Url.Content("~/Responsive/save_notedby")", {eid:eid}, function (r) {
+            if(r == "1")
+            {  $(".my_audio").trigger('play');
+                swal("Save!","", "success");
+            }
+            else
+            {
+                swal("Opps ",r, "error");
+            }
+        })
+    }
+    function save_number() {
+        var phone_number = $('#phone_number_text').val();
+        $.post("@Url.Content("~/Responsive/save_phone_number")", {phone_number:phone_number}, function (r) {
+            if(r == "1")
+            {
+                $(".my_audio").trigger('play');
+                swal("Save!","", "success");
+            }
+            else
+            {
+                swal("Opps ",r, "error");
+            }
+        })
+    }
+</script>
+
+<style>
+    .highlighted-row {
+        color: red;
+    }
+</style>
+

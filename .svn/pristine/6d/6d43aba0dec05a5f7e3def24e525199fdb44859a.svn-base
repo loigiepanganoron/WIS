@@ -1,0 +1,653 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="IMSModelStoreContainer" CdmEntityContainer="IMSEntities">
+    <FunctionImportMapping FunctionImportName="plcrep" FunctionName="IMSModel.Store.plcrep">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="IMSModel.plcrep_Result">
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="totalin" ColumnName="totalin" />
+          <ScalarProperty Name="totalout" ColumnName="totalout" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="totalcostout" ColumnName="totalcostout" />
+          <ScalarProperty Name="totalcostin" ColumnName="totalcostin" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="totalsum" FunctionName="IMSModel.Store.totalsum" />
+    <FunctionImportMapping FunctionImportName="Proc_GetNewTranNo_ris" FunctionName="IMSModel.Store.Proc_GetNewTranNo_ris" />
+    <FunctionImportMapping FunctionImportName="wisrep" FunctionName="IMSModel.Store.wisrep">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="IMSModel.wisrep_Result">
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="totalin" ColumnName="totalin" />
+          <ScalarProperty Name="totalout" ColumnName="totalout" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="totalcostout" ColumnName="totalcostout" />
+          <ScalarProperty Name="totalcostin" ColumnName="totalcostin" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Ending_inventory" FunctionName="IMSModel.Store.Ending_inventory">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="IMSModel.Ending_inventory_Result">
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="total_remaining" ColumnName="total_remaining" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Proc_ManualTransNo" FunctionName="IMSModel.Store.Proc_ManualTransNo" />
+    <FunctionImportMapping FunctionImportName="submit_request" FunctionName="IMSModel.Store.submit_request" />
+    <FunctionImportMapping FunctionImportName="InsertValue" FunctionName="IMSModel.Store.InsertValue" />
+    <FunctionImportMapping FunctionImportName="Notify_Office_Admin" FunctionName="IMSModel.Store.Notify_Office_Admin" />
+    <FunctionImportMapping FunctionImportName="Proc_GetNewOfficeRis" FunctionName="IMSModel.Store.Proc_GetNewOfficeRis" />
+    <EntitySetMapping Name="l_barangay">
+      <EntityTypeMapping TypeName="IMSModel.l_barangay">
+        <MappingFragment StoreEntitySet="l_barangay">
+          <ScalarProperty Name="brgycode" ColumnName="brgycode" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="brgyid" ColumnName="brgyid" />
+          <ScalarProperty Name="prkid" ColumnName="prkid" />
+          <ScalarProperty Name="munid" ColumnName="munid" />
+          <ScalarProperty Name="bid" ColumnName="bid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="l_municipality">
+      <EntityTypeMapping TypeName="IMSModel.l_municipality">
+        <MappingFragment StoreEntitySet="l_municipality">
+          <ScalarProperty Name="lng" ColumnName="lng" />
+          <ScalarProperty Name="lat" ColumnName="lat" />
+          <ScalarProperty Name="isactive" ColumnName="isactive" />
+          <ScalarProperty Name="provid" ColumnName="provid" />
+          <ScalarProperty Name="munno" ColumnName="munno" />
+          <ScalarProperty Name="districtid" ColumnName="districtid" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="munid" ColumnName="munid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="l_province">
+      <EntityTypeMapping TypeName="IMSModel.l_province">
+        <MappingFragment StoreEntitySet="l_province">
+          <ScalarProperty Name="isactive" ColumnName="isactive" />
+          <ScalarProperty Name="prvno" ColumnName="prvno" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="provid" ColumnName="provid" />
+          <ScalarProperty Name="lid" ColumnName="lid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="l_purok">
+      <EntityTypeMapping TypeName="IMSModel.l_purok">
+        <MappingFragment StoreEntitySet="l_purok">
+          <ScalarProperty Name="prkcode" ColumnName="prkcode" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="prkid" ColumnName="prkid" />
+          <ScalarProperty Name="brgyid" ColumnName="brgyid" />
+          <ScalarProperty Name="munid" ColumnName="munid" />
+          <ScalarProperty Name="purokid" ColumnName="purokid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="menus">
+      <EntityTypeMapping TypeName="IMSModel.menu">
+        <MappingFragment StoreEntitySet="menu">
+          <ScalarProperty Name="is_for" ColumnName="is_for" />
+          <ScalarProperty Name="ActionCode" ColumnName="ActionCode" />
+          <ScalarProperty Name="MenuOrder" ColumnName="MenuOrder" />
+          <ScalarProperty Name="Icon" ColumnName="Icon" />
+          <ScalarProperty Name="Controller" ColumnName="Controller" />
+          <ScalarProperty Name="Action" ColumnName="Action" />
+          <ScalarProperty Name="MenuTitle" ColumnName="MenuTitle" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="MenuLevel" ColumnName="MenuLevel" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="plcs">
+      <EntityTypeMapping TypeName="IMSModel.plc">
+        <MappingFragment StoreEntitySet="plc">
+          <ScalarProperty Name="reid" ColumnName="reid" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="srcid" ColumnName="srcid" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="in_out" ColumnName="in_out" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="ename" ColumnName="ename" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_generate_trans_code">
+      <EntityTypeMapping TypeName="IMSModel.tbl_generate_trans_code">
+        <MappingFragment StoreEntitySet="tbl_generate_trans_code">
+          <ScalarProperty Name="date_entry" ColumnName="date_entry" />
+          <ScalarProperty Name="new_transcode" ColumnName="new_transcode" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="entry_id" ColumnName="entry_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_t_deleted_logs">
+      <EntityTypeMapping TypeName="IMSModel.tbl_t_deleted_logs">
+        <MappingFragment StoreEntitySet="tbl_t_deleted_logs">
+          <ScalarProperty Name="delete_date" ColumnName="delete_date" />
+          <ScalarProperty Name="controlno" ColumnName="controlno" />
+          <ScalarProperty Name="trans_code" ColumnName="trans_code" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="price" ColumnName="price" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_t_edited_logs">
+      <EntityTypeMapping TypeName="IMSModel.tbl_t_edited_logs">
+        <MappingFragment StoreEntitySet="tbl_t_edited_logs">
+          <ScalarProperty Name="date_edited" ColumnName="date_edited" />
+          <ScalarProperty Name="prev_quantity" ColumnName="prev_quantity" />
+          <ScalarProperty Name="ris_transaction_id" ColumnName="ris_transaction_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_t_notedby">
+      <EntityTypeMapping TypeName="IMSModel.tbl_t_notedby">
+        <MappingFragment StoreEntitySet="tbl_t_notedby">
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_t_Office">
+      <EntityTypeMapping TypeName="IMSModel.tbl_t_Office">
+        <MappingFragment StoreEntitySet="tbl_t_Office">
+          <ScalarProperty Name="mainofficeid" ColumnName="mainofficeid" />
+          <ScalarProperty Name="OfficeAbbr" ColumnName="OfficeAbbr" />
+          <ScalarProperty Name="OfficeName" ColumnName="OfficeName" />
+          <ScalarProperty Name="OfficeID" ColumnName="OfficeID" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_t_ris_preparation">
+      <EntityTypeMapping TypeName="IMSModel.tbl_t_ris_preparation">
+        <MappingFragment StoreEntitySet="tbl_t_ris_preparation">
+          <ScalarProperty Name="transaction_type" ColumnName="transaction_type" />
+          <ScalarProperty Name="receive" ColumnName="receive" />
+          <ScalarProperty Name="date_approve" ColumnName="date_approve" />
+          <ScalarProperty Name="deleted" ColumnName="deleted" />
+          <ScalarProperty Name="preparedby" ColumnName="preparedby" />
+          <ScalarProperty Name="agree" ColumnName="agree" />
+          <ScalarProperty Name="edited" ColumnName="edited" />
+          <ScalarProperty Name="release" ColumnName="release" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="officename" ColumnName="officename" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="date_time" ColumnName="date_time" />
+          <ScalarProperty Name="controlno" ColumnName="controlno" />
+          <ScalarProperty Name="preparation_id" ColumnName="preparation_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_t_sento_admin">
+      <EntityTypeMapping TypeName="IMSModel.tbl_t_sento_admin">
+        <MappingFragment StoreEntitySet="tbl_t_sento_admin">
+          <ScalarProperty Name="phone_number" ColumnName="phone_number" />
+          <ScalarProperty Name="office_id" ColumnName="office_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="transactions">
+      <EntityTypeMapping TypeName="IMSModel.transaction">
+        <MappingFragment StoreEntitySet="transaction">
+          <ScalarProperty Name="ref_id" ColumnName="ref_id" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="controlno" ColumnName="controlno" />
+          <ScalarProperty Name="ename" ColumnName="ename" />
+          <ScalarProperty Name="reid" ColumnName="reid" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="in_out" ColumnName="in_out" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="stock_date" ColumnName="stock_date" />
+          <ScalarProperty Name="item_id" ColumnName="item_id" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="units">
+      <EntityTypeMapping TypeName="IMSModel.unit">
+        <MappingFragment StoreEntitySet="units">
+          <ScalarProperty Name="unitname" ColumnName="unitname" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="users">
+      <EntityTypeMapping TypeName="IMSModel.user">
+        <MappingFragment StoreEntitySet="user">
+          <ScalarProperty Name="skin" ColumnName="skin" />
+          <ScalarProperty Name="OfficeID" ColumnName="OfficeID" />
+          <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="role" ColumnName="role" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="userRoles">
+      <EntityTypeMapping TypeName="IMSModel.userRole">
+        <MappingFragment StoreEntitySet="userRole">
+          <ScalarProperty Name="roleid" ColumnName="roleid" />
+          <ScalarProperty Name="usertype" ColumnName="usertype" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="plcitems">
+      <EntityTypeMapping TypeName="IMSModel.plcitem">
+        <MappingFragment StoreEntitySet="plcitems">
+          <ScalarProperty Name="srcid" ColumnName="srcid" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="report_log">
+      <EntityTypeMapping TypeName="IMSModel.report_log">
+        <MappingFragment StoreEntitySet="report_log">
+          <ScalarProperty Name="report_generated" ColumnName="report_generated" />
+          <ScalarProperty Name="generated_by" ColumnName="generated_by" />
+          <ScalarProperty Name="generated_on" ColumnName="generated_on" />
+          <ScalarProperty Name="qrcode" ColumnName="qrcode" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_itemcode">
+      <EntityTypeMapping TypeName="IMSModel.tbl_itemcode">
+        <MappingFragment StoreEntitySet="tbl_itemcode">
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="price" ColumnName="price" />
+          <ScalarProperty Name="item_description" ColumnName="item_description" />
+          <ScalarProperty Name="itemcode" ColumnName="itemcode" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_items_per_transaction_code">
+      <EntityTypeMapping TypeName="IMSModel.tbl_items_per_transaction_code">
+        <MappingFragment StoreEntitySet="tbl_items_per_transaction_code">
+          <ScalarProperty Name="accountid" ColumnName="accountid" />
+          <ScalarProperty Name="mainoffice" ColumnName="mainoffice" />
+          <ScalarProperty Name="officecode" ColumnName="officecode" />
+          <ScalarProperty Name="released" ColumnName="released" />
+          <ScalarProperty Name="ris" ColumnName="ris" />
+          <ScalarProperty Name="price" ColumnName="price" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="transaction_code" ColumnName="transaction_code" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="officename" ColumnName="officename" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_manual_items">
+      <EntityTypeMapping TypeName="IMSModel.tbl_manual_items">
+        <MappingFragment StoreEntitySet="tbl_manual_items">
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_t_paid">
+      <EntityTypeMapping TypeName="IMSModel.tbl_t_paid">
+        <MappingFragment StoreEntitySet="tbl_t_paid">
+          <ScalarProperty Name="unit_cost" ColumnName="unit_cost" />
+          <ScalarProperty Name="ris_id" ColumnName="ris_id" />
+          <ScalarProperty Name="reciever_eid" ColumnName="reciever_eid" />
+          <ScalarProperty Name="borrower_eid" ColumnName="borrower_eid" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_wis_allocated">
+      <EntityTypeMapping TypeName="IMSModel.tbl_wis_allocated">
+        <MappingFragment StoreEntitySet="tbl_wis_allocated">
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="cyear" ColumnName="cyear" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="office" ColumnName="office" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_wis_transaction">
+      <EntityTypeMapping TypeName="IMSModel.tbl_wis_transaction">
+        <MappingFragment StoreEntitySet="tbl_wis_transaction">
+          <ScalarProperty Name="dbm_bb" ColumnName="dbm_bb" />
+          <ScalarProperty Name="mooe_no" ColumnName="mooe_no" />
+          <ScalarProperty Name="quarter" ColumnName="quarter" />
+          <ScalarProperty Name="year" ColumnName="year" />
+          <ScalarProperty Name="ref_id_wrt" ColumnName="ref_id_wrt" />
+          <ScalarProperty Name="starting_balance" ColumnName="starting_balance" />
+          <ScalarProperty Name="officename" ColumnName="officename" />
+          <ScalarProperty Name="transcode" ColumnName="transcode" />
+          <ScalarProperty Name="ris_id" ColumnName="ris_id" />
+          <ScalarProperty Name="reid" ColumnName="reid" />
+          <ScalarProperty Name="obj" ColumnName="obj" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="tid" ColumnName="tid" />
+          <ScalarProperty Name="accountid" ColumnName="accountid" />
+          <ScalarProperty Name="srcid" ColumnName="srcid" />
+          <ScalarProperty Name="descript" ColumnName="descript" />
+          <ScalarProperty Name="in_out" ColumnName="in_out" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="itemcode" ColumnName="itemcode" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="transacts">
+      <EntityTypeMapping TypeName="IMSModel.transact">
+        <MappingFragment StoreEntitySet="transact">
+          <ScalarProperty Name="reid" ColumnName="reid" />
+          <ScalarProperty Name="obj" ColumnName="obj" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="tid" ColumnName="tid" />
+          <ScalarProperty Name="accountid" ColumnName="accountid" />
+          <ScalarProperty Name="srcid" ColumnName="srcid" />
+          <ScalarProperty Name="descript" ColumnName="descript" />
+          <ScalarProperty Name="in_out" ColumnName="in_out" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="wis_borrowed_items">
+      <EntityTypeMapping TypeName="IMSModel.wis_borrowed_items">
+        <MappingFragment StoreEntitySet="wis_borrowed_items">
+          <ScalarProperty Name="paid" ColumnName="paid" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="transaction_code" ColumnName="transaction_code" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="officename" ColumnName="officename" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="price" ColumnName="price" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="bid" ColumnName="bid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="wis_ris_status">
+      <EntityTypeMapping TypeName="IMSModel.wis_ris_status">
+        <MappingFragment StoreEntitySet="wis_ris_status">
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="officename" ColumnName="officename" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="ris_id" ColumnName="ris_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="wis_ris_transactions">
+      <EntityTypeMapping TypeName="IMSModel.wis_ris_transactions">
+        <MappingFragment StoreEntitySet="wis_ris_transactions">
+          <ScalarProperty Name="to_be_deleted" ColumnName="to_be_deleted" />
+          <ScalarProperty Name="ref_id" ColumnName="ref_id" />
+          <ScalarProperty Name="controlno" ColumnName="controlno" />
+          <ScalarProperty Name="trans_code" ColumnName="trans_code" />
+          <ScalarProperty Name="risid" ColumnName="risid" />
+          <ScalarProperty Name="date_submited" ColumnName="date_submited" />
+          <ScalarProperty Name="date_returned" ColumnName="date_returned" />
+          <ScalarProperty Name="date_approved" ColumnName="date_approved" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="price" ColumnName="price" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="officename" ColumnName="officename" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_searchAvailable">
+      <EntityTypeMapping TypeName="IMSModel.vw_searchAvailable">
+        <MappingFragment StoreEntitySet="vw_searchAvailable">
+          <ScalarProperty Name="remaining" ColumnName="remaining" />
+          <ScalarProperty Name="account" ColumnName="account" />
+          <ScalarProperty Name="dbm_bb" ColumnName="dbm_bb" />
+          <ScalarProperty Name="mooe_no" ColumnName="mooe_no" />
+          <ScalarProperty Name="quarter" ColumnName="quarter" />
+          <ScalarProperty Name="year" ColumnName="year" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_stockviewing_wis">
+      <EntityTypeMapping TypeName="IMSModel.vw_stockviewing_wis">
+        <MappingFragment StoreEntitySet="vw_stockviewing_wis">
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_where_to_get_existing_item">
+      <EntityTypeMapping TypeName="IMSModel.vw_where_to_get_existing_item">
+        <MappingFragment StoreEntitySet="vw_where_to_get_existing_item">
+          <ScalarProperty Name="available" ColumnName="available" />
+          <ScalarProperty Name="total_out" ColumnName="total_out" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="transcode" ColumnName="transcode" />
+          <ScalarProperty Name="total_in" ColumnName="total_in" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwAlls">
+      <EntityTypeMapping TypeName="IMSModel.vwAll">
+        <MappingFragment StoreEntitySet="vwAll">
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwAllouts">
+      <EntityTypeMapping TypeName="IMSModel.vwAllout">
+        <MappingFragment StoreEntitySet="vwAllout">
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwbyofficeouts">
+      <EntityTypeMapping TypeName="IMSModel.vwbyofficeout">
+        <MappingFragment StoreEntitySet="vwbyofficeout">
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="item_id" ColumnName="item_id" />
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwplcallouts">
+      <EntityTypeMapping TypeName="IMSModel.vwplcallout">
+        <MappingFragment StoreEntitySet="vwplcallout">
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwQtyOnHands">
+      <EntityTypeMapping TypeName="IMSModel.vwQtyOnHand">
+        <MappingFragment StoreEntitySet="vwQtyOnHand">
+          <ScalarProperty Name="IN_STOCK" ColumnName="IN_STOCK" />
+          <ScalarProperty Name="item_id" ColumnName="item_id" />
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwrecieves">
+      <EntityTypeMapping TypeName="IMSModel.vwrecieve">
+        <MappingFragment StoreEntitySet="vwrecieve">
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwrptSummaryAlls">
+      <EntityTypeMapping TypeName="IMSModel.vwrptSummaryAll">
+        <MappingFragment StoreEntitySet="vwrptSummaryAll">
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+          <ScalarProperty Name="released" ColumnName="released" />
+          <ScalarProperty Name="available" ColumnName="available" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwstockoutgrids">
+      <EntityTypeMapping TypeName="IMSModel.vwstockoutgrid">
+        <MappingFragment StoreEntitySet="vwstockoutgrid">
+          <ScalarProperty Name="obj" ColumnName="obj" />
+          <ScalarProperty Name="tid" ColumnName="tid" />
+          <ScalarProperty Name="accountid" ColumnName="accountid" />
+          <ScalarProperty Name="srcid" ColumnName="srcid" />
+          <ScalarProperty Name="unitcost" ColumnName="unitcost" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwtransacts">
+      <EntityTypeMapping TypeName="IMSModel.vwtransact">
+        <MappingFragment StoreEntitySet="vwtransact">
+          <ScalarProperty Name="reid" ColumnName="reid" />
+          <ScalarProperty Name="descript" ColumnName="descript" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="eName" ColumnName="eName" />
+          <ScalarProperty Name="in_out" ColumnName="in_out" />
+          <ScalarProperty Name="unit" ColumnName="unit" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="itemname" ColumnName="itemname" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="itemid" ColumnName="itemid" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwTransactions">
+      <EntityTypeMapping TypeName="IMSModel.vwTransaction">
+        <MappingFragment StoreEntitySet="vwTransactions">
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="eName" ColumnName="eName" />
+          <ScalarProperty Name="in_out" ColumnName="in_out" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="stock_date" ColumnName="stock_date" />
+          <ScalarProperty Name="item_id" ColumnName="item_id" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwUsers">
+      <EntityTypeMapping TypeName="IMSModel.vwUser">
+        <MappingFragment StoreEntitySet="vwUsers">
+          <ScalarProperty Name="usertype" ColumnName="usertype" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="d" ColumnName="d" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="passcode" ColumnName="passcode" />
+          <ScalarProperty Name="emailaddress" ColumnName="emailaddress" />
+          <ScalarProperty Name="SwipEmployeeID" ColumnName="SwipEmployeeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

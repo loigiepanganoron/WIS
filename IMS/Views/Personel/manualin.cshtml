@@ -1,0 +1,98 @@
+﻿<script>
+    function getwis() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var id = rowData.itemid;
+        var unit = rowData.unit;
+        var unitcost = rowData.unitCost;
+
+        document.getElementById("unitwis").value = unit;
+    }
+</script>
+
+<div style="height:95%;width:100%"> 
+    <div style="width:80%;height:100%;margin-left:10%">
+        <div style="float:left;height:70px;width:100%">
+            <div style="height:65px;width:50%;float:left">
+                <div style="height:30px;width:100%">
+                    <label style="font-size:14px"> Source </label>
+                </div>
+                <div style="height:40px;width:100%">
+                    @(Html.Kendo().ComboBox()
+                        .Name("wissource")
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Placeholder("Select Source")
+                        .HtmlAttributes(new { @style = "width: 150px;" })
+                        .Filter("contains")
+                        .AutoBind(true)
+                        .MinLength(1)
+                        .Suggest(true)
+                        .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "APR", Value = "1" }, new SelectListItem() { Text = "BULK BIDDING", Value = "0" } })
+                    )
+                </div>
+              </div>
+
+            <div style="height:65px;width:40%;float:right">
+                <div style="height:30px;width:100%">
+                    <label> Cost</label>
+                </div>
+                <div style="height:40px;width:100%">
+                    @(Html.Kendo().NumericTextBox<decimal>()
+                             .Name("costwis")
+                             .Min(0)
+                             .Max(100000)
+                             .Enable(true)
+                             .Value(0)
+                             .HtmlAttributes(new { style = "width: 100px" })
+                    )
+                </div>
+            </div>
+        </div>
+
+        <div style="float:left;height:50px;width:100%">
+            <label>Items </label>
+            @(Html.Kendo().ComboBox()
+                .Name("wisitemmanual")
+                .DataTextField("itemName")
+                .DataValueField("itemid")
+                .Placeholder("Search item here...")
+                .HtmlAttributes(new { @style = "width: 200px;" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("itembyoffice", "Home", new { officeid = ViewBag.id })))
+                .Events(e => e.Change("getwis"))
+            )
+
+        </div>
+        <div style="float:left;height:50px;width:100%;margin-top:10px">
+            <label> Unit</label>
+            <input disabled="disabled" style="width:70px;height:25px;" type="text" name="unitwis" id="unitwis">
+        </div>
+
+
+        <div style="height:40px;width:100%;margin-top:10px">
+            <div style="float:right">
+                <button class="noise" style="padding:5px 0px 0px 0px;width:90px;height:70%;float:left;border-radius:5px;background-color:#0cb954" onclick="saveren()">
+                    <p style="color:white;font-size:14px;">
+                        Save
+                    </p>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var id = $('#mgaopis1').data('kendoComboBox').value();
+        $('#wisitemmanual').data('kendoComboBox').dataSource.read({ officeid: id })
+    })
+</script>
+
+<script>
+    function saveren() {
+        swal('', 'Function not finished, On-going :)', 'error');
+    }
+</script>

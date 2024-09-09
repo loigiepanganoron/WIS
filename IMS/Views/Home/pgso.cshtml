@@ -1,0 +1,197 @@
+﻿@{
+    ViewBag.Title = "pgso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="width:100%;height:auto;display:inline-block;float:left">
+   
+    <script>
+        function selectofice(a) {
+
+            var selection = this.select();
+            var rowData = this.dataItem(selection);
+            var id = rowData.OfficeId;
+            var off = rowData.OfficeName;
+            $("#byoffice").data("kendoGrid").dataSource.page(1);
+
+            $('#officeni').text(off);
+            // document.getElementById("officeni").value = off;
+            $('#ITEM').data('kendoComboBox').dataSource.read({ officeid: id })
+            $('#byoffice').data('kendoGrid').dataSource.read({ officeid: id })
+            $('#out').data('kendoGrid').dataSource.read({ officeid: id })
+            $('#Monitor').data('kendoGrid').dataSource.read({ officeid: id })
+            $('#Monitor1').data('kendoGrid').dataSource.read({ officeid: id })
+
+        }
+    </script>
+    <div>
+        <div style="height:100px;width:700px;float:left;margin-left:20px;padding:0 10px 0 10px" class="bk">
+            <div>
+            <label class="kn" style="margin-left:30px">Select Office</label>
+            @(Html.Kendo().ComboBox()
+                .Name("mgaopis1")
+                .DataTextField("OfficeName")
+                .DataValueField("OfficeId")
+                .Placeholder("Search Office")
+                .HtmlAttributes(new { @style = "width: 200px" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("GetOffices", "Home")))
+                        .Events(a => a.Change("selectofice"))
+            )
+
+            </div>
+            <label id="officeni" class="n" style="text-align:right"></label>
+        </div>
+    </div>
+    <div class="noise" style="width:280px;height:100px;background-color:#1fa67a;float:right;margin-top:0px;margin-right:-30px;padding-left:4px;border-bottom:2px solid #02603b">
+        <label style="color:white;">Legend:</label>
+        <div style="margin-left:35px;color:white">
+            <div style="height:20px;width:100%">
+                <div style="width:15px;height:15px;background-color:#efaa1b;float:left"></div> <label style="font-size:12px;margin-left:24px">Running Out of Stock</label>
+            </div>
+            <div style="height:20px;width:100%;margin-top:2px">
+                <div style="width:15px;height:15px;background-color:#ff0000;float:left"></div><label style="font-size:12px;margin-left:24px">Out of Stock</label>
+            </div>
+            <div style="height:20px;width:100%;margin-top:2px">
+                <div style="width:15px;height:15px;background-color:white;float:left"></div><label style="font-size:12px;margin-left:24px">Stock Available</label>
+            </div>
+        </div>
+    </div>
+    <div id="triangle-topleft" style="float:right;margin-top:100px;margin-right:-280px"> </div>
+</div>
+
+<!-- #region legends -->
+<!-- #endregion -->
+
+<div style="width:100%;height:auto; clear:both;background-color:white" class="page-content">
+    <div id="mywrap">
+        <div style="width:50%;float:left">
+            <div id="noise" class="myheader">Summary per Office</div>
+            <div style="height:100%;width:100%">
+                @(Html.Kendo().Grid<dynamic>()
+                .Name("byoffice")
+                .Columns(columns =>
+                {
+                    columns.Bound("itemname").Title("Item").Width(120);
+                    columns.Bound("empname").Title("Personel").Width(100);
+                    columns.Bound("itemid").Title("Item id").Hidden();
+                    columns.Bound("ntotal").Title("Qty").Width(75);
+                    columns.Bound("in_out").Title("Mode").Width(60);
+                    columns.Bound("date").Title("Date").ClientTemplate("#=date? kendo.toString(kendo.parseDate(date), 'MM/d/yy') : '' #").Width(75);
+                    columns.Bound("descript").ClientTemplate("#if(descript!= ''){#<span class=\"ehover\" onclick=\"openDesc('#=descript#')\" style=\"cursor:pointer; margin-right:-5px; margin-left:-1px;\" title=\"Details\"><i style=\"font-size:15px\" class=\"fa fa-envelope\"></i></span>#}#").Title("");
+
+                })
+                          .Pageable()
+                          .Selectable()
+                        //.Scrollable()
+                          .HtmlAttributes(new { style = "height:auto" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(12)
+                          .Read(read => read.Action("readtransact", "Home", new { officeid = ViewBag.id }))
+                          .Sort(a => a.Add("itemname").Ascending())
+                          )
+                )
+            </div>
+
+        </div>
+        <div style="width:48%;float:left;margin-left:12px;">
+            <div id="noise" class="myheader" style="text-align:center"> Tools <label class="fa fa-print" style="font-size:20px;float:right" onclick="openprinter()"></label></div>
+            @(Html.Kendo().TabStrip()
+               .Name("tabstrip")
+               .Events(events => events.Select("onselect"))
+               .Animation(animation =>
+                  animation.Open(effect =>
+                      effect.Fade(FadeDirection.In)))
+               .HtmlAttributes(new { style = "width:auto;height:auto" })
+                        .Items(tabstrip =>
+                                      {
+                                          tabstrip.Add().Selected(true).Text("IN").LoadContentFrom("_in", "Personel");
+
+                                      })
+                        .Items(tabstrip =>
+                                      {
+                                          tabstrip.Add().Selected(true).Text("OUT").LoadContentFrom("_out", "Personel");
+                                      })
+                        .Items(tabstrip =>
+                                      {
+                                          tabstrip.Add().Selected(true).Text("Monitor Office Items").LoadContentFrom("monitor", "Personel");
+                                      })
+            )
+            <script>
+                function onselect(e) {
+                    //clear the current content of the tab before it's displayed to force the tabStrip to load it
+                    $(e.contentElement).html("");
+                }
+            </script>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function openDesc(a) {
+
+        if (a.length > 50) {
+            var trimmedString = a.substring(0, 50);
+            var trimmedString2 = a.substring(50, 100);
+            swal("Description", trimmedString + "\n" + trimmedString)
+        }
+        else {
+            swal("Description", a)
+        }
+    }
+    function openprinter() {
+        $.get("@Url.Content("~/Personel/printer")", function (r) {
+            $("#printnani").html(r)
+            $("#printnani").data("kendoWindow").center().open()
+        })
+    }
+
+    $(document).ready(function () {
+        $('#mgaopis1').data('kendoComboBox').list.width('500px');
+    });
+</script>
+
+
+<style>
+    h2 {
+        text-shadow: none;
+    }
+
+    .k-grid tbody tr {
+        height: 50px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .k-grid table {
+        table-layout: fixed;
+    }
+
+    .bk {
+        background-color: #f1f9f7;
+        border: 1px solid #e0f1e9;
+        color: #1d9d74;
+        /*border: 5px solid transparent;*/
+        border-radius: 4px;
+    }
+
+    .n {
+        font-size: 15px;
+        line-height: 1.42857143;
+        font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
+
+    .kn {
+        font-size: 20px;
+        line-height: 1.42857143;
+        font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
+</style>

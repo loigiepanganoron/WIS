@@ -1,0 +1,275 @@
+﻿<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col row">
+        <div class="col col-sm-12">
+            <div class="col ibox-content" style="display:block">
+                <h2>Printing</h2>
+                <div class="col row">
+                    <section class="col col-lg-12 col-sm-12 col-md-12">
+
+                        <a onclick="show_st()" class="btn btn-labeled btn-success"> <span class="btn-label"><i class="glyphicon glyphicon-print"></i>&nbsp;</span>Statement of Ending Inventory</a>
+                        
+                        <a onclick="show_vale_form()" class="btn btn-labeled btn-primary">
+                            <span class="btn-label"><i class="glyphicon glyphicon-print"></i>&nbsp;</span>Printing of Office Borrowed items
+                        </a>
+
+                        <a  class="btn btn-labeled btn-danger" style="visibility:hidden"> <span class="btn-label"><i class="glyphicon glyphicon-print"></i>&nbsp; </span>RSMI-General Fund</a>
+                      
+                        
+
+                    </section> 
+                </div>
+                <div class="row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function load_emp() {
+        var officeid = $("#office").val();
+        //alert(officeid);
+        $("#byoffemployee").data("kendoComboBox").dataSource.read({ officeid: officeid });
+        
+    }
+
+
+    function print_vale() {
+
+        var empid = $("#byoffemployee").val();
+        var from = $("#d_from").val();
+        var to = $("#d_to").val();
+        var officeid = $("#office").val();
+        var offname = $("#office").data("kendoComboBox").text();
+        if (empid == "") {
+            swal("Please select Employee!", "", "error");
+        }
+        else if  (officeid == "") {
+            swal("Please select Office!", "", "error");
+        }
+        else
+        { 
+            window.open("@Url.Content("~/Reports/print_ris.aspx?repID=")" + 10 + "&officeid=" + officeid + "&from=" + from + "&to=" + to + "&offname=" + offname + "&empid=" + empid);
+        }  
+    }
+    function show_vale_print() {
+        $('#modal-show_vale_print').modal('toggle');
+    }
+    function select() {
+        var a = $("#month").val();
+        $("#offices").data("kendoGrid").dataSource.read({date : a})
+    }
+
+    $(document).ready(function () {
+        for (i = new Date().getFullYear() ; i > 1900; i--) {
+            $('#yearpicker').append($('<option />').val(i).html(i));
+        }
+    })
+    function show_st() {
+        $('#modal-st').modal('toggle');
+    }
+    function show_rsmi() {
+        $('#modal-rsmi').modal('toggle');
+    }
+    function show_vale_form() {
+        $('#modal-vale').modal('toggle');
+    }
+    function print(e) {
+        var year = $('#yearpicker').val();
+        var month = 0;
+
+        if (e == 1) {
+            month = 6;
+        }
+        if (e == 2) {
+            month = 12;
+        }
+        var date = new Date(year, month, 0);
+        var day = date.getDate();
+        var mydate = year + '-' + month + '-' + day;
+
+        window.open("@Url.Content("~/Reports/print_ris.aspx?repID=")" + 5 + "&date=" + mydate);
+    }
+</script>
+
+<div id="modal-st" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog" style="width:300px;height:300px">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <section class="col-lg-12 col-sm-12 col-md-12">
+                        <select name="yearpicker" id="yearpicker" style="width:100%;height:35px" ></select>
+                        <a onclick="print(1)" class="btn btn-labeled btn-success" style="width:100%"> <span class="btn-label"><i class="glyphicon glyphicon-print"></i>&nbsp;</span>1st SEM(End of June)</a>
+                        <a onclick="print(2)" class="btn btn-labeled btn-danger" style="width:100%"> <span class="btn-label"><i class="glyphicon glyphicon-print"></i>&nbsp; </span>2nd SEM(End of December)</a>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ 
+
+<div id="modal-rsmi" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog" style="width:300px;height:300px">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modal-vale" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header"> 
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <fieldset>
+                    <section class="col col-md-12">
+                        <h3 id="msg" class="m-t-none m-b  ">Borrowers of the Month</h3>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                @(Html.Kendo().DatePicker()
+                                        .Name("month")
+                                        .Value(DateTime.Now)
+                                        .Format("MMMM - yyyy")
+                                        .Depth(CalendarView.Year)
+                                        .Start(CalendarView.Year)
+                                        .Events(e => e.Change("select"))
+                                )
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <a onclick="show_vale_print()" class="btn btn-labeled btn-danger" style="float:right"> <span class="btn-label"><i class="glyphicon glyphicon-print"></i>&nbsp; </span>Print Vale</a>
+                            </div>
+                           
+
+
+                        </div>
+                       
+                        <div class="col col-lg-12" style="margin-top:15px">
+
+                    @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("offices")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("officeid").Hidden(); 
+                        columns.Bound("officename").Title("Office").Width(250);
+                      
+                    })
+                                                                                                         .Pageable()
+                                                                                                         .Navigatable() 
+                                                                                                         .Selectable()
+                                                                                                         .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                                                                                                         .DataSource(dataSource => dataSource
+                                                                                                         .Ajax()
+                                                                                                         .AutoSync(false)
+                                                                                                         .ServerOperation(false)
+                                                                                                         .PageSize(10000)
+                                                                                                                 .Read(read => read.Action("get_office_vale", "Responsive"))
+                                                                                                         .Sort(a => a.Add("officename").Ascending())
+                                                                                                         )
+                                                                                                   
+                            )
+
+
+
+
+                        </div>
+                    </section>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-show_vale_print" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <fieldset>
+                    <section class="col col-lg-12 col-md-12 col-sm-12">
+                        <h3 id="msg" class="m-t-none m-b  ">Vale Print Form</h3>
+
+                        <div class="col col-lg-12 col-md-12 col-sm-12" style="margin-top:15px">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <label>Office</label>
+                                @(Html.Kendo().ComboBox()
+                                        .Name("office")
+                                        .DataTextField("OfficeName")
+                                        .DataValueField("OfficeID")
+                                        .Placeholder("Select Office")
+                                        .HtmlAttributes(new { @style = "width: 100%" })
+                                        .Filter("contains")
+                                        .AutoBind(true)
+                                        .MinLength(2)
+                                        .DataSource(source => source.Read(read => read.Action("OfficeNew", "Responsive")))
+                                        .Events(e => e.Change("load_emp"))
+                                )
+                            </div>
+
+                            
+                            <div class="col-lg-12 col-md-12 col-sm-12" style="margin-top:10px">
+                                <label>Employee</label>
+                                @(Html.Kendo().ComboBox()
+                                            .Name("byoffemployee")
+                                            .DataTextField("EmpName")
+                                            .DataValueField("eid")
+                                            .Placeholder("Search Name here...")
+                                            .HtmlAttributes(new { @style = "width:100%" })
+                                            .Filter("contains")
+                                            .AutoBind(true)
+                                            .MinLength(1)
+                                   .DataSource(source => source.Read(read => read.Action("getEmp", "Responsive")))
+                                )
+                           </div>
+                             
+                            </div>
+
+                        <div class="col col-lg-12 col-md-12 col-sm-12" style="margin-top:15px;visibility:hidden">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <label>From</label>
+                                @(Html.Kendo().DatePicker()
+                                        .Name("d_from")
+                                        .Value(DateTime.Now)
+                                        .Format("MMMM-dd-yyyy")
+                                        .HtmlAttributes(new { @Style = "width:100%" })
+                                )
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <label>To</label>
+                                @(Html.Kendo().DatePicker()
+                                        .Name("d_to")
+                                        .Value(DateTime.Now)
+                                        .Format("MMMM-dd-yyyy")
+                                        .HtmlAttributes(new { @Style = "float:right;width:100%"})
+                                )
+                            </div>
+                        </div>
+
+                        <div class="col col-lg-12 col-md-12 col-sm-12" style="margin-top:15px">
+                            <a onclick="print_vale()" class="btn btn-labeled btn-danger" style="float:right"> <span class="btn-label"><i class="glyphicon glyphicon-print"></i>&nbsp; </span>Go Print</a>
+                        </div>
+
+                    </section>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

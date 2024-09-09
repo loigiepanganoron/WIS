@@ -1,0 +1,119 @@
+﻿<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            url: "@Url.Content("~/Login/_offid")",
+            type: 'GET',
+       // data: OfficeID,
+        success: function (result) {
+            // $("#opis").html(result);
+            $('#Employeeplc').data('kendoComboBox').dataSource.read({ id: result })
+        }
+    });
+    })
+</script>
+
+
+<div style="width:100%">
+    <button class="noise" style="padding:8px 0px 0px 0px;width:95%;height:30px;float:left;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="tempdisable()">
+        <p style="color:white;font-size:14px;">
+            Select Employee
+        </p>
+    </button>
+    <div style="float:left;width:100%;height:70px">
+        <div style="margin-left:60px;margin-top:20px">
+            @(Html.Kendo().ComboBox()
+                .Name("Employeeplc")
+                .DataTextField("empName")
+                .DataValueField("eid")
+                .Placeholder("Search Name here...")
+                .HtmlAttributes(new { @style = "width: 250px" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("employeeLista", "Personel")))
+            )
+        </div>
+    </div>
+    <div style="width:100%;float:left">
+        <button class="noise" style="padding:3px 0px 0px 0px;width:80px;height:25px;float:right;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="getrow()">
+            <p style="color:white;font-size:14px;">
+                Submit
+            </p>
+        </button>
+    </div>
+</div>
+
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#Employeeplc').data('kendoComboBox').list.width('400px');
+    });
+    function getrow(e) {
+
+
+        var reid = $('#Employeeplc').data('kendoComboBox').value();
+        //var office = $('#mgaopis1').data('kendoComboBox').value();
+        var eid = "@Url.Action("_myeID", "Login")";
+
+      
+        var grid = $('#plcout').data('kendoGrid');
+        //var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var dataItem = grid.dataItem(grid.select().closest("tr"));
+        var itemid = dataItem.itemid;
+        var total = dataItem.quit;
+        var quantity = dataItem.quantity;
+        var unitcost = dataItem.average;
+        var srcid = dataItem.srcid;
+        var accountid = dataItem.accountid;
+        var tid = dataItem.tid;
+        var obj = dataItem.obj;
+        var unit = dataItem.unit;
+        var itemname = dataItem.itemname;
+
+      
+
+        if (reid == "") {
+            swal('', 'Please Select Employee!', 'error');
+        }
+        else
+        {
+            var dataload = {
+
+                "itemid": itemid,
+                "itemname": itemname,
+                "quit": quantity,
+                "in_out": 'OUT',
+                "srcid": srcid,
+                "unit": unit,
+                "srcid": 3,
+                "unitcost": unitcost,
+                "reid": reid,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("plcsave", "Plc")',
+                data: JSON.stringify(dataload),
+                contentType: "application/json;charset=utf-8",
+                processData: true,
+                success: function (data) {
+
+                    if (data == 1) {
+                        $(".my_audio").trigger('play');
+                        swal('', 'Entry Successfully Save!', 'success');
+                        $("#plcout").data("kendoGrid").dataSource.read();
+                        $("#gridplc").data("kendoGrid").dataSource.read();
+                        $('#chart').data('kendoChart').dataSource.read({ itemid: itemid })
+                    }
+                    else {
+                        swal('', data, 'error')
+                    }
+                },
+            })
+        }
+    }
+</script>
+

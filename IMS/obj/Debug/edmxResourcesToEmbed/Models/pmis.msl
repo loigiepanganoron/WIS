@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="pmisModelStoreContainer" CdmEntityContainer="pmisEntities">
+    <EntitySetMapping Name="OfficeDescriptions">
+      <EntityTypeMapping TypeName="pmisModel.OfficeDescription">
+        <MappingFragment StoreEntitySet="OfficeDescription">
+          <ScalarProperty Name="email_emp_grouped" ColumnName="email_emp_grouped" />
+          <ScalarProperty Name="email_admin" ColumnName="email_admin" />
+          <ScalarProperty Name="IsPhysical" ColumnName="IsPhysical" />
+          <ScalarProperty Name="isMain" ColumnName="isMain" />
+          <ScalarProperty Name="Plantilla_Ordering" ColumnName="Plantilla_Ordering" />
+          <ScalarProperty Name="isActiveOffice" ColumnName="isActiveOffice" />
+          <ScalarProperty Name="HeadCelNo" ColumnName="HeadCelNo" />
+          <ScalarProperty Name="locatedinCapitol" ColumnName="locatedinCapitol" />
+          <ScalarProperty Name="project" ColumnName="project" />
+          <ScalarProperty Name="NationalAgency" ColumnName="NationalAgency" />
+          <ScalarProperty Name="SectorCode" ColumnName="SectorCode" />
+          <ScalarProperty Name="OfficeCodeGSIS" ColumnName="OfficeCodeGSIS" />
+          <ScalarProperty Name="Order" ColumnName="Order" />
+          <ScalarProperty Name="Fund" ColumnName="Fund" />
+          <ScalarProperty Name="OfficeDesignation" ColumnName="OfficeDesignation" />
+          <ScalarProperty Name="OfficeHeadID" ColumnName="OfficeHeadID" />
+          <ScalarProperty Name="OfficeHead" ColumnName="OfficeHead" />
+          <ScalarProperty Name="OfficeCode" ColumnName="OfficeCode" />
+          <ScalarProperty Name="OfficeMedium" ColumnName="OfficeMedium" />
+          <ScalarProperty Name="OfficeAbbr" ColumnName="OfficeAbbr" />
+          <ScalarProperty Name="OfficeName" ColumnName="OfficeName" />
+          <ScalarProperty Name="OfficeID" ColumnName="OfficeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwLoginParameters">
+      <EntityTypeMapping TypeName="pmisModel.vwLoginParameter">
+        <MappingFragment StoreEntitySet="vwLoginParameter">
+          <ScalarProperty Name="emailaddress" ColumnName="emailaddress" />
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+          <ScalarProperty Name="passcode" ColumnName="passcode" />
+          <ScalarProperty Name="SwipEmployeeID" ColumnName="SwipEmployeeID" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="euid" ColumnName="euid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwMergeAllEmployees">
+      <EntityTypeMapping TypeName="pmisModel.vwMergeAllEmployee">
+        <MappingFragment StoreEntitySet="vwMergeAllEmployee">
+          <ScalarProperty Name="EmpNameFull" ColumnName="EmpNameFull" />
+          <ScalarProperty Name="Salary" ColumnName="Salary" />
+          <ScalarProperty Name="BirthD" ColumnName="BirthD" />
+          <ScalarProperty Name="Concurrent" ColumnName="Concurrent" />
+          <ScalarProperty Name="CanHaveTravel" ColumnName="CanHaveTravel" />
+          <ScalarProperty Name="TimeCode" ColumnName="TimeCode" />
+          <ScalarProperty Name="bloodtype" ColumnName="bloodtype" />
+          <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+          <ScalarProperty Name="Cause" ColumnName="Cause" />
+          <ScalarProperty Name="AppointCoverage" ColumnName="AppointCoverage" />
+          <ScalarProperty Name="employmentstatus_id" ColumnName="employmentstatus_id" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="EmailAdd" ColumnName="EmailAdd" />
+          <ScalarProperty Name="OfficeName" ColumnName="OfficeName" />
+          <ScalarProperty Name="OfficeAbbr" ColumnName="OfficeAbbr" />
+          <ScalarProperty Name="Department" ColumnName="Department" />
+          <ScalarProperty Name="Position" ColumnName="Position" />
+          <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+          <ScalarProperty Name="RowNo" ColumnName="RowNo" />
+          <ScalarProperty Name="trNo" ColumnName="trNo" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="SwipeId" ColumnName="SwipeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

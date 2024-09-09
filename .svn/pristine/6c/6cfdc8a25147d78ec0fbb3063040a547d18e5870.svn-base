@@ -1,0 +1,112 @@
+﻿
+
+
+<div style="width:100%">
+    <button class="noise" style="padding:8px 0px 0px 0px;width:95%;height:30px;float:left;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="tempdisable()">
+        <p style="color:white;font-size:14px;">
+            Select Employee
+        </p>
+    </button>
+    <div style="float:left;width:100%;height:70px">
+        <div style="margin-left:60px;margin-top:20px">
+            @(Html.Kendo().ComboBox()
+                .Name("Employee")
+                .DataTextField("empName")
+                .DataValueField("eid")
+                .Placeholder("Search Name here...")
+                .HtmlAttributes(new { @style = "width: 250px" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("employeeLista", "Personel")))
+            )
+        </div>
+    </div>
+    <div style="width:100%;float:left">
+        <button class="noise" style="padding:3px 0px 0px 0px;width:80px;height:25px;float:right;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="savethisout()">
+            <p style="color:white;font-size:14px;">
+                Submit
+            </p>
+        </button>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        var id = $('#mgaopis1').data('kendoComboBox').value();
+        $('#Employee').data('kendoComboBox').dataSource.read({ id: id })
+    }) 
+
+    $(document).ready(function () {
+        $('#Employee').data('kendoComboBox').list.width('400px');
+    });
+
+    function savethisout(e) {
+
+
+        var reid = $('#Employee').data('kendoComboBox').value();
+        var office = $('#mgaopis1').data('kendoComboBox').value();
+        var eid = "@Url.Action("_myeID", "Login")";
+        var grid = $('#outwis').data('kendoGrid');
+        var selectedItem = grid.dataItem(grid.select().closest("tr"));
+      
+        //var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var itemid = selectedItem.itemid;
+        var total = selectedItem.total;
+        var quantity = selectedItem.qty;
+        var descript = selectedItem.descript;
+        var unitcost = selectedItem.unitcost;
+        var srcid = selectedItem.srcid;
+        var accountid = selectedItem.accountid;
+        var tid = selectedItem.tid;
+        var obj = selectedItem.obj;
+        var unit = selectedItem.unit;
+        var itemname = selectedItem.itemname;
+        
+        if (reid == "") {
+            swal('', 'Please Select Employee!', 'error');
+        }
+        else {
+            var dataload = {
+
+                "itemid": itemid,
+                "itemname": itemname,
+                "quantity": quantity,
+                "officeid": office,
+                "in_out": 'OUT',
+                "descript": descript,
+                "unitcost": unitcost,
+                "srcid": srcid,
+                "accountid": accountid,
+                "tid": tid,
+                "unit": unit,
+                "obj": obj,
+                "reid": reid,
+            };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveOut", "Home")',
+                data: JSON.stringify(dataload),
+                contentType: "application/json;charset=utf-8",
+                processData: true,
+                success: function (data) {
+
+                    if (data == 1) {
+                        swal('', 'Entry Successfully Save!', 'success');
+                        $("#outwis").data("kendoGrid").dataSource.read({ officeid: office });
+                        $("#byofficewis").data("kendoGrid").dataSource.read({ officeid: office });
+                        $("#chartwis").data("kendoChart").dataSource.read({ officeid: office, itemid: itemid })
+                    }
+                    else {
+                        swal('', data, 'error')
+                    }
+                },
+            })
+
+        }
+       
+    }
+
+</script>

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="IMSModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="transaction">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="item_id" Type="Int32" />
+    <Property Name="stock_date" Type="DateTime" Precision="3" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="in_out" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="role" Type="Int32" />
+    <Property Name="eid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="userRole">
+    <Key>
+      <PropertyRef Name="roleid" />
+    </Key>
+    <Property Name="usertype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="roleid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <EntityType Name="vwQtyOnHand">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+    <Property Name="item_id" Type="Int32" />
+    <Property Name="IN_STOCK" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vwTransaction">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="item_id" Type="Int32" />
+    <Property Name="stock_date" Type="DateTime" Precision="3" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="in_out" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="eName" Type="String" MaxLength="67" FixedLength="false" Unicode="true" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="vwUser">
+    <Key>
+      <PropertyRef Name="d" />
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="SwipEmployeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="emailaddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="passcode" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="eid" Type="Int64" />
+    <Property Name="d" Type="Int64" Nullable="false" />
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="usertype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityContainer Name="IMSEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="transactions" EntityType="Self.transaction" />
+    <EntitySet Name="users" EntityType="Self.user" />
+    <EntitySet Name="userRoles" EntityType="Self.userRole" />
+    <EntitySet Name="vwQtyOnHands" EntityType="Self.vwQtyOnHand" />
+    <EntitySet Name="vwTransactions" EntityType="Self.vwTransaction" />
+    <EntitySet Name="vwUsers" EntityType="Self.vwUser" />
+  </EntityContainer>
+</Schema>

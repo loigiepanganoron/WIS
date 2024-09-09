@@ -1,0 +1,730 @@
+﻿<script>
+    function getthis() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var id = rowData.itemid;
+        var unit = rowData.unit;
+        document.getElementById("unit").value = unit;
+    }
+
+    function pass8() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var total = rowData.quit;
+        var unit = rowData.unit;
+        var itemid = rowData.itemid;
+
+        $('#chartbyoffice').data('kendoChart').dataSource.read({ itemid: itemid })
+    }
+    function In() {
+
+        var qty2 = $('#qty2').val();
+        var item = $('#items2').data('kendoComboBox').value();
+        var itemname = $('#items2').data('kendoComboBox').text();
+        var unit = $('#unit').val();
+
+        $.ajax({
+            url: "@Url.Content("~/Login/_myRoleID")",
+            type: 'GET',
+            success: function (result)
+            {
+                if ( result != "1" ) {
+                    swal('', 'You dont have permission', 'error');
+                }
+                else
+                {
+                    if (qty2 == '0') {
+                        swal('', 'Enter quantity!', 'error');
+                    }
+                    if (item == "") {
+                        swal('', 'Select item first!', 'error');
+                    }
+                    if (qty2 == "") {
+                        swal('', 'Enter quantity!', 'error');
+                    }
+                    if (item != "" && qty2 != '0' && qty2 != "") {
+                        $.post("@Url.Content("~/Home/stockIn")",
+                    { itemID: $('#items2').val(), qty: $('#qty2').val(),itemname : itemname, unit:unit}, function (r) {
+           
+                        $('#qty2').val('');
+                        $(".my_audio").trigger('play');
+                        swal('', 'Entry Successfully Save!', 'success');
+                        $('#gridbyoff').data('kendoGrid').dataSource.read()
+                        $('#byofficeout').data('kendoGrid').dataSource.read()
+                    });
+                    }
+                }
+            }
+         });
+    }
+    function addempbyoff(e)
+    {
+
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var itemid = dataItem.itemid;
+        var total = dataItem.quit;
+        var quantity = dataItem.quantity;
+        var unitcost = dataItem.average;
+        var srcid = dataItem.srcid;
+        var accountid = dataItem.accountid;
+        var tid = dataItem.tid;
+        var obj = dataItem.obj;
+        var unit = dataItem.unit;
+        var itemname = dataItem.itemname;
+
+        $.ajax({
+            url: "@Url.Content("~/Login/_myRoleID")",
+            type: 'GET',
+        success: function (result)
+        {
+            if ( result != "1" ) {
+                swal('', 'You dont have permission', 'error');
+            }
+            else
+            {
+                if (quantity > total) {
+                    swal('', 'Opps quantity to be out must be equal or lesser than the total quantity of the Item.!', 'error');
+                }
+                if (quantity < 0) {
+                    swal('', 'Opps quantity to be out must not less than zero!', 'error');
+                }
+                if (quantity == null) {
+                    swal('', 'Enter quantity!', 'error');
+                }
+                if (quantity == 0) {
+                    swal('', 'Opps quantity must not be zero!', 'error');
+                }
+
+                if (total >= quantity && quantity > 0) {
+                    var dataload = {
+
+                        "itemid": itemid,
+                        "itemname": itemname,
+                        "quit": quantity,
+                        "in_out": 'OUT',
+                        "unit": unit,
+                    };
+                    $.get("@Url.Content("~/Home/addemp")", function (r) {
+                        $("#empbyoff").html(r)
+                        $("#empbyoff").data("kendoWindow").center().open()
+                    })
+                }
+                else {
+                    swal('', 'Opps you enter invalid quantity!', 'error');
+                }
+            }
+        }
+    });
+
+
+       
+    }
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        
+
+        $("#byfilter").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#byofficeout").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "itemname", operator: "contains", value: value });
+                orfilter.filters.push({ field: "itemname", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+
+
+
+        $("#byofftransfilter").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#gridbyoff").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "itemname", operator: "contains", value: value });
+                orfilter.filters.push({ field: "itemname", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+    })
+
+    function byoffimg(a) {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var eid = rowData.eid;
+        var reid = rowData.reid;
+
+        $('#imgbyoff1').data('kendoListView').dataSource.read({ eid: eid })
+        $('#imgbyoff2').data('kendoListView').dataSource.read({ reid: reid })
+
+    }
+
+</script>
+<div style="width:100%;height:auto;padding:0px 10px 0px 10px">
+    <div style="width:30%;height:300px;float:left;">
+      
+        
+        <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-radius:5px;background-color:#0cb954;margin-top:15px">
+            <p style="color:white;font-size:14px;">
+                Stock In
+            </p>
+        </button>
+
+        <div id="load" class="bk" style="width:100%;height:90%;float:left;border:0px solid #808080;padding-top:30px;border-radius:5px;margin-top:2px">
+            <div style="float:left;margin-left:5px">
+                <label class="nm"> Item</label>
+               @(Html.Kendo().ComboBox()
+                .Name("items2")
+                .DataTextField("itemName")
+                .DataValueField("itemid")
+                .Placeholder("Search item here...")
+                .HtmlAttributes(new { @style = "width: 200px" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("InList", "Home")))
+                 .Events(e => e.Change("getthis"))
+            )  
+            </div>
+
+            <div style="float:left;margin-left:5px">
+                <label class="nm">Unit</label>
+                <input disabled="disabled" style="width:65px;height:35px;" type="text" name="unit" id="unit">
+                @*<input disabled="disabled" style="width:65px;height:35px;" type="text" name="unit" id="unit">*@
+            </div>
+            <div style="float:left;margin-left:5px">
+                <label class="nm">Quantity</label>
+                @(Html.Kendo().NumericTextBox<decimal>()
+                             .Name("qty2")
+                             .Min(0)
+                             .Max(100000)
+                        // .Value(0)
+                             .HtmlAttributes(new { style = "width: 70px" })
+                )
+                @*<input style="width:65px;height:35px;" type="text" name="qty" id="qty">*@
+            </div>
+
+            <div style="float:left;margin-left:5px">
+                <label class="nm"> Source </label>
+                @(Html.Kendo().ComboBox()
+                        .Name("srcid")
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Placeholder("Select Source")
+                        .HtmlAttributes(new { @style = "width: 180px;" })
+                        .Filter("contains")
+                        .Enable(false)
+                        .AutoBind(true)
+                        .MinLength(1)
+                        .Suggest(true)
+                        .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "APR", Value = "1" }, new SelectListItem() { Text = "BULK BIDDING", Value = "0" } })
+
+                )
+            </div>
+            <div style="float:left;margin-left:5px;">
+                <label class="nm">Unit Cost</label>
+                @(Html.Kendo().NumericTextBox<decimal>()
+                             .Name("unitcost")
+                             .Min(0)
+                             .Enable(false)
+                             .Max(100000)
+                             .Enable(false)
+                             .Value(0)
+                             .HtmlAttributes(new { style = "width: 120px" })
+                )
+            </div>
+            <label style="text-align:center;font-size:12px;float:left;margin-left:20px" id="errmsg"> </label>
+            <div style="float:right;margin-top:50px">
+                @*<button id="btn-sub" type="button" onclick="savein()"> <p style="color:white">Submit</p></button>*@
+
+                <button class="noise" style="padding:3px 0px 0px 0px;width:80px;height:30px;float:left;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="In()">
+                    <p style="color:white;font-size:14px;">
+                        Submit
+                    </p>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div style="width:45%;height:300px;float:left;margin-left:5px">
+        @*<div id="noise" style="width:100%;height:40px;border-radius:5px">
+                <label style="text-align:center;color:white;font-size:20px;padding-top:7px">OUT</label>
+            </div>*@
+        <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-top-left-radius:5px;border-bottom-left-radius:5px;background-color:#0cb954;margin-top:15px">
+            <p style="color:white;font-size:14px;">
+                Stock Out
+            </p>
+        </button>
+        <span class="k-textbox k-space-right " style="width:200px;height:30px;margin-top:15px;margin-left:-10px">
+            <input placeholder="Search Item" id="byfilter" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px "><a href="#" class="k-icon k-i-search" style="margin-top:-10px">&nbsp;</a>
+        </span>
+
+
+        <div style="width:100%;height:auto;float:left;border-radius:5px;margin-top:2px;background-color:#d3d3d3">
+            @(Html.Kendo().Grid<IMS.Models.savein.samplemodel>()
+    .Name("byofficeout")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.itemname).Title("Item").Width(130);
+        columns.Bound(p => p.unit).Title("unit").Hidden();
+        columns.Bound(p => p.quit).Title("total").Width(0).Hidden();
+        columns.Bound(p => p.ntotal).Title("Remaining").Width(60);
+        columns.Bound(p => p.quantity).Title("Out").Width(40);
+        columns.Command(command => command.Custom("Add").Click("addempbyoff")).Width(50).HtmlAttributes(new { @style = "color:white" });
+    })
+    .Selectable()
+    .Editable(editable => editable.Mode(GridEditMode.InCell))
+    .Pageable()
+    .Navigatable()
+                    //.HtmlAttributes(new { style = "height:550px" })
+
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(5)
+        .ServerOperation(false)
+        .Model(model =>
+    {
+        model.Id(p => p.itemid);
+        model.Field(p => p.itemname).Editable(false);
+        model.Field(p => p.ntotal).Editable(false);
+    })
+        .Read("byofficeout", "Home")
+        .Sort(a => a.Add("itemname").Ascending()))
+        .Events(e => e.Change("pass8"))
+                  //     .Events(e => e.DataBound("boundplcout"))
+            )
+
+            <br>
+            <br>
+
+        </div>
+    </div>
+
+
+
+
+    <div style="width:200px;height:340px;float:left;margin:5px 0px 0px 5px">
+        @*<button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="addcategory()">
+            <p style="color:white;font-size:14px;">
+                ADD CATEGORY
+            </p>
+        </button>*@
+
+        <button class="noise" style="padding:3px 0px 0px 0px;width:80px;height:30px;float:right;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="rep()">
+            <p style="color:white;font-size:14px;">
+                REPORTS
+            </p>
+        </button>
+
+        @(Html.Kendo().Chart<IMS.Models.item>()
+        .Name("chartbyoffice")
+        .HtmlAttributes(new { @style = "width: 200px;height:300px" })
+        .Legend(legend => legend.Position(ChartLegendPosition.Bottom))
+                .DataSource(ds => ds.Read(read => read.Action("byofficechart", "Home")))
+       .Series(series =>
+       {
+           series.Column(model => model.navailable).Name("For Released");
+           series.Column(model => model.nreleased).Name("Total Released");
+       })
+                 .Tooltip(t => t.Template("${value} - ${dataItem.unit}/s").Visible(true))
+        )
+
+    </div>
+
+
+
+    <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-top-left-radius:5px;border-bottom-left-radius:5px;background-color:#0cb954;margin-top:15px">
+        <p style="color:white;font-size:14px;">
+            Transactions
+        </p>
+    </button>
+    <span class="k-textbox k-space-right " style="width:200px;height:30px;margin-top:15px;margin-left:-10px">
+        <input placeholder="Search Item" id="byofftransfilter" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px "><a href="#" class="k-icon k-i-search" style="margin-top:-10px">&nbsp;</a>
+    </span>
+
+
+    <div style="float:left;height:450px;width:100%;margin-top:10px;border-radius:5px">
+
+        @*<div class="noise" style="height:45px;width:100%;border-radius:5px;padding-top:7px;"> <label style="text-align:center;color:white;font-size:20px"> TRANSACTIONS  </label></div>*@
+
+        <div style="width:75%;height:100%;float:left">
+            @(Html.Kendo().Grid<dynamic>()
+                    .Name("gridbyoff")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("eid").Title("").Hidden();
+                        columns.Bound("reid").Title("").Hidden();
+                        columns.Bound("itemname").Title("Item Name").Width(120);
+                        columns.Bound("eName").Title("Personel").Width(100);
+                        columns.Bound("itemid").Title("Item ID").Hidden();
+                        columns.Bound("quit").Title("Quantity").Width(75);
+                        columns.Bound("unit").Title("Unit").Width(75);
+                        columns.Bound("in_out").Title("Mode").Width(55);
+                        columns.Bound("date").Title("Date").ClientTemplate("#=date? kendo.toString(kendo.parseDate(date), 'MM/d/yy h:mm tt') : '' #").Width(100);
+
+                    })
+                              .Pageable()
+                              .Selectable()
+                              .HtmlAttributes(new { style = "height:auto" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(12)
+                              .Read(read => read.Action("byofftransaction", "Home"))   
+                              .Sort(a => a.Add("date").Descending())
+                              )
+                              .Events(e => e.Change("byoffimg"))
+            )
+        </div>
+
+        <div style="width:23%;height:100%;float:left;margin-left:5px">
+            <button class="noise" style="padding:3px 0px 0px 0px;width:95%;height:30px;margin-top:-50px;float:left;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="hide()">
+                <p style="color:white;font-size:14px;">
+                    Additional Information
+                </p>
+            </button>
+            <script type="text/x-kendo-tmpl" id="temp">
+                <div style="padding:1px;width:100%;height:250px" class="akoborder">
+                    <div style="width:100%;height:165px">
+                        <div style="width:80%;height:165px;margin-right:10%;margin-left:10%">
+                            <img class="employee-photos" id="x-#:SwipeId#" src="http://192.168.2.104/idprod/PGAS/#:SwipeId#.jpg" onerror="this.onerror = null; this.src = '/Content/images/no-image-icon.jpg'" />
+                        </div>
+                    </div>
+                    <div style="width:98%;height:55px;margin-top:5px;" class="bk">
+                        <div style="font-family:Tahoma;font-size:12px;width:100%;height:35px;margin-top:4px;float:left;text-align:center">
+                            <div style="font-family:Tahoma;font-size:12px;width:100%;height:35px;margin-top:4px;">
+                                <label style="color:rgb(153,153,153)"> #:EmpName# </label>
+                                <label style="color:rgb(153,153,153)">Personel in-charge</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </script>
+
+            <div style="width:100%;height:230px;overflow:hidden">
+                @(Html.Kendo().ListView<IMS.Models.wis.employee>()
+            .Name("imgbyoff1")
+            .TagName("div")
+            .ClientTemplateId("temp")
+            .AutoBind(false)
+
+            .HtmlAttributes(new { @style = "max-height:400" })
+
+            .DataSource(dataSource =>
+            {
+                dataSource.Read(read => read.Action("imgwis", "Personel", new { eid = ViewBag.eid }));
+                dataSource.PageSize(15)
+            .Model(model => model.Id("eid"));
+            })
+                )
+
+            </div>
+            <script type="text/x-kendo-tmpl" id="temp2">
+                <div style="padding:1px;width:100%;height:250px" class="akoborder">
+                    <div style="width:100%;height:165px">
+                        <div style="width:80%;height:165px;margin-right:10%;margin-left:10%">
+                            <img class="employee-photos" id="x-#:SwipeId#" src="http://192.168.2.104/idprod/PGAS/#:SwipeId#.jpg" onerror="this.onerror = null; this.src = '/Content/images/no-image-icon.jpg'" />
+                        </div>
+                    </div>
+                    <div style="width:98%;height:55px;margin-top:5px;" class="bk">
+                        <div style="font-family:Tahoma;font-size:12px;width:100%;height:35px;margin-top:4px;float:left;text-align:center">
+                            <div style="font-family:Tahoma;font-size:12px;width:100%;height:35px;margin-top:4px;">
+                                <label style="color:rgb(153,153,153)"> #:EmpName# </label>
+                                <label style="color:rgb(153,153,153)">Employee who recieved the item </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </script>
+
+            <div style="width:100%;height:230px;overflow:hidden">
+                @(Html.Kendo().ListView<IMS.Models.wis.employee>()
+            .Name("imgbyoff2")
+            .TagName("div")
+            .ClientTemplateId("temp2")
+            .AutoBind(false)
+            .HtmlAttributes(new { @style = "max-height:400" })
+            .DataSource(dataSource =>
+            {
+                dataSource.Read(read => read.Action("imgwis2", "Personel", new { reid = ViewBag.reid }));
+                dataSource.PageSize(15)
+            .Model(model => model.Id("reid"));
+            })
+                )
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+@(Html.Kendo().Window()
+    .Name("adc")
+    .Draggable()
+    .Title("Add Category")
+    .HtmlAttributes(new { style = "width:300px;height:300px" })
+    .Modal(true)
+    .Visible(!ViewData.ModelState.IsValid)
+)
+
+
+@(Html.Kendo().Window()
+        .Name("please")
+        .Draggable()
+        .Title("Report")
+        .HtmlAttributes(new { style = "width:400px;height:300px" })
+        .Modal(true)
+        .Visible(!ViewData.ModelState.IsValid)
+)
+
+@(Html.Kendo().Window()
+    .Name("empbyoff")
+    .Draggable()
+    .Title("Employee")
+    .HtmlAttributes(new { style = "width:400px;height:320px" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+
+<script>
+    function hide()
+    {
+        $('#imgplc').data('kendoListView').dataSource.read({ eid: 0 })
+        $('#imgplc2').data('kendoListView').dataSource.read({ reid: 0 })
+    }
+    function plcimg(a) {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var eid = rowData.plceid;
+        var reid = rowData.reid;
+        //var reid = rowData.reid;
+
+       // $('#plcwis2').data('kendoListView').dataSource.read({ reid: 0 })
+        //$('#plcwis').data('kendoListView').dataSource.read({ eid: 0 })
+
+       // $('#imgwis2').data('kendoListView').dataSource.read({ reid: reid })
+        $('#imgplc').data('kendoListView').dataSource.read({ eid: eid })
+        $('#imgplc2').data('kendoListView').dataSource.read({ reid: reid })
+
+    }
+    function rep() {
+        $.ajax({
+            url: "@Url.Content("~/Login/_myRoleID")",
+            type: 'GET',
+            success: function (result)
+            {
+                if (result != "1") {
+                    swal('', 'You dont have Permission', 'error')
+                }
+                else
+                {
+                    $.get("@Url.Content("~/Plc/plcrep")", function (r) {
+                        $("#please").html(r)
+                        $("#please").data("kendoWindow").open()
+                    })
+                }
+            }
+        })     
+    }
+
+    function pass() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var total = rowData.quit;
+        var unit = rowData.unit;
+        var itemid = rowData.itemid;
+
+
+        $('#chart').data('kendoChart').dataSource.read({ itemid: itemid })
+
+    }
+
+    function addcategory() {
+
+        $.get("@Url.Content("~/Plc/adc")", function (r) {
+            $("#adc").html(r)
+            $("#adc").data("kendoWindow").open()
+        })
+    }
+
+    function savein() {
+
+        var itemid = $('#plcitems').data('kendoComboBox').value();
+        var itemname = $('#plcitems').data('kendoComboBox').text();
+        var srcid = $('#srcid').data('kendoComboBox').value();
+        var quantity = $('#qty').val();
+        var unitcost = $('#unitcost').data('kendoNumericTextBox').value();
+        var unit = $('#unit').val()
+
+
+        if (itemname == "") {
+            swal('', 'Select Item', 'error')
+        }
+
+        if (srcid == "") {
+            swal('', 'Select Source', 'error')
+        }
+
+        if (quantity == "") {
+            swal('', 'Quantity is invalid', 'error')
+        }
+        if (unit == "") {
+            swal('', 'Reselect item', 'error')
+        }
+
+        var data = {
+            "itemname": itemname,
+            "itemid": itemid,
+            "srcid": srcid,
+            "quit": quantity,
+            "unitcost": unitcost,
+            "unit": unit,
+        }
+        if (itemname != "" && srcid != "" && quantity != "" && unitcost != 0) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Savein", "Plc")',
+                data: JSON.stringify(data),
+
+                contentType: "application/json;charset=utf-8",
+                processData: true,
+                success: function (data) {
+
+                    if (data == 1) {
+                        $(".my_audio").trigger('play');
+                        swal('', 'Entry Successfully Save!', 'success');
+                        $("#plcout").data("kendoGrid").dataSource.read();
+                        $("#gridplc").data("kendoGrid").dataSource.read();
+                        $('#chart').data('kendoChart').dataSource.read({ itemid: itemid })
+                        $("#plcitems").data("kendoComboBox").dataSource.read();
+                        $("#unit").val("");
+                        $("#qty").val("");
+                        $("#unitcost").val("");
+                    }
+                    else {
+                        swal('', data, 'error')
+                    }
+                },
+            })
+        }
+
+        else {
+            swal('', 'Please try again and again!', 'error')
+        }
+    }
+</script>
+
+<style>
+    .highlighted-row {
+        background-color: red;
+        color: white;
+    }
+
+    .nm {
+        font-size: 15px;
+        margin-left: 4px;
+    }
+
+    #btn-sub {
+        background-color: #1fa67a;
+        border-radius: 5px;
+        color: white;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 12px;
+        text-align: center;
+        height: 30px;
+        font-weight: normal;
+    }
+
+    .bk {
+        background-color: #f1f9f7;
+        border: 1px solid #e0f1e9;
+        color: #1d9d74;
+        /*border: 5px solid transparent;*/
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    #errmsg {
+        color: red;
+    }
+
+    .k-grid tbody tr {
+        height: 30px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .k-grid table {
+        table-layout: fixed;
+    }
+    .k-button,.k-button-icontext,.k-grid-Add {
+        color:white;
+    }
+</style>
+
+<style>
+    .employee-photos {
+        display: inline-block;
+        width: 100%;
+        height: 165px;
+        /*border-radius: 50%;*/
+        background-size: 100% 165px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 165px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+    }
+
+    .employee-name {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 32px;
+        /*padding-left: 3px;*/
+    }
+
+    .Employee:hover e {
+        visibility: visible;
+        position: absolute;
+        width: 110px;
+        height: 110px;
+        top: 0;
+        margin: 0;
+        padding: 0;
+        line-height: 110px;
+        vertical-align: middle;
+        text-align: center;
+        color: #fff;
+        background-color: rgba(0,0,0,0.75);
+        transition: background .2s linear, color .2s linear;
+        -moz-transition: background .2s linear, color .2s linear;
+        -webkit-transition: background .2s linear, color .2s linear;
+        -o-transition: background .2s linear, color .2s linear;
+    }
+
+    .k-listview:after, .employee dl:after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+
+    .akoborder {
+        border-bottom: solid 1px;
+        border-color: #9a9a9a;
+    }
+</style>

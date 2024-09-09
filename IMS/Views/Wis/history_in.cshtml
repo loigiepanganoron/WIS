@@ -1,0 +1,103 @@
+﻿
+<script>
+    $(document).ready(function () {
+
+        $('#history_in').on('click', '.checkbox', selectRow);
+        //history_in.table.on("click", ".chkbx", selectRow);
+
+        $("#showSelection").bind("click", function () {
+            var checked = [];
+            for (var i in checkedIds) {
+                if (checkedIds[i]) {
+                    checked.push(i);
+                }
+            }
+            alert(checked);
+        });
+    })
+
+
+    var checkedIds = {};
+
+    //on click of the checkbox:
+    function selectRow() {
+        var checked = this.checked,
+            row = $(this).closest("tr"),
+            grid = $("#history_in").data("kendoGrid"),
+            dataItem = grid.dataItem(row);
+
+        checkedIds[dataItem.itemid] = checked;
+        if (checked) {
+            //-select the row
+            row.addClass("k-state-selected");
+        } else {
+            //-remove selection
+            row.removeClass("k-state-selected");
+        }
+    }
+
+
+        //on dataBound event restore previous selected rows:
+        function onDataBound(e) {
+            function dataBound(e) {
+                var grid = $("#history_in").data("kendoGrid");
+                var gridData = grid.dataSource.view();
+
+                for (var i = 0; i < gridData.length; i++) {
+                    if (checkedIds[gridData[i].itemid]) {
+                        grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("k-state-selected").find(".checkbox").attr("checked", "checked");
+                    }
+                }
+            }
+        }
+
+</script>
+
+
+<div id="tabcontent">
+    @(Html.Kendo().Grid<dynamic>()
+                .Name("history_in")
+                .Columns(columns =>
+                {
+                    //columns.Bound("").Title("").Width(30).ClientTemplate("<input type='checkbox' class='checkbox' />");
+                    columns.Bound("itemid").Title("").Hidden();
+                    columns.Bound("itemname").Title("Item Name");
+                    columns.Bound("totalin").Title("Quantity").Width(120);
+                    columns.Bound("date").Title("Date").ClientTemplate("#=date? kendo.toString(kendo.parseDate(date), 'MMM/dd/yyyy') : '' #").Width(120);
+                })
+                          .Pageable()
+                      //  .Selectable()
+                        //.Scrollable()
+                        //.HtmlAttributes(new { style = "height:auto" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(10)
+                          .Read(read => read.Action("history_in_read", "Wis"))
+                       // .Sort(a => a.Add("itemname").Ascending())
+                          )
+                        //.Events(e => e.DataBound("onDataBound"))
+    ) 
+
+    @*<button id="showSelection">Show selected IDs</button>*@
+</div>
+
+<style>
+        #tabcontent {
+        width: 100%;
+        height: auto;
+         }
+           .k-grid tbody tr {
+            height: 35px;
+        }
+
+        .k-grid td {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .k-grid table {
+            table-layout: fixed;
+        }
+    
+</style>

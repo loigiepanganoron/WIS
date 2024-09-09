@@ -1,0 +1,103 @@
+﻿
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <label>What year?</label>
+                    <select name="yearpicker_maintenance" id="yearpicker_maintenance" style="width:100%;height:35px" onclick="year()"></select>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox-content">
+                <label>Select Transaction Number</label>
+
+                @(Html.Kendo().ComboBox()
+        .Name("transcode_maintenance")
+        .DataTextField("transno")
+        .DataValueField("cyear")
+        .Placeholder("Search...")
+        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+        .Filter("contains")
+        .AutoBind(false)
+        .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("apr_bb", "Responsive")))
+                )
+            </div>
+
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox-content">
+                <label>Select Item</label>
+                                      @(Html.Kendo().ComboBox()
+                                            .Name("all_items_maintenance")
+                                            .DataTextField("itemname")
+                                            .DataValueField("itemid")
+                                            .Placeholder("Search...")
+                                            .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                                            .Filter("contains")
+                                            .AutoBind(true)
+                                            .MinLength(1)
+                                            .DataSource(source => source.Read(read => read.Action("all_items", "Responsive")))
+                                         )
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Auto Distributed</h2>
+            <div class="ibox-content" style="display:block">
+                <div class="row">
+                    @(Html.Kendo().Grid<dynamic>()
+                    .Name("maintenance_ris")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("id").Title("").Hidden();
+                        columns.Bound("itemname").Title("Itemname").Width(250);
+                        columns.Bound("totalin").Title("Quantity").Width(120);
+                        columns.Bound("unit").Title("Unit").Width(100);
+                        columns.Bound("date").Title("Date Added").Width(100).ClientTemplate("#= date? kendo.toString(kendo.parseDate(date), 'MMM d, yyyy') : '' #");//.Format("{0:MMM d, yyyy}");;
+                    })
+                              .Pageable()
+
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(20)
+                              .Read(read => read.Action("get_added_in", "Responsive"))
+                              .Sort(a => a.Add("ris").Ascending())
+                              )
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        for (i = new Date().getFullYear() ; i > 1900; i--) {
+            $('#yearpicker_maintenance').append($('<option />').val(i).html(i));
+        }
+    })
+    $(document).ready(function () {
+        var year = $('#yearpicker_maintenance').val();
+        $("#transcode_maintenance").data("kendoComboBox").dataSource.read({ year: year });
+    })
+</script>
+
+<script>
+    function year() {
+        var year = $('#yearpicker_maintenance').val();
+        $("#transcode_maintenance").data("kendoComboBox").dataSource.read({ year: year });
+    }
+</script>

@@ -1,0 +1,466 @@
+﻿
+
+<script>
+    function load()
+    {
+        load_sai_view();
+    }
+    function load_emp() {
+        var officeid =   $("#Office").val();
+        $("#byoffemployee").data("kendoComboBox").dataSource.read({officeid:officeid}); 
+    }
+    function hide() {
+        var grid = $("#sai_items").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].available == 0) {
+                grid.tbody.find("tr[data-uid=" + gridData[i].uid + "]").hide()
+            }
+            //else if (gridData[i].accepted == 0) {
+            //    //grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("hapitna");
+            //}
+        }
+    }
+ 
+    $(document).ready(function () {
+        var input = document.getElementById("itemname");
+
+        // Execute a function when the user releases a key on the keyboard
+        input.addEventListener("keyup", function(event) {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                // Trigger the button element with a click
+                document.getElementById("search_now").click();
+            }
+        });
+    })
+  
+</script>
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="col col-sm-6 col-lg-6 col-md-6" id="available_div">
+                        <input type="text" id="itemname" class="form-control" placeholder="Search Itemname">
+                    </div>
+                    <div class="col col-sm-6 col-lg-6 col-md-6" >
+                        <button class="btn btn-sm btn-primary pull-left" id="search_now" onclick="search_item()">
+                            <strong>
+                                Search Items
+                            </strong>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="col col-sm-9 col-lg-9 col-md-9" id="available_div">
+                        <label>    </label>
+                        @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("available_delivery")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemname").Title("ItemName");
+                        columns.Bound("year").Title("Year");
+                        columns.Bound("quarter_str").Title("Quarter");
+                        columns.Bound("mooe_no_str").Title("Object");
+                        columns.Bound("dbm_bb_str").Title("Transacton Type"); 
+                        columns.Bound("account_str").Title("Account");
+                        columns.Bound("quantity").Title("Remaining");
+
+                    })
+                              .Pageable()
+                              .AutoBind(true)
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(5)
+                                      .Read(read => read.Action("search_items", "Responsive"))
+                                // .Events(e => e.RequestEnd("onRequestEnd"))
+                                      )
+                        )
+
+
+
+
+                </div>
+                    </div>
+
+
+                    <div class="col-lg-12">
+                        <div class="ibox  float-e-margins"> 
+                            <div class="ibox-content">
+                                <div class="ibox-content" style="display:block">
+                                    <div class="col row">
+                                        <div class="col col-sm-12 col-lg-12 col-md-12">
+                                            <button class="btn btn-sm btn-primary pull-right" onclick="load_sai_view()">
+                                                <strong>
+                                                    Load Items
+                                                </strong>
+                                            </button>
+                                        </div>
+                                        <div class="col-lg-12 col-sm-12 col-md-12" style="margin-bottom:10px">
+                                            <div class="col-lg-2 col-sm-2 col-md-2">
+                                                <label>Year</label>
+                                                <input type="number" id="load_sai_year" class="form-control" value="2017" onchange="load()">
+                                            </div>
+
+                                            <div class="col-lg-2 col-sm-2 col-md-2">
+                                                <label>Quarter</label>
+                                                @(Html.Kendo().ComboBox()
+                        .Name("quarter")
+                        .Filter("contains")
+                        .Placeholder("Select Quarter")
+                        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                            Text = "1st Quarter", Value = "1"
+                          },
+                          new SelectListItem() {
+                            Text = "2nd Quarter", Value = "2"
+                          },
+                          new SelectListItem() {
+                            Text = "3rd Quarter", Value = "3"
+                          },
+                          new SelectListItem() {
+                            Text = "4th Quarter", Value = "4"
+                          }
+                      })
+          .SelectedIndex(0)
+          .Events(e => e.Change("load"))
+          .Suggest(true)
+                                                )
+                                            </div>
+
+                                            <div class="col-lg-2 col-sm-2 col-md-2">
+                                                <label>MOOE/N-O</label>
+                                                @(Html.Kendo().ComboBox()
+                        .Name("mooe_no")
+                        .Filter("contains")
+                                                        //.Placeholder("Select ")
+                        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                            Text = "MOOE", Value = "2"
+                          },
+                          new SelectListItem() {
+                            Text = "NON-OFFICE", Value = "43"
+                          }
+                      })
+          .SelectedIndex(0)
+                        .Events(e => e.Change("load"))
+          .Suggest(true)
+                                                )
+                                            </div>
+
+                                            <div class="col-lg-2 col-sm-2 col-md-2">
+                                                <label>DBM/BB</label>
+                                                @(Html.Kendo().ComboBox()
+                        .Name("dbm_bb")
+                        .Filter("contains")
+                                                        //.Placeholder("Select ")
+                        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                            Text = "DBM", Value = "1"
+                          },
+                          new SelectListItem() {
+                            Text = "BULK BIDDING", Value = "2"
+                          }
+                      })
+          .SelectedIndex(0)
+                        .Events(e => e.Change("load"))
+          .Suggest(true)
+                                                )
+                                            </div>
+
+
+                                            <div class="col-lg-3 col-sm-3 col-md-3">
+                                                <label>ACCOUNT</label>
+                                                @(Html.Kendo().ComboBox()
+                        .Name("account")
+                        .Filter("contains")
+                                                        //.Placeholder("Select ")
+                        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                            Text = "OFFICE SUPPLIES EXPENSES", Value = "336"
+                          },
+                          new SelectListItem() {
+                            Text = "SUPPORT TO BAC", Value = "35749"
+                          },
+                            new SelectListItem() {
+                            Text = "PROVINCIAL AUDITOR OFFICE", Value = "2613"
+                          },
+                            new SelectListItem() {
+                            Text = "SUPPORT TO EDUCATION PROGRAM / MODEL OF EXELENCE", Value = "2579"
+                          },
+                      })
+          .SelectedIndex(0)
+                     .Events(e => e.Change("load"))
+          .Suggest(true)
+                                                )
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="col-lg-12 col-sm-12 col-md-12" style="margin-bottom:5px">
+                                            <label>Office</label>
+                                            @(Html.Kendo().ComboBox()
+                                        .Name("Office")
+                                        .DataTextField("OfficeName")
+                                        .DataValueField("OfficeID")
+                                        .Placeholder("Office...")
+                                        .HtmlAttributes(new { @style = "width: 100%" })
+                                        .Filter("contains")
+                                        .AutoBind(true)
+                                        .MinLength(2)
+                                        .DataSource(source => source.Read(read => read.Action("OfficeNew", "Responsive")))
+                                        .Events(e => e.Change("load_emp"))
+                                            )
+                                        </div>
+
+                                        <div class="col-lg-12 col-sm-12 col-md-12" style="margin-bottom:50px">
+                                            <label>Employee</label>
+                                            @(Html.Kendo().ComboBox()
+                                            .Name("byoffemployee")
+                                            .DataTextField("EmpName")
+                                            .DataValueField("eid")
+                                            .Placeholder("Search Name here...")
+                                            .HtmlAttributes(new { @style = "width:100%" })
+                                            .Filter("contains")
+                                            .AutoBind(true)
+                                            .MinLength(1)
+                                   .DataSource(source => source.Read(read => read.Action("getEmp", "Responsive"))) 
+                                            )
+                                        </div>
+
+
+                                        <div class="col col-sm-6 col-lg-6 col-md-6">
+                                            <input placeholder="Search Item" id="filter" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px ">
+                                        </div>
+
+                                        <div class="col col-sm-6 col-lg-6 col-md-6">
+                                            <button class="btn btn-sm btn-primary" onclick="submit_request()"><strong>Submit Request</strong></button>
+                                        </div>
+                                        <br>
+                                  
+                                        <br>
+                                        <div class="col  col-lg-12 col-md-12 col-sm-12">
+
+                                            @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("sai_items")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemid").Hidden();
+                        columns.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= stat_id ? checked='checked':'' # class='chkbx' />")
+                    .HeaderTemplate("<input type='checkbox' id='masterCheckBox' class='masterCheckBox' onclick='checkAll(this)' />").Width(50);
+                        columns.Bound("itemname").Title("Item Name").Width(250);
+                        columns.Bound("unit").Title("Unit").Width(50);
+                        columns.Bound("transcode").Title("Code").Width(100);
+                        // columns.Bound("remaining").Title("Allocation").Width(100);
+                        columns.Bound("available").Title("Item Available (PGSO)").Width(100);
+                        columns.Bound("request_quantity").Title("Request Quantity").Width(100).HtmlAttributes(new { @style = "color:black;font-weight:bold" });
+                    })
+                                                                                                  .Pageable()
+                                                                                                  .Navigatable()
+                                                                                                  .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                                                                                  .Selectable()
+                                                                                                  .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                                                                                                  .DataSource(dataSource => dataSource
+                                                                                                  .Ajax()
+                                                                                                  .AutoSync(false)
+                                                                                                  .ServerOperation(false)
+                                                                                                  .PageSize(10000)
+                                                                                                            .Model(model =>
+                                                                                                            {
+                                                                                                                model.Id("itemid");
+                                                                                                                model.Field(a => a.transcode).Editable(false);
+                                                                                                                model.Field(a => a.itemname).Editable(false);
+                                                                                                                model.Field(a => a.quantity).Editable(false);
+                                                                                                                model.Field(a => a.unit).Editable(false);
+                                                                                                                model.Field(a => a.available).Editable(false);
+                                                                                                                model.Field(a => a.remaining).Editable(false);
+                                                                                                                model.Field(a => a.recieve_quantity).Editable(true);
+                                                                                                            })
+                                                                                                  .Read(read => read.Action("emergency_sai", "Responsive"))
+                                                                                                  .Sort(a => a.Add("itemname").Ascending())
+                                                                                                  )
+                                                                                                 .Events(c => c.DataBound("hide"))
+                                            )
+
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    function search_item() 
+    {
+        var itemname = $("#itemname").val();
+        $("#available_delivery").data("kendoGrid").dataSource.read({itemname:itemname});
+        $("#available_delivery").data("kendoGrid").dataSource.page(1);
+    }
+    function load_sai_view()
+    {
+        var year = $('#load_sai_year').val();
+        var quarter = $('#quarter').val();
+        var mooe_no = $('#mooe_no').val();
+        var dbm_bb = $('#dbm_bb').val(); 
+        var accountid = $('#account').val();
+
+
+        $("#sai_items").data("kendoGrid").dataSource.read({year:year,quarter:quarter,mooe_no:mooe_no,dbm_bb:dbm_bb,accountid:accountid}); 
+         
+    }
+
+    function submit_request() {
+
+        var year = $('#load_sai_year').val();
+        var quarter = $('#quarter').val();
+        var mooe_no = $('#mooe_no').val();
+        var dbm_bb = $('#dbm_bb').val();
+        var grid = $("#sai_items").data("kendoGrid");
+        var officeid = $("#Office").val();
+        var officename = $("#Office").data('kendoComboBox').text();
+        var empid = $("#byoffemployee").val();
+       
+        
+        if(officeid == "")
+        {
+            swal("Please select Office!","", "error");
+        }
+        else if(empid == "")
+        {
+            swal("Please select Employee!","", "error");
+        }
+        else
+        { 
+            // Get selected rows
+            var sel = $("input:checked", grid.tbody).closest('tr');
+            var zero = 0;
+            var itemnames = [];
+            var items = [];
+            var arr = [];
+
+            $.each(sel, function (idx, row) {
+                var item = grid.dataItem(row);
+                var itemid = item.itemid;
+                var itemname = item.itemname;
+                var unit = item.unit;
+                var available = item.available;
+                var request_quantity = item.request_quantity;
+                var remaining = item.remaining;
+                var transcode = item.transcode;
+                if(request_quantity == 0 || request_quantity < 0)
+                {
+                    zero+=1;
+                    itemnames.push({itemname: itemname})
+                }
+                if(request_quantity > available)
+                {
+                    zero+=1;
+                    itemnames.push({itemname: itemname})
+                }
+                //if(request_quantity > remaining)
+                // {
+                //     zero+=1;
+                //      itemnames.push({itemname: itemname})
+                //  }
+                items.push({ itemid: itemid, itemname: itemname,unit:unit,request_quantity:request_quantity})
+                arr.push(transcode)
+            });
+
+         
+            var outputArray = [];
+    
+            for (var i = 0; i < arr.length; i++)
+            {
+                if ((jQuery.inArray(arr[i], outputArray)) == -1)
+                {
+                    outputArray.push(arr[i]);
+                }
+            }
+   
+        
+            if(outputArray.length > 1)
+            {
+                swal("The same code at a time.","", "error");
+            }
+            else if(items == "")
+            {
+                swal("Select Item!","", "error");
+            }
+            else
+            {
+                if(zero == 0)
+                {
+                    swal({ title: "Submit Request?", text: "", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Yes", showLoaderOnConfirm: true, closeOnConfirm: false }, function (isConfirm) {
+                        if (isConfirm) {
+                            $.post("@Url.Content("~/Responsive/submit_emergency")", {items,year:year,quarter:quarter,mooe_no:mooe_no,dbm_bb:dbm_bb,tc:outputArray,officeid:officeid,officename:officename,eid:empid}, function (r) {
+                                if(r == "1")
+                                {  $(".my_audio").trigger('play');
+                                    $(".sweet-overlay, .sweet-alert").remove();
+                                    swal("Request Submitted","", "success");
+                                    //$("#sai_items").data("kendoGrid").dataSource.read({year:year,quarter:quarter,mooe_no:mooe_no,dbm_bb:dbm_bb});
+                                    load_sai_view();
+                                    $("#ListViewManual").data("kendoListView").dataSource.read();
+                                }
+                                else
+                                {
+                                    $(".sweet-overlay, .sweet-alert").remove();
+                                    swal("Opps ",r, "error");
+                                    $("#sai_items").data("kendoGrid").dataSource.read();
+                                    $("#ListViewManual").data("kendoListView").dataSource.read();
+                                }
+                            })
+                        }
+
+                            //swal("Loading", "done", "success"); $(".sweet-overlay, .sweet-alert").remove();
+                        else {
+                            $(".sweet-overlay, .sweet-alert").remove();
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Please Check Quantity",JSON.stringify(itemnames), "error");
+                }
+            }
+        }
+    }
+</script>

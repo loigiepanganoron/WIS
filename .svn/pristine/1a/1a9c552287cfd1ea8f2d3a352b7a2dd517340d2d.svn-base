@@ -1,0 +1,819 @@
+﻿@{
+    ViewBag.Title = "wis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function openDesc(a) {
+
+        if (a.length > 50) {
+            var trimmedString = a.substring(0, 50);
+            var trimmedString2 = a.substring(50, 100);
+            swal("Description", trimmedString + "\n" + trimmedString)
+        }
+        else {
+            swal("Description", a)
+        }
+    }
+    function selectofice(a) {
+
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var id = rowData.OfficeId;
+        var off = rowData.OfficeName;
+
+        // $("#byofficewis").data("kendoGrid").dataSource.page(1);
+
+        $('#officeni').text(off);
+        // document.getElementById("officeni").value = off;
+        $('#ITEMwis').data('kendoComboBox').dataSource.read({ officeid: id })
+        $('#byofficewis').data('kendoGrid').dataSource.read({ officeid: id })
+        $('#outwis').data('kendoGrid').dataSource.read({ officeid: id })
+        //$('#Monitor').data('kendoGrid').dataSource.read({ officeid: id })
+        //$('#Monitor1').data('kendoGrid').dataSource.read({ officeid: id })
+
+    }
+    function tochart(a) {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var itemid = rowData.itemid;
+        var officeid = $('#mgaopis1').data('kendoComboBox').value();
+
+        $('#chartwis').data('kendoChart').dataSource.read({ officeid: officeid, itemid: itemid })
+    }
+    function wisimg(a) {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var eid = rowData.eid;
+        var reid = rowData.reid;
+
+        $('#imgwis2').data('kendoListView').dataSource.read({ reid: 0 })
+        $('#imgwis').data('kendoListView').dataSource.read({ eid: 0 })
+
+        $('#imgwis2').data('kendoListView').dataSource.read({ reid: reid })
+        $('#imgwis').data('kendoListView').dataSource.read({ eid: eid })
+
+    }
+    function hide() {
+        $('#imgwis2').data('kendoListView').dataSource.read({ reid: 0 })
+        $('#imgwis').data('kendoListView').dataSource.read({ eid: 0 })
+
+    }
+    function getitem() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var id = rowData.itemid;
+        var unit = rowData.unit;
+        var unitcost = rowData.unitCost;
+
+        document.getElementById("unit").value = unit;
+    }
+        function disable(e) {
+            var grid = $("#out").data("kendoGrid");
+            var gridData = grid.dataSource.view();
+
+
+            for (var i = 0; i < gridData.length; i++) {
+                if (gridData[i].total <= 5) {
+                    grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("high1");
+                };
+            }
+        }
+
+        function getrow(e) {
+
+
+
+            var office = $('#mgaopis1').data('kendoComboBox').value();
+            var eid = "@Url.Action("_myeID", "Login")";
+            var grid = $('#out').data('kendoGrid');
+
+            var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+            var itemid = dataItem.itemid;
+            var total = dataItem.total;
+            var quantity = dataItem.qty;
+            var descript = dataItem.descript;
+            var unitcost = dataItem.unitcost; 
+            var srcid = dataItem.srcid;
+            var accountid = dataItem.accountid;
+            var tid = dataItem.tid;
+            var obj = dataItem.obj;
+            var unit = dataItem.unit;
+            var itemname = dataItem.itemname;
+
+            if (quantity > total) {
+                swal('', 'Opps quantity to be out must be equal or lesser than the total quantity of the Item.!', 'error');
+            }
+            if (quantity < '0') {
+                swal('', 'Opps quantity to be out must not less than zero!', 'error');
+            }
+            if (quantity == null) {
+                swal('', 'Enter quantity!', 'error');
+            }
+            if (quantity == '0') {
+                swal('', 'Opps quantity must not be zero!', 'error');
+            }
+            if (quantity != null && quantity != "0" && quantity <= total && quantity > '0') {
+                var dataload = {
+
+                    "itemid": itemid,
+                    "itemname": itemname,
+                    "quantity": quantity,
+                    "officeid": office,
+                    "in_out": 'OUT',
+                    "descript": descript,
+                    "unitcost": unitcost,
+                    "srcid": srcid,
+                    "accountid": accountid,
+                    "tid": tid,
+                    "unit": unit,
+                    "obj": obj,
+                };
+
+                $.get("@Url.Content("~/Personel/emp")", function (r) {
+
+                    $("#emp").html(r)
+                    $("#emp").data("kendoWindow").center().open()
+                })
+
+            }
+            else {
+                swal('', 'Opps you enter invalid quantity!', 'error');
+            }
+        }
+        function selectnew(a) {
+            var selection = this.select();
+            var rowData = this.dataItem(selection);
+            var id = rowData.OfficeId;
+
+            $('#out').data('kendoGrid').dataSource.read({ officeid: id })
+        }
+        //  $(document).ready(function () {
+        // var id = $('#mgaopis1').data('kendoComboBox').value();
+        // $('#out').data('kendoGrid').dataSource.read({ officeid: id })
+        // });
+        $(document).ready(function () {
+
+            $(".blink").keypress(function (e) {
+                //if the letter is not digit then display error and don't type anything
+                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    //display error message
+                    $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                    return false;
+                }
+            });
+
+
+            $("#filterwis").on("keyup", (function () {
+                var value = $(this).val();
+                grid = $("#outwis").data("kendoGrid");
+                var orfilter = { logic: "or", filters: [] };
+                if (value) {
+                    grid.dataSource.filter({ field: "itemname", operator: "contains", value: value });
+                    orfilter.filters.push({ field: "itemname", operator: "contains", value: value })
+                    grid.dataSource.filter(orfilter);
+                }
+                else {
+                    grid.dataSource.filter({});
+                }
+            }
+            ));
+
+            $("#transwis").on("keyup", (function () {
+                var value = $(this).val();
+                grid = $("#byofficewis").data("kendoGrid");
+                var orfilter = { logic: "or", filters: [] };
+                if (value) {
+                    grid.dataSource.filter({ field: "itemname", operator: "contains", value: value });
+                    orfilter.filters.push({ field: "itemname", operator: "contains", value: value })
+                    grid.dataSource.filter(orfilter);
+                }
+                else {
+                    grid.dataSource.filter({});
+                }
+            }
+            ));
+
+
+        });
+
+        function openprinter() {
+            $.get("@Url.Content("~/Personel/printer")", function (r) {
+                $("#printnani").html(r)
+                $("#printnani").data("kendoWindow").center().open()
+            })
+        }
+        function insave() {
+
+            var office = $('#mgaopis1').data('kendoComboBox').value();
+            var quantity = $('#quantitywis').val();
+            var item = $('#ITEMwis').data('kendoComboBox').value();
+            var srcid = $('#srcidwis').data('kendoComboBox').value();
+            var obj = $('#objwis').data('kendoComboBox').value();
+            var unitcost = $('#unitcostwis').data('kendoNumericTextBox').value();
+            var itemname = $('#ITEMwis').data('kendoComboBox').text();
+            var unit = $('#unit').val();
+
+
+            if (quantity == '0') {
+                swal('', 'Enter quantity!', 'error');
+            }
+            if (item == "") {
+                swal('', 'Select item first!', 'error');
+            }
+            if (quantity == "") {
+                swal('', 'Enter quantity!', 'error');
+            }
+            if (srcid == "") {
+                swal('', 'Please try again', 'error');
+            };
+            if (obj == "") {
+                swal('', 'Please try again', 'error');
+            };
+
+
+            if (item != "" && quantity != '0' && quantity != "") {
+                var dataload = {
+                    "itemid": item,
+                    "quantity": quantity,
+                    "officeid": office,
+                    "in_out": 'IN',
+                    "descript": '',
+                    "srcid": srcid,
+                    "obj": obj,
+                    "unitcost": unitcost,
+                    "itemname": itemname,
+                    "accountid": 336,
+                    "tid": 37,
+                    "unit": unit,
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("SaveNew", "Home")',
+                    data: JSON.stringify(dataload),
+
+                    contentType: "application/json;charset=utf-8",
+                    processData: true,
+                    success: function (data) {
+
+                        if (data == 1) {
+                            swal('', 'Entry Successfully Save!', 'success');
+                            $("#byofficewis").data("kendoGrid").dataSource.read({ officeid: office });
+                            $("#outwis").data("kendoGrid").dataSource.read({ officeid: office });
+                            $('#quantitywis').val('');
+                            $('ITEMwis').categories.text('');
+                        }
+                        else {
+                            swal('', data, 'error')
+                        }
+                    },
+                })
+            }
+            else {
+                swal('', 'Please try again!', 'error');
+            }
+        }
+
+    function tempdisable()
+         {
+        $.get("@Url.Content("~/Personel/manualin")", function (r) {
+            $("#manualin").html(r)
+            $("#manualin").data("kendoWindow").center().open()
+        })
+        //swal('', 'This button is temporarily disabled!', 'error');
+        }
+
+</script>
+
+
+<div style="width:100%;height:auto;padding:0px 10px 0px 10px">
+    <div style="width:35%;height:300px;float:left;">
+        <div style="height:31.5px">
+            <button class="noise" style="padding:5px 0px 0px 0px;width:90px;height:100%;float:left;border-top-left-radius:5px;border-bottom-left-radius:5px;background-color:#0cb954;margin-top:15px">
+                <p style="color:white;font-size:14px;">
+                    Stock In
+                </p>
+            </button>
+            <div style="height:30px;width:200px;float:left;margin-top:15px;margin-left:-8px">
+               
+                 @(Html.Kendo().ComboBox()
+                .Name("mgaopis1")
+                .DataTextField("OfficeName")
+                .DataValueField("OfficeId")
+                .Placeholder("WIS (Search office here.)")
+                .HtmlAttributes(new { @style = "width: 200px" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("GetOffices", "Home")))
+                        .Events(a => a.Change("selectofice"))
+                )
+
+            </div>
+        </div>
+        <div id="load" class="bk" style="width:100%;height:90%;float:left;border:0px solid #808080;padding-top:0px;border-radius:5px;margin-top:0px">
+            <div style="height:25px;width:100%">
+                <label id="officeni" style="text-align:left;font-size:12px"></label>
+            </div>
+            <div style="float:left;margin-left:5px">
+                <label class="nm"> Item</label>
+                @(Html.Kendo().ComboBox()
+                .Name("ITEMwis")
+                .DataTextField("itemName")
+                .DataValueField("itemid")
+                .Placeholder("Search item here...")
+                .HtmlAttributes(new { @style = "width: 180px;" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                        .DataSource(source => source.Read(read => read.Action("itembyoffice", "Home", new { officeid = ViewBag.id })))
+                        .Events(e => e.Change("getitem"))
+                ) 
+            </div>
+
+            <div style="float:left;margin-left:5px">
+                <label class="nm">Unit</label>
+                <input disabled="disabled" style="width:65px;height:32px;" type="text" name="unit" id="unit">
+            </div>
+            <div style="float:left;margin-left:5px">
+                <label class="nm">Quantity</label>
+                @(Html.Kendo().NumericTextBox<decimal>()
+                             .Name("quantitywis")
+                             .Min(0)
+                             .Max(100000)
+                        // .Value(0)
+                             .HtmlAttributes(new { style = "width: 70px" })
+                )
+                @*<input style="width:65px;height:35px;" type="text" name="qty" id="qty">*@
+            </div>
+
+            <div style="float:left;margin-left:5px">
+                <label class="nm"> Source </label>
+                @(Html.Kendo().ComboBox()
+                        .Name("srcidwis")
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Placeholder("Select Source")
+                        .HtmlAttributes(new { @style = "width: 180px;" })
+                        .Filter("contains")
+                        .AutoBind(true)
+                        .MinLength(1)
+                        .Suggest(true)
+                        .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "APR", Value = "1" }, new SelectListItem() { Text = "BULK BIDDING", Value = "0" } })
+                )
+            </div>
+            <div style="float:left;margin-left:5px;">
+                <label class="nm">Unit Cost</label>
+                @(Html.Kendo().NumericTextBox<decimal>()
+                             .Name("unitcostwis")
+                             .Min(0)
+                             .Max(100000)
+                             .Enable(true)
+                             .Value(0)
+                             .HtmlAttributes(new { style = "width: 120px" })
+                )
+            </div>
+
+            <div style="float:left;margin-left:5px">
+                <label class="nm">Type</label>
+                @(Html.Kendo().ComboBox()
+                .Name("objwis")
+                .Placeholder("Select here...")
+                        .HtmlAttributes(new { style = "width: 180px" })
+                .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "MOOE", Value = "2" }, new SelectListItem() { Text = "NON-OFFICE", Value = "43" } })
+                )
+            </div>
+
+            <div style="float:left;margin-left:5px;margin-top:-135px">
+                <label style="text-align:center;font-size:12px;float:left;margin-left:20px" id="errmsg"> </label>
+            </div>
+
+        </div>
+
+        <div style="float:right;margin-top:-40px">
+            @*<button id="btn-sub" type="button" onclick="savein()"> <p style="color:white">Submit</p></button>*@
+
+            <button class="noise" style="padding:3px 0px 0px 0px;width:80px;height:30px;float:left;margin-top:-20px;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="insave()">
+                <p style="color:white;font-size:14px;">
+                    Submit
+                </p>
+            </button>
+        </div>
+    </div>
+
+
+
+
+
+    @*     STOCKOUT GRID (below)                        *@
+
+
+
+
+    <div style="width:40%;height:300px;float:left;margin-left:5px">
+        <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-top-left-radius:5px;border-bottom-left-radius:5px;background-color:#0cb954;margin-top:15px">
+            <p style="color:white;font-size:14px;">
+                Stock Out
+            </p>
+        </button>
+        <span class="k-textbox k-space-right " style="width:200px;height:30px;margin-top:15px;margin-left:-10px">
+            <input placeholder="Search Item" id="filterwis" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px "><a href="#" class="k-icon k-i-search" style="margin-top:-10px">&nbsp;</a>
+        </span>
+
+
+        <div style="width:100%;height:auto;float:left;border-radius:5px;margin-top:2px;">
+            @(Html.Kendo().Grid<IMS.Models.savein.samplemodel>()
+    .Name("outwis")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.itemname).Title("Item").Width(150);
+        columns.Bound(p => p.ntotal).Title("Total").Width(55);
+        columns.Bound(p => p.qty).Title("Out").Width(50);
+        columns.Bound(p => p.descript).Title("Desc").Width(50);
+        columns.Command(command => command.Custom("Add").Click("getrow")).Width(80);
+    })
+                    // .Scrollable()
+    .Selectable()
+    .Editable(editable => editable.Mode(GridEditMode.InCell))
+    .Pageable()
+    .Navigatable()
+                    //.HtmlAttributes(new { style = "height:550px" })
+
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(5)
+        .ServerOperation(false)
+        .Model(model =>
+    {
+        model.Id(p => p.itemid);
+        model.Field(p => p.itemname).Editable(false);
+        model.Field(p => p.ntotal).Editable(false);
+    })
+        .Read("readOut", "Home", new { officeid = ViewBag.id })
+            .Sort(a => a.Add("itemname").Ascending()))
+            .Events(e => e.Change("tochart"))
+            )
+
+            <br>
+            <br>
+
+        </div>
+    </div>
+
+
+
+
+    @*   CHART MONITOR (below)     *@
+
+
+
+
+
+    <div style="width:234px;height:340px;float:left;margin:5px 0px 0px 5px">
+        <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="tempdisable()">
+            <p style="color:white;font-size:14px;">
+                SYNC
+            </p>
+        </button>
+
+        <button class="noise" style="padding:3px 0px 0px 0px;width:80px;height:30px;float:left;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="openprinter()">
+            <p style="color:white;font-size:14px;">
+                REPORTS
+            </p>
+        </button>
+
+        @(Html.Kendo().Chart<IMS.Models.item>()
+        .Name("chartwis")
+        .HtmlAttributes(new { @style = "width: 200px;height:300px" })
+        .Legend(legend => legend.Position(ChartLegendPosition.Bottom))
+                .DataSource(ds => ds.Read(read => read.Action("wischrt", "Personel", new { officeid = ViewBag.officeid, itemid = ViewBag.itemid })))
+       .Series(series =>
+       {
+           series.Column(model => model.navailable).Name("For Released");
+           series.Column(model => model.nreleased).Name("Total Released");
+       })
+                 .Tooltip(t => t.Template("${value} - ${dataItem.unit}/s").Visible(true))
+        )
+
+    </div>
+
+
+
+
+
+    @* TRANSACTIONS (below) *@
+
+
+
+    <button class="noise" style="padding:3px 0px 0px 0px;width:150px;height:30px;float:left;border-top-left-radius:5px;border-bottom-left-radius:5px;background-color:#0cb954;margin-top:15px">
+        <p style="color:white;font-size:14px;">
+            Transactions
+        </p>
+    </button>
+    <span class="k-textbox k-space-right " style="width:200px;height:30px;margin-top:15px;margin-left:-10px">
+        <input placeholder="Search Item" id="transwis" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px "><a href="#" class="k-icon k-i-search" style="margin-top:-10px">&nbsp;</a>
+    </span>
+
+
+    <div style="float:left;height:450px;width:100%;margin-top:10px;border-radius:5px">
+
+        @*<div class="noise" style="height:45px;width:100%;border-radius:5px;padding-top:7px;"> <label style="text-align:center;color:white;font-size:20px"> TRANSACTIONS  </label></div>*@
+
+        <div style="float:left;width:76%;height:100%">
+            @(Html.Kendo().Grid<dynamic>()
+                .Name("byofficewis")
+                .Columns(columns =>
+                {
+                    columns.Bound("eid").Title("").Width(50).Hidden();
+                    columns.Bound("reid").Title("").Width(50).Hidden();
+                    columns.Bound("itemname").Title("Item").Width(150);
+                    columns.Bound("empname").Title("Personel").Width(150);
+                    columns.Bound("itemid").Title("Item id").Hidden();
+                    columns.Bound("ntotal").Title("Qty").Width(50);
+                    columns.Bound("in_out").Title("Mode").Width(50);
+                    columns.Bound("date").Title("Date").ClientTemplate("#=date? kendo.toString(kendo.parseDate(date), 'MM/d/yy h:mm tt') : '' #").Width(50);
+                    columns.Bound("descript").ClientTemplate("#if(descript!= ''){#<span class=\"ehover\" onclick=\"openDesc('#=descript#')\" style=\"cursor:pointer; margin-right:-5px; margin-left:-1px;\" title=\"Details\"><i style=\"font-size:15px\" class=\"fa fa-envelope\"></i></span>#}#").Title("").Width(50);
+
+                })
+                          .Pageable()
+                          .Selectable()
+                    //.Scrollable()
+                          .HtmlAttributes(new { style = "height:auto" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(12)
+                          .Read(read => read.Action("readtransact", "Home", new { officeid = ViewBag.id }))
+                          .Sort(a => a.Add("itemname").Ascending())
+                          )
+                          .Events(e => e.Change("wisimg"))
+            )
+        </div>
+
+
+
+        <div style="float:left;height:100%;width:23%;border:0px solid #0cb954;margin-left:5px;margin-top:-60px" >
+           
+            <button class="noise" style="padding:3px 0px 0px 0px;width:95%;height:30px;float:left;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="hide()">
+                <p style="color:white;font-size:14px;">
+                    Additional Information
+                </p>
+            </button>
+                <script type="text/x-kendo-tmpl" id="temp">
+                    <div style="padding:1px;width:100%;height:250px" class="akoborder">
+                        <div style="width:100%;height:165px">
+                            <div style="width:80%;height:165px;margin-right:10%;margin-left:10%">
+                                <img class="employee-photos" id="x-#:SwipeId#" src="http://192.168.2.104/idprod/PGAS/#:SwipeId#.jpg" onerror="this.onerror = null; this.src = '/Content/images/no-image-icon.jpg'" />
+                            </div>
+                        </div>
+                        <div style="width:98%;height:55px;margin-top:5px;" class="bk">
+                            <div style="font-family:Tahoma;font-size:12px;width:100%;height:35px;margin-top:4px;float:left;text-align:center">
+                                <div style="font-family:Tahoma;font-size:12px;width:100%;height:35px;margin-top:4px;">
+                                    <label style="color:rgb(153,153,153)"> #:EmpName# </label>
+                                    <label style="color:rgb(153,153,153)">Personel who released the item </label> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+            
+            <div style="width:100%;height:230px;overflow:hidden">
+                @(Html.Kendo().ListView<IMS.Models.wis.employee>()
+            .Name("imgwis")
+            .TagName("div")
+            .ClientTemplateId("temp")
+            .AutoBind(false)
+
+            .HtmlAttributes(new { @style = "max-height:400" })
+
+            .DataSource(dataSource =>
+            {
+
+
+                dataSource.Read(read => read.Action("imgwis", "Personel", new { eid = ViewBag.eid }));
+
+                dataSource.PageSize(15)
+
+            .Model(model => model.Id("eid"));
+
+            })
+                ) 
+
+            </div>
+            <script type="text/x-kendo-tmpl" id="temp2">
+                <div style="padding:1px;width:100%;height:250px" class="akoborder">
+                    <div style="width:100%;height:165px">
+                        <div style="width:80%;height:165px;margin-right:10%;margin-left:10%">
+                            <img class="employee-photos" id="x-#:SwipeId#" src="http://192.168.2.104/idprod/PGAS/#:SwipeId#.jpg" onerror="this.onerror = null; this.src = '/Content/images/no-image-icon.jpg'" />
+                        </div>
+                    </div>
+                    <div style="width:98%;height:55px;margin-top:5px;" class="bk">
+                        <div style="font-family:Tahoma;font-size:12px;width:100%;height:35px;margin-top:4px;float:left;text-align:center">
+                            <div style="font-family:Tahoma;font-size:12px;width:100%;height:35px;margin-top:4px;">
+                                <label style="color:rgb(153,153,153)"> #:EmpName# </label>
+                                <label style="color:rgb(153,153,153)">Employee who recieved the item </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </script>
+
+            <div style="width:100%;height:230px;overflow:hidden">
+                @(Html.Kendo().ListView<IMS.Models.wis.employee>()
+            .Name("imgwis2")
+            .TagName("div")
+            .ClientTemplateId("temp2")
+            .AutoBind(false)
+            .HtmlAttributes(new { @style = "max-height:400" })
+            .DataSource(dataSource =>
+            {
+                dataSource.Read(read => read.Action("imgwis2", "Personel", new { reid = ViewBag.reid }));
+                dataSource.PageSize(15)
+            .Model(model => model.Id("reid"));
+            })
+                )
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+@(Html.Kendo().Window()
+    .Name("manualin")
+    .Draggable()
+    .Title("Manual")
+    .HtmlAttributes(new { style = "width:400px;height:300px" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+
+    @(Html.Kendo().Window() 
+    .Name("printnani")
+    .Draggable()
+    .Title("Print")
+    .HtmlAttributes(new { style = "width:400px;height:260px" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+    )
+@(Html.Kendo().Window()
+    .Name("emp")
+    .Draggable()
+    .Title("Employee")
+    .HtmlAttributes(new { style = "width:400px;height:260px" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+
+    <script>
+    $(document).ready(function () {
+        $('#mgaopis1').data('kendoComboBox').list.width('500px');
+        $('#ITEMwis').data('kendoComboBox').list.width('300px');
+
+        $("#quantitywis").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            // if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
+            var charCode = (e.which) ? e.which : event.keyCode
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                //display error message
+                $("#errmsg").html("Warning: Digits Only!!").show().fadeOut(500);
+                return false;
+            }
+        });
+    });
+    </script>
+
+    <style>
+           th {
+            font-size: 15px;
+            font-weight: normal;
+            border: solid 1px #b7b6b6;
+            border-collapse: collapse;
+            height: 30px;
+            text-align: center;
+        }
+
+        td {
+            border: solid 1px #cecece;
+        }
+
+        table {
+            margin-top: -5px;
+        }
+
+        #errmsg {
+            color: red;
+        }
+
+        .sm {
+            font-size: 12px;
+            color: #047853;
+        }
+
+        .bk {
+            background-color: #f1f9f7;
+            border: 1px solid #e0f1e9;
+            color: #1d9d74;
+            /*border: 5px solid transparent;*/
+            border-radius: 4px;
+        }
+
+        .high1 {
+            background-color: #e0ac05;
+            color: white;
+        }
+        .k-grid tbody tr {
+            height: 30px;
+        }
+
+        .k-grid td {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .k-grid table {
+            table-layout: fixed;
+        }
+
+        .nm {
+            font-size: 15px;
+            margin-left: 4px;
+        }
+
+        #btn-sub {
+            background-color: #1fa67a;
+            border-radius: 5px;
+            color: white;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 12px;
+            text-align: center;
+            height: 30px;
+            font-weight: normal;
+        }
+
+        .bk {
+            background-color: #f1f9f7;
+            border: 1px solid #e0f1e9;
+            color: #1d9d74;
+            /*border: 5px solid transparent;*/
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+
+        #errmsg {
+            color: red;
+        }
+    </style>
+
+    <style>
+        .employee-photos {
+            display: inline-block;
+            width: 100%;
+            height: 165px;
+            /*border-radius: 50%;*/
+            background-size: 100% 165px;
+            background-position: center center;
+            vertical-align: middle;
+            line-height: 165px;
+            box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        }
+
+        .employee-name {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 32px;
+            /*padding-left: 3px;*/
+        }
+
+        .Employee:hover e {
+            visibility: visible;
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            top: 0;
+            margin: 0;
+            padding: 0;
+            line-height: 110px;
+            vertical-align: middle;
+            text-align: center;
+            color: #fff;
+            background-color: rgba(0,0,0,0.75);
+            transition: background .2s linear, color .2s linear;
+            -moz-transition: background .2s linear, color .2s linear;
+            -webkit-transition: background .2s linear, color .2s linear;
+            -o-transition: background .2s linear, color .2s linear;
+        }
+
+        .k-listview:after, .employee dl:after {
+            content: ".";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        .akoborder {
+            border-bottom: solid 1px;
+            border-color: #9a9a9a;
+        }
+    </style>

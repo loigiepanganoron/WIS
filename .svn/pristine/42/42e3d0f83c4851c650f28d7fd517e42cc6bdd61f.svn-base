@@ -1,0 +1,1027 @@
+﻿ 
+ 
+@*<script src="~/Scripts/jquery.signalR-2.2.2.js"></script>
+<script src="~/signalr/hubs"></script>
+<script src="http://localhost/IMS/signalr/hubs"></script>
+<script src="~/Scripts/timer.js"></script>*@
+  
+<script>
+    //function onRequestEnd(e) { 
+    //    if (e.type == "read") {
+    //        //check for errors in the response
+    //        if (e.response == null || e.response.Errors == null) {
+    //            var grid = $("#available_delivery").data("kendoGrid");
+    //            grid.dataSource.read();
+    //            var count = grid.dataSource.total(); 
+    //            if(count>0)
+    //            {
+                  
+    //            }
+    //            else{
+    //               // $('#available_div').css("display","none");
+    //            }
+             
+    //        }
+    //    }
+    //    else
+    //    {
+            
+    //    }
+    //}
+    function load()
+    {
+        load_sai_view();
+    }
+
+    function receive(e) {
+
+        swal({ title: "Receive?", text: "", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Yes", showLoaderOnConfirm: true, closeOnConfirm: false }, function (isConfirm) {
+            if (isConfirm) {
+
+                $.post("@Url.Content("~/Responsive/receive")", {e}, function (r) {
+                    if(r == "1")
+                    {  $(".my_audio").trigger('play');
+                        $(".sweet-overlay, .sweet-alert").remove();
+                        swal("Receive!","", "success"); 
+                        $('#ListViewManual').data("kendoListView").dataSource.read();
+                    }
+                    else
+                    {
+                        $(".sweet-overlay, .sweet-alert").remove();
+                        swal("Opps ",r, "success");
+                    }
+                })
+            }
+
+                //swal("Loading", "done", "success"); $(".sweet-overlay, .sweet-alert").remove();
+            else {
+                $(".sweet-overlay, .sweet-alert").remove();
+            }
+        });
+    }
+    function submit_request() {
+
+        var year = $('#load_sai_year').val();
+        var quarter = $('#quarter').val();
+        var mooe_no = $('#mooe_no').val();
+        var dbm_bb = $('#dbm_bb').val();
+        var grid = $("#sai_items").data("kendoGrid");
+
+        // Get selected rows
+        var sel = $("input:checked", grid.tbody).closest('tr');
+        var zero = 0;
+        var itemnames = [];
+        var items = [];
+        var arr = [];
+
+        $.each(sel, function (idx, row) {
+            var item = grid.dataItem(row);
+            var itemid = item.itemid;
+            var itemname = item.itemname;
+            var unit = item.unit;
+            var available = item.available;
+            var request_quantity = item.request_quantity;
+            var remaining = item.remaining;
+            var transcode = item.transcode;
+            if(request_quantity == 0 || request_quantity < 0)
+            {
+                zero+=1;
+                itemnames.push({itemname: itemname})
+            }
+            if(request_quantity > available)
+            {
+                zero+=1;
+                itemnames.push({itemname: itemname})
+            }
+            if(request_quantity > remaining)
+            {
+                zero+=1;
+                itemnames.push({itemname: itemname})
+            }
+            items.push({ itemid: itemid, itemname: itemname,unit:unit,request_quantity:request_quantity})
+            arr.push(transcode)
+        });
+
+         
+        var outputArray = [];
+    
+        for (var i = 0; i < arr.length; i++)
+        {
+            if ((jQuery.inArray(arr[i], outputArray)) == -1)
+            {
+                outputArray.push(arr[i]);
+            }
+        }
+   
+        
+        //if(outputArray.length > 1)
+        //{
+        //    swal("The same code at a time.","", "error");
+        //}
+        if(items == "")
+        {
+            swal("Select Item!","", "error");
+        }
+        else
+        {
+            if(zero == 0)
+            {
+                swal({ title: "Submit Request?", text: "", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Yes", showLoaderOnConfirm: true, closeOnConfirm: false }, function (isConfirm) {
+                    if (isConfirm) {
+                        $.post("@Url.Content("~/Responsive/submit_request")", {items,year:year,quarter:quarter,mooe_no:mooe_no,dbm_bb:dbm_bb,tc:outputArray}, function (r) {
+                    if(r == "1")
+                    {  $(".my_audio").trigger('play');
+                        $(".sweet-overlay, .sweet-alert").remove();
+                        swal("Request Submitted","", "success");
+                        //$("#sai_items").data("kendoGrid").dataSource.read({year:year,quarter:quarter,mooe_no:mooe_no,dbm_bb:dbm_bb});
+                        load_sai_view();
+                        $("#ListViewManual").data("kendoListView").dataSource.read();
+                    }
+                    else
+                    {
+                        $(".sweet-overlay, .sweet-alert").remove();
+                        swal("Opps ",r, "error");
+                        $("#sai_items").data("kendoGrid").dataSource.read();
+                        $("#ListViewManual").data("kendoListView").dataSource.read();
+                    }
+                })
+            }
+
+                        //swal("Loading", "done", "success"); $(".sweet-overlay, .sweet-alert").remove();
+            else {
+                $(".sweet-overlay, .sweet-alert").remove();
+            }
+                });
+    }
+    else
+    {
+        swal("Please Check Quantity",JSON.stringify(itemnames), "error");
+    }
+}
+}
+function agree(controlno) {
+    swal({ title: "Agree?", text: "", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Yes", showLoaderOnConfirm: true, closeOnConfirm: false }, function (isConfirm) {
+        if (isConfirm) {
+            $.post("@Url.Content("~/Responsive/agree")", {"controlno":controlno}, function (r) {
+                if(r=="1")
+                {  $(".my_audio").trigger('play');
+                    swal('','Agreed!','success')
+                    $("#ListViewManual").data("kendoListView").dataSource.read();
+                }
+                else
+                {
+                    swal('',r,'error')
+                }
+            })
+        }
+        else {
+            $(".sweet-overlay, .sweet-alert").remove();
+        }
+    });
+}
+</script>
+
+<script>
+    function edited(e) {
+        var grid = $("#view_ris").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].prev_quantity > 0) {
+                grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("highlighted-row");
+
+            }
+            else if (gridData[i].accepted == 0) {
+                //grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("hapitna");
+            }
+        }
+    }
+
+
+
+    $(document).ready(function () {
+        $("#filter").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#sai_items").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "itemname", operator: "contains", value: value });
+                orfilter.filters.push({ field: "itemname", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+
+       
+    })
+    $(function () {
+        $('#sai_items').on('click', '.chkbx', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#sai_items').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('stat_id', checked);
+        })
+    })
+
+    function checkAll(ele) {
+
+        var state = $(ele).is(':checked');
+        var grid = $('#sai_items').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['stat_id'] != state)
+                this.dirty = true;
+            this['stat_id'] = state;
+        });
+        grid.refresh();
+    }
+</script>
+
+<script>
+    function print_this_shit() {
+        var control = $('#control_to_print').val(); 
+        window.open("@Url.Content("~/Reports/print_ris.aspx?repID=")" + 3 + "&controlno=" + control); 
+    }
+    function view(controlno,status)
+    {
+        document.getElementById("control_to_print").value = controlno;
+        $('#cn').text(controlno);
+        $('#view_ris').data('kendoGrid').dataSource.read({controlno:controlno})
+        $('#modal-form').modal('toggle');
+        //alert(status);
+        if(status==1)
+        {
+            $('#btn_print').show();
+            $('#btn_add').hide();
+        }
+        else
+        {
+            $('#btn_print').hide();
+            $('#btn_add').show();
+        }
+    }
+    function print(controlno)
+    {
+        window.open("@Url.Content("~/Reports/print_ris.aspx?repID=")" + 3 + "&controlno=" + controlno);
+        //window.open("~/Reports/print_ris.aspx?repID="+3,"&controlno="+controlno);
+    }
+    function hide() {
+        var grid = $("#sai_items").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].remaining == 0 ) {
+                grid.tbody.find("tr[data-uid=" + gridData[i].uid + "]").hide()  
+            }
+            //else if (gridData[i].accepted == 0) {
+            //    //grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("hapitna");
+            //}
+        }
+    }
+    function load_sai_view()
+    {
+        var year = $('#load_sai_year').val();
+        var quarter = $('#quarter').val();
+        var mooe_no = $('#mooe_no').val();
+        var dbm_bb = $('#dbm_bb').val();
+        var url1 = "@Url.Action("_offid", "Login")";
+
+        $.get(url1, function (data) {
+        
+            if(data == "13")
+            {
+                
+                var accountid = $('#account').val(); 
+                $("#sai_items").data("kendoGrid").dataSource.read({year:year,quarter:quarter,mooe_no:mooe_no,dbm_bb:dbm_bb,accountid:accountid}); 
+            }
+            else
+            {
+                 
+                $("#sai_items").data("kendoGrid").dataSource.read({year:year,quarter:quarter,mooe_no:mooe_no,dbm_bb:dbm_bb,accountid:336}); 
+            }
+        })
+      
+
+    }
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            @*<div class="row col-lg-12 col-md-12 ">
+                    <div class="ibox-content">
+                        <span id="newTime"></span>
+                        <button id="btd">press </button>
+                    </div>
+                </div>*@
+               <div class="row">
+                    <div class="col-lg-12">
+                         <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <button class="btn btn-xs  btn-danger pull-left" style="float:left" onclick="show_note()">Noted By/Approved By </button> &nbsp;
+                            <button class="btn btn-xs  btn-danger pull-left" style="float:left;margin-left:10px" onclick="show_add_contact()">Add Phone Number</button> 
+                        </div> 
+                    </div>
+                    </div>
+               </div>
+
+
+                    <div class="row" id="ris_list">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5 style="float:left;margin-left:10px">Office Submitted RIS</h5>
+
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="ibox-content">
+                                    <div>
+                                        <script type="text/x-kendo-tmpl" id="ris_listview">
+                                            <div class="feed-element lv" onmouseover="this.style.background = 'rgb(241,241,241)'" onmouseout="this.style.background = ''">
+                                                <div class="media-body" style="padding-bottom:10px">
+                                                    <span>
+                                                        #if(edited || deleted)
+                                                        {#
+                                                        #if(agree)
+                                                        {#
+                                                        <button class="btn btn-success btn-xs disabled" type="button"><i class="fa fa-thumbs-o-up"></i>&nbsp;Agreed</button>
+                                                        #}
+                                                        else
+                                                        {#
+                                                        <button class="btn btn-danger btn-xs " type="button" onclick="agree('#:controlno#')"><i class="fa fa-thumbs-o-up"></i>&nbsp;Agree</button>
+                                                        #} #
+                                                        #}
+                                                        else{#
+                                                        #}#
+                                                    </span>
+                                                    <span>
+                                                        <button class="btn btn-info btn-xs" type="button" onclick="view('#:controlno#','#:status#')"><i class="fa fa-eye"></i>&nbsp;View</button>
+                                                    </span>
+                                                    <h3>#:controlno#</h3>
+                                                    <p class="text-muted">#= kendo.toString(kendo.parseDate(date_submitted, 'yyyy-MM-dd h:mm tt'), 'MM/dd/yyyy h:mm tt') #</p>
+                                                    #if(status == 1)
+                                                    {#
+                                                    <button class="btn btn-success btn-xs disabled " type="button">&nbsp;APPD</button>
+                                                    #if(receive)
+                                                    {#
+                                                    <button class="btn btn-success btn-xs disabled " type="button">&nbsp;Received</button>
+
+                                                    #}else{#
+                                                    <button class="btn btn-success btn-xs  " type="button" onclick="receive('#:controlno#')">&nbsp;Receive</button>
+                                                    #}#
+
+
+                                                    @*<div style="float:left;display:inline-block;margin-left:10px"> <i class="fa fa-cab" style="color:orange">&nbsp;</i><p> On Delivery</p></div>*@
+                                                    #}else{#
+                                                    <button class="btn btn-warning btn-xs disabled " type="button">&nbsp;APV</button>
+                                                    #}#
+                                                </div>
+                                            </div>
+                                        </script>
+
+                                        @(Html.Kendo().ListView<IMS.Models.item>()
+                        .Name("ListViewManual")
+                        .TagName("div")
+                        .ClientTemplateId("ris_listview")
+                        .AutoBind(true)
+                        .Navigatable()
+                        .Pageable()
+                        .HtmlAttributes(new { style = "height:100%;width:100%;margin:auto;border-color:white" })
+                        .DataSource(dataSource =>
+                        {
+                            dataSource.Read(read => read.Action("listview_ris", "Responsive"));
+                            dataSource.PageSize(1000);
+                        })
+                                        )
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+          <!-- start here -->
+            <div class="row" style="visibility:hidden">
+                <div class="col-lg-12">
+                    <div class="ibox  float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Available Items</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <div class="ibox-content" style="display:block">
+                                <div class="col row">
+                                    <div class="col col-sm-6 col-lg-6 col-md-6" id="available_div">
+                                        <label>You have stocks available at PGSO , Please Claim! Thank You..</label>
+                                        @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("available_delivery")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("year").Title("Year");
+                        columns.Bound("quarter_str").Title("Quarter");
+                        columns.Bound("mooe_no_str").Title("Object");
+                        columns.Bound("dbm_bb_str").Title("Transacton Type");
+
+                    })
+                              .Pageable()
+                              .AutoBind(true)
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(5)
+                                      .Read(read => read.Action("get_available_delivery", "Responsive"))
+                                                // .Events(e => e.RequestEnd("onRequestEnd"))
+                                      )
+                                        )
+
+
+
+
+
+                                    </div>
+
+                                    <div class="col col-sm-12 col-lg-12 col-md-12">
+                                        <button class="btn btn-sm btn-primary pull-right" onclick="load_sai_view()"><strong>Load Items</strong></button>
+                                    </div>
+
+
+                                    <div class="col-lg-12 col-sm-12 col-md-12" style="margin-bottom:100px">
+                                        <div class="col-lg-2 col-sm-2 col-md-2">
+                                            <label>Year</label>
+                                            <input type="number" id="load_sai_year" class="form-control" value="2017" onchange="load()">
+                                        </div>
+
+                                        <div class="col-lg-2 col-sm-2 col-md-2">
+                                            <label>Quarter</label>
+                                            @(Html.Kendo().ComboBox()
+                        .Name("quarter")
+                        .Filter("contains")
+                        .Placeholder("Select Quarter")
+                        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                            Text = "1st Quarter", Value = "1"
+                          },
+                          new SelectListItem() {
+                            Text = "2nd Quarter", Value = "2"
+                          },
+                          new SelectListItem() {
+                            Text = "3rd Quarter", Value = "3"
+                          },
+                          new SelectListItem() {
+                            Text = "4th Quarter", Value = "4"
+                          }
+                      })
+          .SelectedIndex(0)
+          .Events(e => e.Change("load"))
+          .Suggest(true)
+                                            )
+                                        </div>
+
+                                        <div class="col-lg-2 col-sm-2 col-md-2">
+                                            <label>MOOE/N-O</label>
+                                            @(Html.Kendo().ComboBox()
+                        .Name("mooe_no")
+                        .Filter("contains")
+                                                    //.Placeholder("Select ")
+                        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                            Text = "MOOE", Value = "2"
+                          },
+                          new SelectListItem() {
+                            Text = "NON-OFFICE", Value = "43"
+                          }
+                      })
+          .SelectedIndex(0)
+                        .Events(e => e.Change("load"))
+          .Suggest(true)
+                                            )
+                                        </div>
+
+                                        <div class="col-lg-2 col-sm-2 col-md-2">
+                                            <label>DBM/BB</label>
+                                            @(Html.Kendo().ComboBox()
+                        .Name("dbm_bb")
+                        .Filter("contains")
+                                                    //.Placeholder("Select ")
+                        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                            Text = "DBM", Value = "1"
+                          },
+                          new SelectListItem() {
+                            Text = "BULK BIDDING", Value = "2"
+                          }
+                      })
+          .SelectedIndex(0)
+                        .Events(e => e.Change("load"))
+          .Suggest(true)
+                                            )
+                                        </div>
+
+                                        @if (IMS.@class.USER.C_officeID == 13)
+                                        {
+                                            <div class="col-lg-3 col-sm-3 col-md-3">
+                                                <label>ACCOUNT</label>
+                                                @(Html.Kendo().ComboBox()
+                        .Name("account")
+                        .Filter("contains")
+                                                //.Placeholder("Select ")
+                        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                            Text = "OFFICE SUPPLIES EXPENSES", Value = "336"
+                          },
+                          new SelectListItem() {
+                            Text = "SUPPORT TO BAC", Value = "35749"
+                          },
+                            new SelectListItem() {
+                            Text = "PROVINCIAL AUDITOR OFFICE", Value = "2613"
+                          },
+                            new SelectListItem() {
+                            Text = "SUPPORT TO EDUCATION PROGRAM / MODEL OF EXELENCE", Value = "2579"
+                          },
+                      })
+          .SelectedIndex(0)
+                     .Events(e => e.Change("load"))
+          .Suggest(true)
+                                                )
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                    <div class="col col-sm-6 col-lg-6 col-md-6">
+                                        <input placeholder="Search Item" id="filter" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px ">
+                                    </div>
+
+                                    <div class="col col-sm-6 col-lg-6 col-md-6">
+                                        <button class="btn btn-sm btn-primary" onclick="submit_request()"><strong>Submit Request</strong></button>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="col  col-lg-12 col-md-12 col-sm-12">
+
+                                        @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("sai_items")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemid").Hidden();
+                        columns.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= stat_id ? checked='checked':'' # class='chkbx' />")
+                    .HeaderTemplate("<input type='checkbox' id='masterCheckBox' class='masterCheckBox' onclick='checkAll(this)' />").Width(50);
+                        columns.Bound("itemname").Title("Item Name").Width(250);
+                        columns.Bound("unit").Title("Unit").Width(50);
+                        columns.Bound("transcode").Title("Code").Width(100);
+                        columns.Bound("remaining").Title("Allocation").Width(100);
+                        columns.Bound("available").Title("Item Available (PGSO)").Width(100);
+                        columns.Bound("totalout").Title("").Width(100).Hidden();
+                        columns.Bound("quantity").Title("").Width(100).Hidden();
+                        columns.Bound("request_quantity").Title("Request Quantity").Width(100).HtmlAttributes(new { @style = "color:black;font-weight:bold" });
+                    })
+                                                                                  .Pageable()
+                                                                                  .Navigatable()
+                                                                                  .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                                                                  .Selectable()
+                                                                                  .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                                                                                  .DataSource(dataSource => dataSource
+                                                                                  .Ajax()
+                                                                                  .AutoSync(false)
+                                                                                  .ServerOperation(false)
+                                                                                  .PageSize(10000)
+                                                                                            .Model(model =>
+                                                                                            {
+                                                                                                model.Id("itemid");
+                                                                                                model.Field(a => a.transcode).Editable(false);
+                                                                                                model.Field(a => a.itemname).Editable(false);
+                                                                                                model.Field(a => a.quantity).Editable(false);
+                                                                                                model.Field(a => a.unit).Editable(false);
+                                                                                                model.Field(a => a.available).Editable(false);
+                                                                                                model.Field(a => a.remaining).Editable(false);
+                                                                                                model.Field(a => a.recieve_quantity).Editable(true);
+                                                                                            })
+                                                                                  .Read(read => read.Action("for_SAI", "Responsive"))
+                                                                                  .Sort(a => a.Add("itemname").Ascending())
+                                                                                  )
+                                                                                 .Events(c => c.DataBound("hide"))
+                                        )
+
+                                    </div>
+                                    <br>
+                                    <br>
+
+                                    <br>
+                                    <br>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+          <!-- sdfsdf -->
+           
+                   <div class="col row" id="hidden_div" style="visibility:hidden">
+                    <div class="col col-sm-12">
+                        <div class="col ibox-content" style="display:block">
+                            <bold><h2 id="add_items_header" style="color:#000000">Add Items to RIS-19-0000069</h2></bold>
+                            <bold> <a id="add_items_header" onclick="cancel()" style="text-decoration:underline;font-size:large">Back/Cancel</a></bold>
+                            <div class="col row">
+                                <button class="btn btn-sm btn-primary" style="margin-top:50px;float:right;margin-right:150px" onclick="submitRequest()"><strong>Submit Request</strong></button>
+                                <section class="col col-lg-12 col-sm-12 col-md-12">
+
+                                    <input placeholder="Search Item" id="byfilter" type="text" class="form-control" style="background-color:#ffd800;width:50%">
+
+                                </section>
+                                <section class="col col-lg-12 col-sm-12 col-md-12" style="margin-top:20px"> 
+
+                                    @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("running_balance")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.itemid).Title("").Hidden();
+                        columns.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= stat_id ? checked='checked':'' # class='chkbx' />")
+                    .HeaderTemplate("<input type='checkbox' id='masterCheckBox' class='masterCheckBox' onclick='checkAll(this)' />").Width(50);
+                        columns.Bound(p => p.itemname).Title("Item Name").Width(250);
+                        //     columns.Bound("eName").Title("Personel").Width(200);
+                        columns.Bound(p => p.quantity).Title("Quantity").Width(100);
+                        columns.Bound(p => p.unit).Title("Unit").Width(100);
+                        columns.Bound(p => p.rprice).Title("Unit Cost").Width(100).Format("{0:n2}");
+                        columns.Bound(p => p.request_quantity).Title("Request Quantity").Width(100).HtmlAttributes(new { @style = "color:black;font-weight:bold" });
+                    })
+                                                                  .Pageable()
+                                                                  .Selectable()
+                                                                  .HtmlAttributes(new { style = "width:90%;height:auto;" })
+                                                                  .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                                                  .DataSource(dataSource => dataSource
+                                                                  .Ajax()
+                                                                  .ServerOperation(false)
+                                                                  .PageSize(10000)
+                                                                 .Model(model =>
+                                                                 {
+                                                                     model.Id("itemid");
+                                                                     model.Field(a => a.itemname).Editable(false);
+                                                                     model.Field(a => a.quantity).Editable(false);
+                                                                     model.Field(a => a.unit).Editable(false);
+                                                                     model.Field(a => a.rprice).Editable(false);
+                                                                     model.Field(a => a.request_quantity).Editable(true);
+                                                                 })
+                                                                          .Read(read => read.Action("ris_warehouse", "Responsive"))
+                                                                  )
+                                    )
+                                </section>
+                            </div>
+                            <div class="row">
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+
+       </div>
+    </div>
+</div>
+
+ 
+<style>
+    .lv {
+        float: left;
+        position: relative;
+        width: 130px;
+        height: 120px;
+        margin: 0 5px;
+        padding: 0;
+        float:left
+    }
+</style>
+
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog"  > 
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <br>
+                <h3 id="cn"> </h3>
+                <input type="text" id="control_to_print" style="visibility:hidden" />
+                <br>
+                @(Html.Kendo().Grid<System.Data.DataRow>()
+                    .Name("view_ris")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("id").Hidden();
+                        columns.Bound("itemid").Title("itemid").Hidden();
+                        columns.Bound("itemname").Title("Item Name").Width(300);
+                        columns.Bound("price").Title("Price").Width(80).Format("{0:N}");
+                        columns.Bound("unit").Title("Unit").Width(80);
+                        columns.Bound("quantity").Title("Quantity").Width(80).Format("{0:N}");
+                        columns.Bound("prev_quantity").Title("Prev").Width(80).Format("{0:N}");
+                        columns.Bound("trans_code").Title("Transcode").Width(80);
+                        columns.Bound("comment").Title("Comment").Width(80);
+
+                        columns.Bound("to_be_deleted").Title("Status").Width(80).ClientTemplate("#if(to_be_deleted == \"1\" )" +
+                                "{#"+
+                                    "<div style=\"text-align:center\"><span style=\"color:red\"> Deleted </span></div>" +
+                                "#}"+
+                                "else"+
+                                "{#"+
+                                  "#if(prev_quantity >\"0\")" +
+                                      "{#"+
+                                       "<div style=\"text-align:center\"><span style=\"color:red\">Edited  </span></div>" +
+                                      "#}"+
+                                     "else" +
+                                     "{#" +
+                                          "" +
+                                     "#}#"+
+                                "#}#"
+                             );
+                    })
+                                                      .Pageable()
+                        //.Selectable()
+                                                     // .Editable(editable => editable.Mode(GridEditMode.InCell)) 
+                                                      .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                                                      .DataSource(dataSource => dataSource
+                                                      .Ajax()
+                                                      .ServerOperation(false)
+                                                      .PageSize(10)
+                                                      
+                                                      .Read(read => read.Action("saigridview", "Responsive"))
+                                                              )
+                                                             // .Events(a=>a.DataBound("edited"))
+                )
+            </div>
+            <div class="modal-footer">
+                <button  id="btn_print" class="btn btn-sm btn-danger  " onclick="print_this_shit()"><strong>Print</strong></button>
+                <button id="btn_add" class="btn btn-sm btn-success  " onclick="add_items_to_ris()"><strong>Add Items to this RIS</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-note" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog" > 
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <section class="col col-lg-12 col-md-12 col-sm-12">
+                        <h3>Noted By : </h3><p id="nn"></p> 
+                    </section>
+
+                <section class="col col-lg-12 col-md-12 col-sm-12">
+                    <h2>Name</h2> 
+            @(Html.Kendo().ComboBox()
+            .Name("notedby")
+            .DataTextField("EmpName")
+            .DataValueField("eid")
+            .Placeholder("Search Name..")
+            .HtmlAttributes(new { @style = "width: 100%" })
+            .Filter("contains")
+            .AutoBind(false)
+            .MinLength(2)
+           .DataSource(source => source.Read(read => read.Action("notedby", "Responsive"))))
+                </section>
+
+                <section class="col col-lg-12 col-md-12 col-sm-12"> 
+                    <button class="btn btn-sm btn-danger" onclick="save_notedby()" style="margin-top:20px">Save! </button> 
+                </section>
+               </div>
+            </div>
+            <div class="modal-footer">
+                
+            </div>
+        </div>
+    </div>
+</div> 
+
+<div id="modal-number" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row"> 
+                    <section class="col col-lg-12 col-md-12 col-sm-12">
+                        <h2>Phone Number</h2>
+                        <p style="color:red">For multiple phone number just add / as separator </p>
+                        <input type="text" style="width:100%" id="phone_number_text"/>
+                    </section>
+
+                    <section class="col col-lg-12 col-md-12 col-sm-12">
+                        <button class="btn btn-sm btn-danger" onclick="save_number()" style="margin-top:20px">Save! </button>
+                    </section>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var url = "@Url.Action("get_notedby","Responsive")";
+        $.get(url,function (d) {
+            $("#nn").html(d);
+        })
+        var number_link = "@Url.Action("get_phone_number", "Responsive")";
+        $.get(number_link,function (d) { 
+            $("#phone_number_text").val(d);
+        }) 
+    })
+    function show_note() {
+        $('#modal-note').modal('toggle');
+    }
+    function show_add_contact() {
+        $('#modal-number').modal('toggle');
+    }
+    function save_notedby() {
+            var eid = $('#notedby').val();
+            $.post("@Url.Content("~/Responsive/save_notedby")", {eid:eid}, function (r) {
+            if(r == "1")
+            {  $(".my_audio").trigger('play');
+                swal("Save!","", "success");
+            }
+            else
+            {
+                swal("Opps ",r, "error");
+            }
+        })
+    }
+    function save_number() {
+        var phone_number = $('#phone_number_text').val();
+        $.post("@Url.Content("~/Responsive/save_phone_number")", {phone_number:phone_number}, function (r) {
+            if(r == "1")
+            {
+                $(".my_audio").trigger('play');
+                swal("Save!","", "success");
+            }
+            else
+            {
+                swal("Opps ",r, "error");
+            }
+        })
+    }
+    function add_items_to_ris() { 
+
+        $('#modal-form').modal('toggle'); 
+        $('#ris_list').css('visibility','hidden');
+        $('#ris_list').css("position", "absolute").css("left", -9999);
+
+        $('#hidden_div').css('visibility','visible').css("left", 0);
+        var header = $("#cn").text();  
+        $('#add_items_header').text("Adding items to "+ header);
+          
+    }
+
+    function cancel() {
+      
+            $.get("@Url.Action("partialSai_view", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+      
+        //$('#hidden_div').css('visibility','hidden');
+        //$('#hidden_div').css("position", "absolute").css("left", -9999);
+
+        //$('#ris_list').css('visibility','visible');
+        //$('#ris_list').css("position", "absolute").css("left", 0);
+
+       
+        //var header = $("#cn").text();  
+        //$('#add_items_header').text("");
+      
+    }
+
+    function checkAll(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#running_balance').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['stat_id'] != state)
+                this.dirty = true;
+            this['stat_id'] = state;
+        });
+        grid.refresh();
+    }
+
+    $(function () {
+        $('#running_balance').on('click', '.chkbx', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#running_balance').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('stat_id', checked);
+        })
+    })
+
+    function submitRequest() { 
+        $("#running_balance").data("kendoGrid").dataSource.filter({});
+        setTimeout(
+        function() 
+        { 
+            var grid = $("#running_balance").data("kendoGrid");
+            var control_number = $("#cn").text();  
+            // Get selected rows
+            var sel = $("input:checked", grid.tbody).closest('tr');
+            var zero = 0;
+            var itemnames = [];
+            var items = [];
+            var arr = [];
+
+            $.each(sel, function (idx, row) {
+                var item = grid.dataItem(row);
+                var itemid = item.itemid;
+                var itemname = item.itemname;
+                var rprice = item.rprice;
+                var unit = item.unit; 
+                var quantity = item.quantity;
+                var request_quantity = item.request_quantity; 
+                if(request_quantity == 0 || request_quantity < 0)
+                {
+                    zero+=1;
+                    itemnames.push({itemname: itemname})
+                }
+                if(request_quantity > quantity)
+                {
+                    zero+=1;
+                    itemnames.push({itemname: itemname})
+                }
+                items.push({ itemid: itemid, itemname: itemname,unit:unit,rprice:rprice,request_quantity:request_quantity})
+                // arr.push(transcode)
+            });
+
+         
+        
+            if(items == "")
+            {
+                swal("Select Item!","", "error");
+            }
+            else
+            {
+                if(zero == 0)
+                {
+                    swal({ title: "Submit Request?", text: "", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Yes", showLoaderOnConfirm: true, closeOnConfirm: false }, function (isConfirm) {
+                        if (isConfirm) {
+                            $.post("@Url.Content("~/Responsive/submit_added_items")", {items,"control_number":control_number}, function (r) {
+                                if(r == "1")
+                                {  
+                                    $(".my_audio").trigger('play');
+                                    $(".sweet-overlay, .sweet-alert").remove();
+                                    swal("Request Submitted","", "success");
+                                    $("#running_balance").data("kendoGrid").dataSource.read();
+                           
+                                }
+                                else
+                                {
+                                    $(".sweet-overlay, .sweet-alert").remove();
+                                    swal("Opps ",r, "error");
+                                    $("#running_balance").data("kendoGrid").dataSource.read(); 
+                                }
+                            })
+                        }
+
+                            //swal("Loading", "done", "success"); $(".sweet-overlay, .sweet-alert").remove();
+                        else {
+                            $(".sweet-overlay, .sweet-alert").remove();
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Please Check Quantity",JSON.stringify(itemnames), "error");
+                }
+            }
+        }, 1000);
+    } 
+</script> 
+
+<style>
+     .highlighted-row {
+        color: red; 
+    }
+</style>

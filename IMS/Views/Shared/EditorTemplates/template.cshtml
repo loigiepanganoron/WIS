@@ -1,0 +1,18 @@
+﻿@model IMS.Models.savein.samplemodel
+
+@*@(Html.Kendo().ComboBox()
+          .Name("itemname")
+          .DataTextField("itemname")
+          .DataValueField("itemid")
+          .Filter("startswith")
+              .DataSource(source => source.Read(read => read.Action("InList", "Home")))
+              .BindTo((System.Collections.IEnumerable)ViewData["item"])
+          )*@
+
+@(Html.Kendo().ComboBoxFor(m => m)
+        .DataValueField("itemid")
+        .DataTextField("itemname")
+            .BindTo((System.Collections.IEnumerable)ViewData["item"])
+)
+
+

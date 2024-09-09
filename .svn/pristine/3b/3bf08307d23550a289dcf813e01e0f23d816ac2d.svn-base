@@ -1,0 +1,35 @@
+﻿
+<div style="width:100%">
+
+@(Html.Kendo().Grid<dynamic>()
+                .Name("gridItemOwner")
+                .Columns(columns =>
+                {
+                    columns.Bound("officename").Title("Office").Width(250);
+                    columns.Bound("itemname").Title("Item Name").Width(200);
+                    columns.Bound("totalin").Title("Quantity").Width(150);
+                })
+                          .Pageable()
+                          .Selectable()
+                          .HtmlAttributes(new { style = "height:auto" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(12)
+                              .Read(read => read.Action("wis_item_owner", "Wis", new { itemid = ViewBag.id }))
+                          .Sort(a => a.Add("officename").Ascending())
+                          )
+)
+</div>
+
+<script>
+    $(document).ready(function () {
+        var grid = $('#instock').data('kendoGrid');
+        var selectedItem = grid.dataItem(grid.select().closest("tr"));
+        var itemid = selectedItem.itemid;
+        
+        $('#gridItemOwner').data('kendoGrid').dataSource.read({ itemid: itemid })
+
+    })
+
+</script>

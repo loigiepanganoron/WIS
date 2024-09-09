@@ -1,0 +1,280 @@
+﻿@{
+    ViewBag.Title = "Stocks";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    //var item_id = 0;
+    //function filter() {
+    //    return { itemid: 0 }
+    //}
+  //  $(document).ready(function () {
+        //filter();
+    //})
+    $(document).ready(function () {
+
+
+        //$("#filter").on("keyup", function () {
+        //    var value = $(this).val();
+
+
+        $("#filter").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#stockView").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "itemName", operator: "contains", value: value });
+                orfilter.filters.push({ field: "itemName", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+
+        $("#filter1").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#stockView2").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "eName", operator: "contains", value: value });
+                orfilter.filters.push({ field: "eName", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        })   
+        );
+        })
+
+</script>
+<script>
+    function dataBound(e) {
+        var grid = $("#stockView").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].qty == 0) {
+                grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("highlighted-row");
+            }
+            else if (gridData[i].qty <= 5) {
+                grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("hapitna");
+            }
+        }
+    }
+    function high(e) {
+        var grid = $("#stockView2").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].desc !='') {
+                grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("high");
+            }
+        }
+    }  
+  
+</script>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "@Url.Content("~/Login/_officeName")",
+            type: 'GET',
+            data: id,
+            success: function (result) {
+                $("#opis").html(result);
+
+            }
+        });
+    });
+</script>
+
+<style>
+.highlighted-row {
+	background-color: #ff0000;
+    color:white;
+}
+.hapitna {
+    background-color: #efaa1b;
+    color:white;  
+}
+.highlighted-row.k-alt {
+	background-color: #ff0000;
+}
+.high {
+        background-color:#0c447a;
+        color:white;
+}
+#triangle-topleft {
+	width: 0;
+	height: 0;
+    opacity:.8;
+	border-top: 30px solid #097d52 ;
+	border-right: 30px solid transparent;
+}
+</style>
+
+<div style="width:100%">
+    <div id="noise" style="width:auto;min-width:250px;height:45px;float:left;padding-top:5px;border-bottom-right-radius:25px;">
+        <label style="color:white;font-size:15px;text-align:center"> Stock Management</label>
+        <label id="opis" style="color:#fdff0c;font-size:12px;text-align:center">....</label>
+    </div>
+</div>
+
+<div style="width:100%; clear:both; padding-bottom:5px; padding-left:20px;margin-bottom:-40px">
+    <button id="button" class="k-primary fill" onclick="pop()">Out</button>
+    <button id="button" class="k-primary fill" onclick="pop2()">In</button>
+</div>
+
+
+<div id="noise" style="width:280px;height:100px;background-color:#1fa67a;float:right;margin-top:-60px;margin-right:-30px;padding-left:4px;border-bottom:2px solid #02603b">
+    <label style="color:white;">Legend:</label>
+    <div style="margin-left:35px;color:white">
+        <div style="height:20px;width:100%">
+            <div style="width:15px;height:15px;background-color:#efaa1b;float:left"></div> <label style="font-size:12px;margin-left:24px">Running Out of Stock</label>
+        </div>
+        <div style="height:20px;width:100%;margin-top:2px">
+            <div style="width:15px;height:15px;background-color:#ff0000;float:left"></div><label style="font-size:12px;margin-left:24px">Out of Stock</label>
+        </div>
+        <div style="height:20px;width:100%;margin-top:2px">
+            <div style="width:15px;height:15px;background-color:white;float:left"></div><label style="font-size:12px;margin-left:24px">Stock Available</label>
+        </div>
+    </div>
+     
+</div>
+<div id="triangle-topleft" style="float:right;margin-top:40px;margin-right:-280px"> </div>    
+
+
+
+
+
+@*<div style="width:100%;height:auto;float:left;margin-left:50px;margin-top:15px">
+    <button id="button" onclick="rptView()" class="k-primary fill">Reports</button>
+</div>*@
+
+
+<div style="width:100%;height:auto; clear:both;background-color:white" class="page-content">
+    <div id="mywrap">
+        <div id="mydiv1">
+            <div id="noise" class="myheader">Available Items</div>
+            <span id="EmpSearch" class="k-textbox k-space-right " style="width:100%">
+                <input placeholder="Search Item" id="filter" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px "><a href="#" class="k-icon k-i-search" style="margin-top:-10px">&nbsp;</a>
+            </span>
+            @(Html.Kendo().Grid<dynamic>()
+                .Name("stockView")
+                .Columns(columns =>
+                {
+                    columns.Bound("itemName").Title("Supply Name");
+                    columns.Bound("itemid").Title("Quantity at Hand").Hidden();
+                    columns.Bound("unit").Title("Unit");
+                    columns.Bound("qty").Title("Qty");
+                })
+                        
+                          .Selectable()
+                          .Pageable()
+                          .Sortable()
+                    //.ClientDetailTemplateId("template")
+                          .HtmlAttributes(new { style = "height:auto;" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(10)
+                          .Read(read => read.Action("ItemQtyList", "Home"))
+                          .Sort(a => a.Add("itemName").Ascending())
+                          )
+                          .Events(e => e.Change("getID"))
+                          .Events(e => e.DataBound("dataBound"))              
+
+            )
+        </div>
+        <div id="mydiv2" >
+            <div id="noise" class="myheader"> Transactions(History) </div>
+            <span id="EmpSearch" class="k-textbox k-space-right " style="width:100%">
+                <input placeholder="Search Employee" id="filter1" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px "><a href="#" class="k-icon k-i-search" style="margin-top:-10px">&nbsp;</a>
+            </span>
+            @(Html.Kendo().Grid<dynamic>()
+                .Name("stockView2")
+                .Columns(columns =>
+                {
+
+                    //columns.Bound(S => S.eid).Width(100).Title("Id").Hidden().Groupable(false);
+                    columns.Bound("stockdate").Title("Date").ClientTemplate("#= stockdate? kendo.toString(kendo.parseDate(stockdate), 'MMM d, yyyy') : '' #");//.Format("{0:MMM d, yyyy}");
+                    columns.Bound("eName").Title("Employee Name");
+                    columns.Bound("in_out").Title("Stock Status");
+                        //.ClientFooterTemplate("Total Qty On Hand");
+                    columns.Bound("qty").Title("Quantity");
+                    columns.Bound("desc").ClientTemplate("#if(desc!= ''){#<span class=\"ehover\" onclick=\"openDesc('#=desc#')\" style=\"cursor:pointer; margin-right:-5px; margin-left:-1px;\" title=\"Remove\"><i class=\"icon-clipboard-2\"></i></span>#}#").Title("").Width(30);
+                    //.ClientFooterTemplate("#:kendo.toString(sum, 'n')#");
+                    //columns.Bound(S => S.in_out).Width(100).Title("In/Out");
+                })
+                .Pageable()
+                .Sortable()
+                .HtmlAttributes(new { style = "height:auto;" })
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .ServerOperation(false)
+                    .PageSize(20)
+                    .Read(read => read.Action("ItemQtySelectList", "Home"))            
+                    .Sort(a => a.Add("stockdate").Descending())
+                )
+                    .Events(e => e.DataBound("high"))
+            )
+        </div>
+    </div>
+</div>
+
+@(Html.Kendo().Window()
+    .Name("windowin_out")
+    .Draggable()
+    .Title("Stocks")
+    .HtmlAttributes(new { style = "width:400px;height:400px" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+@(Html.Kendo().Window()
+    .Name("windowin")
+    .Draggable()
+    .Title("Stocks")
+    .HtmlAttributes(new { style = "width:400px;height:250px" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+<script>
+    //item id
+    var id;
+    function pop() {
+        $.get("@Url.Content("~/Home/in_out")", function (r) {
+            $("#windowin_out").html(r)
+            $("#windowin_out").data("kendoWindow").center().open()
+        })
+    }  
+    function pop2() {
+        $.get("@Url.Content("~/Home/partial_in")", function (r) {
+            $("#windowin").html(r)
+            $("#windowin").data("kendoWindow").center().open()
+
+        })
+    }
+    function getID(a) {
+
+        var grid = this;
+
+        grid.select().each(function () {
+            var dataItem = grid.dataItem($(this));
+            id = dataItem.itemid;
+            //alert(id)
+            //item_id = id;
+            $("#stockView2").data("kendoGrid").dataSource.read({ itemid: id });
+        });
+
+    }
+    function openDesc(e) {
+        if (e.length > 50) {
+            var trimmedString = e.substring(0, 50);
+            var trimmedString2 = e.substring(50, 100);
+            swal("Description", trimmedString + "\n" + trimmedString)
+        }
+        else {
+            swal("Description", e)
+        }
+    }
+</script>
+

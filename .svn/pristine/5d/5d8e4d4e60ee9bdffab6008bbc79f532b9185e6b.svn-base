@@ -1,0 +1,794 @@
+﻿
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <label>What year?</label>
+                    <select name="yearpicker" id="yearpicker" style="width:100%;height:35px" onclick="year()"></select>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox-content">
+                <label>Select Transaction Number</label>
+
+         @(Html.Kendo().ComboBox()
+        .Name("transcode")
+        .DataTextField("transno")
+        .DataValueField("cyear")
+        .Placeholder("Search...")
+        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+        .Filter("contains")
+        .AutoBind(false)
+        .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("apr_bb", "Responsive")))
+                .Events(e => e.Change("sulod"))
+                )
+            </div>
+
+        </div>
+
+        @*<button class="btn btn-sm btn-primary" onclick="manual()" style="float:right">
+            <strong>
+                Manual Entry
+            </strong>
+        </button>*@
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="ibox-content">
+                <form role="form">
+                    <div class="form-group">
+                        <label>Barcode</label>
+                        <input type="text" name="item_code" id="item_code" class="form-control" autofocus="autofocus">
+                    </div>
+                    <div class="form-group">
+                        <label>Item Name</label>
+                        <input type="text" name="itemname" id="itemname" class="form-control" disabled="disabled">
+                    </div>
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <input type="text" name="unit" id="unit" class="form-control" disabled="disabled">
+                    </div>
+                    <div class="form-group">
+                        <label>Item id</label>
+                        <input type="number" name="itemid" id="itemid" class="form-control" disabled="disabled">
+                    </div>
+                </form>
+            </div>
+      </div>
+    
+        <div class="col-sm-5">
+                    <div class="ibox-content">
+                        <form role="form">
+                            <div class="form-group">
+                                <label>Price</label>
+                                <input type="number" name="price" id="price" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Quantity</label>
+                                @*<input type="text" name="quantity" id="quantity" class="form-control"  value="1">*@
+                                @(Html.Kendo().NumericTextBox<int>()
+                             .Name("quantity")
+                             //.Value(1)
+                             .HtmlAttributes(new { style = "width: 100%" })
+                                )
+                            </div>
+                        </form>
+
+                        <button class="btn btn-sm btn-primary" onclick="filtermax()">
+                            <strong> 
+                                Submit
+                            </strong>
+                        </button>
+                   </div>
+            </div>
+         </div>
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <h2> RECENTLY ADDED</h2>
+            <div class="ibox-content" style="display:block">
+                <div class="row">
+                    @(Html.Kendo().Grid<dynamic>()
+                    .Name("recently_added")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("id").Title("").Hidden();
+                        columns.Bound("itemname").Title("Itemname").Width(250);
+                        columns.Bound("totalin").Title("Quantity").Width(120);
+                        columns.Bound("unit").Title("Unit").Width(100);
+                        columns.Bound("in_out").Title("Status").Width(100);
+                        columns.Bound("date").Title("Date Added").Width(100).ClientTemplate("#= date? kendo.toString(kendo.parseDate(date), 'MMM d, yyyy') : '' #");//.Format("{0:MMM d, yyyy}");;
+                    })
+                              .Pageable()
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(20)
+                              .Read(read => read.Action("get_added_in", "Responsive"))
+                              .Sort(a => a.Add("date").Ascending())
+                              )
+                    ) 
+                </div> 
+            </div>
+        </div>
+        <div id="modal-form" class="modal fade" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h3 class="m-t-none m-b">Register Item</h3>
+
+                                <div class="form-group"><label>Item Code</label> <input type="text" id="code" placeholder="Item Code" class="form-control"></div>
+                                <div class="form-group">
+                                    <label>Item Name</label>
+                                    @(Html.Kendo().ComboBox()
+                                            .Name("all_items")
+                                            .DataTextField("itemname")
+                                             .DataValueField("itemid")
+                                            .Placeholder("Search...")
+                                            .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                                            .Filter("contains")
+                                            .AutoBind(true)
+                                            .MinLength(1)
+                                            .DataSource(source => source.Read(read => read.Action("all_items", "Responsive")))
+                                            .Events(a => a.Change("getthis"))
+                                    )
+                                </div>
+                                <div class="form-group"><label>Unit</label> <input type="text" id="item_unit" class="form-control" disabled="disabled"></div>
+                                <div>
+                                    <button class="btn btn-sm btn-primary" onclick="save_itemcode()"><strong>Register</strong></button>
+
+                                    <button class="btn btn-sm btn-primary" onclick="close_modal()" style="float:right"><strong>Close</strong></button>
+
+                                </div>
+
+                               
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="modal-form1" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h3 class="m-t-none m-b">Manual Entry</h3>
+                                <div class="row">
+                                <div class="col-lg-5"> 
+                                    <label>Select Year</label>
+                                    <select name="yearpicker_manual" id="yearpicker_manual" style="width:100%;height:35px" onclick="year_manual()"></select>
+                                </div>
+                                <div class="col-lg-5">
+                                    <label>Select Transaction Number</label>
+
+                                    @(Html.Kendo().ComboBox()
+                                                .Name("transcode_manual")
+                                                .DataTextField("transno")
+                                               .DataValueField("cyear")
+                                                .Placeholder("Search...")
+                                                .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                                                .Filter("contains")
+                                                .AutoBind(false)
+                                                .MinLength(1)
+                                                .DataSource(source => source.Read(read => read.Action("apr_bb", "Responsive")))
+                                                //.Events(e => e.Change("read_item"))
+                                    )  
+                                </div>
+                                </div>
+                                <br/>  
+                                <div class="form-group">
+                                    <label>Item Name</label>
+                                    @(Html.Kendo().ComboBox()
+                                            .Name("all_items_actualprice")
+                                            .DataTextField("itemname")
+                                            .DataValueField("itemid")
+                                            .Placeholder("Search...")
+                                            .HtmlAttributes(new { @style = "width:100%;height:28px" })
+                                            .Filter("contains")
+                                            .AutoBind(true)
+                                            .MinLength(1)
+                                                    .DataSource(source => source.Read(read => read.Action("all_items", "Responsive")))
+                                            .Events(a => a.Change("get_info"))
+                                    )
+                                </div>
+                                <div class="form-group"><label>Unit</label> <input type="text" id="unit_manual" class="form-control" disabled="disabled"></div>
+                                <div class="form-group"><label>Quantity</label> 
+                                @(Html.Kendo().NumericTextBox<int>()
+                             .Name("quantity_manual")
+                                        //.Value(1)
+                             .HtmlAttributes(new { style = "width: 100%" })
+                                )</div>
+
+                                <div class="form-group"><label>Price</label> <input type="text" id="price_manual" class="form-control"></div>
+                                <div class="form-group"><label>Item Id</label> <input type="text" id="itemid_manual" class="form-control"></div>
+                                 <div>
+                                    <button class="btn btn-sm btn-primary" onclick="filtermax_manual()"><strong>Submit</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function manual() {
+        $('#modal-form1').modal('toggle');
+    }
+    function close_modal() {
+        //alert('hi')
+       $('#modal-form').modal('hide');
+    }
+</script>
+
+<script>
+    function filtermax() {
+        var quantity = $("#quantity").data('kendoNumericTextBox').value();
+        var itemid = $("#itemid").val();
+        var tr = $('#transcode').data('kendoComboBox').text();
+        if (tr == "") {
+            setTimeout(function () {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 4000
+                };
+                toastr.error('Error','Select Transaction Code!');
+
+            }, 500);
+        }
+        else if (quantity < 1)
+        {
+            setTimeout(function () {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 4000
+                };
+                toastr.error('Error', 'Quantity is invalid!');
+
+            }, 500);
+        }
+        else if(itemid == ""){
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                showMethod: 'slideDown',
+                timeOut: 4000
+            };
+            toastr.error('error', 'Cant find itemid, please try again');
+        }
+        else {
+            $.get("@Url.Content("~/Responsive/filterNum")", { transcode: $('#transcode').data('kendoComboBox').text(), itemid: $("#itemid").val() }, function (r) {
+
+                if (r == 0) {
+                    //swal('', 'Item Full', 'error')
+                    setTimeout(function () {
+                        toastr.options = {
+                            closeButton: true,
+                            progressBar: true,
+                            showMethod: 'slideDown',
+                            timeOut: 4000
+                        };
+                        toastr.error('Error', 'Item Full');
+
+                    }, 500);
+                }
+                else if (quantity > r) {
+                   // swal('', 'Quantity must not larger than ' + r, 'error')
+                    setTimeout(function () {
+                        toastr.options = {
+                            closeButton: true,
+                            progressBar: true,
+                            showMethod: 'slideDown',
+                            timeOut: 4000
+                        };
+                        toastr.error('Error', 'Quantity must not larger than ' + r);
+
+                    }, 500);
+                }
+                else if (quantity <= r) {
+                    instock()
+                }
+            })
+        }
+    }
+    function filtermax_manual() {
+        var quantity = $("#quantity_manual").data('kendoNumericTextBox').value();
+        var itemid = $("#itemid_manual").val();
+        var tr = $('#transcode_manual').data('kendoComboBox').text();
+        if (tr == "") {
+            setTimeout(function () {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 4000
+                };
+                toastr.error('Error','Select Transaction Code!');
+
+            }, 500);
+        }
+        else if (quantity < 1)
+        {
+            setTimeout(function () {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 4000
+                };
+                toastr.error('Error', 'Quantity is invalid!');
+
+            }, 500);
+        }
+        else if (itemid == "") 
+        {
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                showMethod: 'slideDown',
+                timeOut: 4000
+            };
+            toastr.error('error', 'Cant find itemid, please try again');
+        }
+        else {
+            $.get("@Url.Content("~/Responsive/filterNum")", { transcode: $('#transcode_manual').data('kendoComboBox').text(), itemid: $("#itemid_manual").val() }, function (r) {
+
+                if (r == 0) {
+                    //swal('', 'Item Full', 'error')
+                    setTimeout(function () {
+                        toastr.options = {
+                            closeButton: true,
+                            progressBar: true,
+                            showMethod: 'slideDown',
+                            timeOut: 4000
+                        };
+                        toastr.error('Error', 'Item Full');
+
+                    }, 500);
+                }
+                else if (quantity > r) {
+                    // swal('', 'Quantity must not larger than ' + r, 'error')
+                    setTimeout(function () {
+                        toastr.options = {
+                            closeButton: true,
+                            progressBar: true,
+                            showMethod: 'slideDown',
+                            timeOut: 4000
+                        };
+                        toastr.error('Error', 'Quantity must not larger than ' + r);
+
+                    }, 500);
+                }
+                else if (quantity <= r) {
+                    instock_manual()
+                }
+            })
+        }
+       
+    }
+    function instock_manual() {
+          
+        var item_code = $("#item_code").val();
+        var itemname = $('#all_items_actualprice').data('kendoComboBox').text();
+        var unit = $("#unit_manual").val();
+        var price = $("#price_manual").val();
+        var quantity = $("#quantity_manual").val();
+        var itemid = $("#itemid_manual").val();
+        var transaction_code = $('#transcode_manual').data('kendoComboBox').text();
+        
+        var data = {
+            "itemcode": item_code,
+            "itemname": itemname,
+            "unit": unit,
+            "price": price,
+            "quantity": quantity,
+            "transcode": transaction_code,
+            "itemid": itemid
+        }
+
+
+
+        if (itemname == "") {
+            swal('', 'Error', 'error')
+        }
+        else if (transaction_code == "") {
+            swal('', 'Select Transaction Code', 'error')
+        }
+        else if (itemid == "") {
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                showMethod: 'slideDown',
+                timeOut: 4000
+            };
+            toastr.error('error', 'Cant find itemid, please try again');
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("entry_via_code", "Responsive")',
+                data: JSON.stringify(data),
+
+                contentType: "application/json;charset=utf-8",
+                processData: true,
+                success: function (data) {
+
+                    if (data == 1) {
+
+                        $("#itemid_manual").val("");
+                        $("#unit_manual").val("");
+                        $("#price_manual").val("");
+                        $("#quantity_manual").val("");
+                        $("#all_items_actualprice").data("kendoComboBox").text('');
+                        //$("#comboBox").data("kendoComboBox").text('')
+                        var numerictextbox = $("#quantity_manual").data("kendoNumericTextBox");
+                        numerictextbox.focus();
+                        $('#recently_added').data('kendoGrid').dataSource.read()
+                       
+                        setTimeout(function () {
+                            toastr.options = {
+                                closeButton: true,
+                                progressBar: true,
+                                showMethod: 'slideDown',
+                                timeOut: 4000
+                            };
+                            toastr.success('Success', 'Entry successfully added!');
+                        }, 500);
+                    }
+                    else {
+                        swal('', data, 'error')
+                    }
+                }
+            })
+        }
+    }
+</script>
+
+<script>
+   
+    $(document).ready(function () {
+        document.getElementById('quantity').onkeyup = function (event) {
+            if (event.keyCode == 13) {
+                filtermax()
+              
+            }
+        }
+    })
+
+    $(document).ready(function () {
+        var delay = (function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
+
+        $("#item_code").on("keyup", (function () {
+
+            var code = $(this).val();
+            var transcode = $('#transcode').data('kendoComboBox').text();
+
+            if (transcode == "") {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 4000
+                };
+                toastr.error('error', 'Select Transaction Code..');
+                $("#item_code").val("");
+            }
+            else {
+                clearTimeout(delay);
+
+                delay(function () {
+
+                    if (code.replace(/ /g, '').length < 1) {
+
+                    }
+                    else {
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Action("read_itemcode", "Responsive")',
+                            data: { 'code': code, 'transcode': transcode },
+                            dataType: "json",
+                            contentType: "application/json",
+                            processData: true,
+                            success: function (data) {
+                                if (data) {
+                                    document.getElementById("itemname").value = data.itemname;
+                                    document.getElementById("unit").value = data.unit;
+                                    document.getElementById("price").value = data.price;
+                                    document.getElementById("itemid").value = data.itemid;
+                                    var numerictextbox = $("#quantity").data("kendoNumericTextBox");
+                                    numerictextbox.focus();
+                                }
+                                else {
+                                }
+                            },
+                            error: function (errorThrown) {
+                                $("#itemname").val("");
+                                $("#unit").val("");
+                                $("#item_code").val("");
+                                $("#price").val("");
+                                $("#itemid").val("");
+                                var numerictextbox = $("#quantity").data("kendoNumericTextBox");
+                                numerictextbox.value("0.00");
+                                $('#modal-form').modal('toggle');
+                                $('input').blur();
+                            }
+                        })
+                    }
+                }, 500);
+            }
+         
+        }))
+    })
+
+    function instock() {
+
+        var item_code = $("#item_code").val();
+         var itemname = $("#itemname").val();
+         var unit  = $("#unit").val();
+         var price = $("#price").val();
+         var quantity = $("#quantity").val();
+         var itemid = $("#itemid").val();
+         var transaction_code = $('#transcode').data('kendoComboBox').text();
+
+         var data = {
+             "itemcode":item_code,
+             "itemname": itemname,
+             "unit": unit,
+             "price": price,
+             "quantity": quantity,
+             "transcode": transaction_code,
+             "itemid":itemid
+         }
+
+         $("#item_code").val("");
+         $("#itemname").val("");
+         $("#itemid").val("");
+         $("#unit").val("");
+         $("#price").val("");
+         $("#quantity").val("");
+
+         if (itemname == "") {
+             swal('','Error','error')
+         }
+         else if (transaction_code == "")
+         {
+             swal('','Select Transaction Code','error')
+         }
+         else if (itemid == "")
+         {
+                 toastr.options = {
+                     closeButton: true,
+                     progressBar: true,
+                     showMethod: 'slideDown',
+                     timeOut: 4000
+                 };
+                 toastr.error('error', 'Cant find itemid, please try again');
+         }
+         else
+         {
+             $.ajax({
+                 type: "POST",
+                 url: '@Url.Action("entry_via_code", "Responsive")',
+                 data: JSON.stringify(data),
+
+                 contentType: "application/json;charset=utf-8",
+                 processData: true,
+                 success: function (data) {
+
+                     if (data == 1) {
+                         setTimeout(function () {
+                             toastr.options = {
+                                 closeButton: true,
+                                 progressBar: true,
+                                 showMethod: 'slideDown',
+                                 timeOut: 4000
+                             };
+                             toastr.success('Success', 'Entry successfully added!');
+
+                         }, 500);
+                         
+                         var numerictextbox = $("#quantity").data("kendoNumericTextBox");
+                         numerictextbox.focus();
+                         numerictextbox.focus(false);
+                        // $("#item_code").blur();
+                         $('#recently_added').data('kendoGrid').dataSource.read()
+                         $("#item_code").focus();
+                     }
+                     else {
+                         swal('', data, 'error')
+                     }
+                 }
+             })
+         }
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        for (i = new Date().getFullYear() ; i > 1900; i--) {
+            $('#yearpicker').append($('<option />').val(i).html(i));
+        }
+    })
+    $(document).ready(function () {
+        var year = $('#yearpicker').val();
+        $("#transcode").data("kendoComboBox").dataSource.read({ year: year });
+    })
+    $(document).ready(function () {
+        for (i = new Date().getFullYear() ; i > 1900; i--) {
+            $('#yearpicker_manual').append($('<option />').val(i).html(i));
+        }
+    })
+    $(document).ready(function () {
+        var year = $('#yearpicker_manual').val();
+        $("#transcode_manual").data("kendoComboBox").dataSource.read({ year: year });
+    })
+</script>
+<script>
+    function year() {
+        var year = $('#yearpicker').val();
+        $("#transcode").data("kendoComboBox").dataSource.read({ year: year });
+    }
+  
+</script>
+<script>
+    function sulod() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var code = rowData.transno;
+        $("#item_code").focus();
+        var data = {
+            "transaction_code":code
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("check_code", "Responsive")',
+            data: JSON.stringify(data),
+
+            contentType: "application/json;charset=utf-8",
+            processData: true,
+            success: function (result) {
+
+                if (result == "failed") {
+                    $("#item_code").focus();
+                }
+                else if (result == "save") {
+                    $("#item_code").focus();
+                }
+                else if (result == "wala")
+                {
+                    $("#item_code").focus();
+                }
+            }
+        })
+    }
+    function getthis() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var unit = rowData.unit;
+        document.getElementById("item_unit").value = unit;
+    }
+    function get_info() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var itemid = rowData.itemid;
+        var transcode = $('#transcode_manual').data('kendoComboBox').text();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("all_items_actualprice", "Responsive")',
+            data: { 'itemid':itemid , 'transcode': transcode },
+            dataType: "json",
+            contentType: "application/json",
+            processData: true,
+            success: function (data) {
+                
+                if (data != "") {
+                    document.getElementById("unit_manual").value = data[0].unit;
+                    document.getElementById("price_manual").value = data[0].price;
+                    document.getElementById("itemid_manual").value = data[0].itemid;
+                    $("#quantity_manual").focus();
+                }
+                else if (data == ""){
+                
+                    $("#unit_manual").val("");
+                    $("#price_manual").val("");
+                    $("#itemid_manual").val("");
+                    var numerictextbox = $("#quantity_manual").data("kendoNumericTextBox");
+                    numerictextbox.value("0.00");
+                }
+            },
+            error: function (errorThrown) {
+                
+                $("#unit_manual").val("");
+                $("#price_manual").val("");
+                $("#itemid_manual").val("");
+                var numerictextbox = $("#quantity_manual").data("kendoNumericTextBox");
+                numerictextbox.value("0.00");
+            }
+        })
+    }
+    function save_itemcode() {
+        var itemcode = $('#code').val();
+         var itemname = $('#all_items').data('kendoComboBox').text();
+         var itemid = $('#all_items').data('kendoComboBox').value();
+         var unit = $('#item_unit').val();
+        
+         var data = {
+             "itemcode": itemcode,
+             "itemname": itemname,
+             "itemid": itemid,
+             "unit":unit
+         }
+         if (itemname == "") {
+             swal('', 'Select Item Name', 'error')
+         }
+         else if (itemcode == "") {
+             swal('', 'Select Item Name', 'error')
+         }
+         else {
+             $.ajax({
+                 type: "POST",
+                 url: '@Url.Action("update_barcodes", "Responsive")',
+                 data: JSON.stringify(data),
+
+                 contentType: "application/json;charset=utf-8",
+                 processData: true,
+                 success: function (data) {
+
+                     if (data == 1)
+                     {
+                         swal('', 'Save', 'success')
+                         $('#all_items').data('kendoComboBox').text("");
+                         $('#code').val("");
+                         $('#item_unit').val("");
+
+                     }
+                     else
+                     {
+                         swal('', data, 'error')
+                     }
+                 }
+             })
+         }
+    }
+   
+</script>
+<style>
+    .k-grid tbody tr {
+        height: 30px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+</style>
+
+

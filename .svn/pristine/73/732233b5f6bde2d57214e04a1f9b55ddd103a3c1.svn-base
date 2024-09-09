@@ -1,0 +1,278 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <script>
+    var roleid = 9;
+    $(document).ready(function () {
+        loadUsrInfo();
+
+    })
+
+    function loadUsrInfo() {
+
+        var url1 = "@Url.Action("_myInfo", "Login")";
+        var url = "@Url.Action("_myName", "Login")";
+            var urloff = "@Url.Action("_officeName", "Login")";
+            $.get(url1, function (data) {
+                document.getElementById("uImg").src = data;
+            })
+
+            $.get(url, function (d) {
+                $("#MyInfo").html(d);
+
+            })
+            $.get(urloff, function (d) {
+                $("#off").html(d);
+
+            })
+        }
+    </script>
+}
+
+<script>
+
+    function reqMyAccount()     {
+        $("#myAccount").slideUp();
+
+        $('#siteContent').html('<div style="width: 100%;height:100%;"><img src="@Url.Content("~/Content/MyTheme/loading_2x.gif")" alt="Loading..." style="position: absolute;top: 40%;left: 57%;margin-top: -16px;margin-left: -16px;" /></div>');
+        $('#webTitle').html("My Account");
+
+
+        var url = "@Url.Action("MyAccount", "Account")";
+        $.post(url, function (data) {
+            $("#siteContent").html(data);
+        })
+    }
+    function office() { 
+        window.location = "@Url.Content("~/Responsive/index")" 
+    }
+    function prepare() {
+        window.location = "@Url.Content("~/Responsive/Sai_view")"
+    }
+    function wis() {
+        window.location = "@Url.Content("~/Responsive/acceptance_inspection")"
+    }
+    function print_ris() {
+        window.location = "@Url.Content("~/Responsive/Ris_approval")"
+    }
+    function monitoring() {
+        window.location = "@Url.Content("~/Responsive/utilization")"
+    }
+    function user() {
+        window.location = "@Url.Content("~/Responsive/User")"
+    }
+    function printing() {
+        window.location = "@Url.Content("~/Responsive/Printing")"
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        $("#office_link").click(function () {
+            $.get("@Url.Action("index", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+        $("#prepareris_link").click(function () {
+            $.get("@Url.Action("Sai_view", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+        $("#stockin_link").click(function () {
+            $.get("@Url.Action("acceptance_inspection", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+        $("#approve_ris_link").click(function () {
+            $.get("@Url.Action("Ris_approval", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+        $("#printing_link").click(function () {
+            $.get("@Url.Action("Printing", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+        $("#monitoring_link").click(function () {
+            $.get("@Url.Action("utilization", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+        $("#user_link").click(function () {
+            $.get("@Url.Action("User", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+
+        $("#returned_link").click(function () {
+            $.get("@Url.Action("returned_item_view", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+        $("#emergency_link").click(function () {
+            $.get("@Url.Action("warehouse", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+        $("#warehouse_link").click(function () {
+            $.get("@Url.Action("ris_view_warehouse", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+        $("#return_borrow").click(function () {
+            $.get("@Url.Action("ReturnItemsBorrowed", "Responsive")", function (html) {
+                $("#here").html(html);
+            })
+        });
+
+        var selector = '.nav li';
+
+        $(selector).on('click', function () {
+            $(selector).removeClass('active');
+            $(this).addClass('active');
+        });
+    })
+</script>
+
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header" style="background-size: 100% 100%">
+                <div class="dropdown profile-element">
+                    <span>
+                      @*  <img alt="image" style="height:48px;width:48px" class="img-circle" src="" id="uImg" onerror="this.src = '/Content/images/no-image-icon.jpg'" />*@
+                        <img  alt="image" style="height:48px;width:48px;background-color:white" class="img-circle" src="" id="uImg" onerror="this.src = '@Url.Content("~/Content/images/no-image-icon.jpg")'" />
+                    </span>
+                    <a data-toggle="dropdown" class="dropdown-toggle">
+                        <span class="clear">
+                            <span class="block m-t-xs" style="text-align:center">
+                                <strong class="font-bold" id="MyInfo"></strong>
+                                
+                                <small  id="off">  </small>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="logo-element">
+                    IMS
+                </div>
+            </li>
+            <li class="disabled">
+                <a><i class="fa fa-th-large"></i> <span class="nav-label">Dashboards</span> <span class="fa arrow"></span></a>
+            </li>
+            @foreach (var item in Model)
+            {
+                if (item.MenuLevel == 0)
+                {
+                    if (item.Action == "" || item.Controller == "")
+                    {
+                        <li id="@item.MenuID">
+                            <a> <span class="nav-label"><span class="@item.Icon"></span>@item.Tittle</span><span id="hasChild_@item.MenuID"></span></a>
+                        </li>
+                    }
+                    else
+                    {
+                        if (item.Tittle != "Approve RIS")
+                        { 
+                        <li id="@item.MenuID">
+                           @*<a href="@Url.Action(item.Action, item.Controller)"> <span class="@item.Icon"></span>  <span class="nav-label"> @item.Tittle</span><span id="hasChild_@item.MenuID"></span></a>*@ 
+                            <a href="@Url.Action(item.Action, item.Controller)"><i class="@item.Icon"></i> <span class="nav-label">@item.Tittle</span></a> 
+                        </li>
+                        }
+                        else
+                        {
+                           <li id="@item.MenuID">
+                            <a href="@Url.Action(item.Action, item.Controller)"><i class="@item.Icon"></i> <span class="nav-label">@item.Tittle</span><span id="count" class="label label-info pull-right">0</span>  </a>
+                               </li>
+                        }
+                    }
+                }
+            }
+
+
+
+            @*
+    <li>
+        <a  id="office_link"><i class="fa fa-diamond"></i> <span class="nav-label"> Office Management</span></a>
+    </li>
+    <li>
+        <a  id="prepareris_link"><i class="fa fa-desktop"></i> <span class="nav-label">Prepare RIS</span></a>
+    </li>
+    <li>
+        <a id="warehouse_link"><i class="fa fa-building"></i> <span class="nav-label">Warehouse</span></a>
+    </li>*@
+
+            @*<li>
+                <a id="returned_link"><i class="fa fa-recycle"></i> <span class="nav-label">Returned Items</span><span class="label label-warning pull-right"></span></a>
+            </li>*@
+
+            @*<li>
+        <a ><i class="fa fa-bar-chart-o"></i> <span class="nav-label">WIS</span> <span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level collapse">
+
+            <li><a href="/Responsive/entry_barcode">Stock Entry</a></li>
+            <li><a href="/Responsive/print_ris">Print RIS</a></li>
+            <li><a href="/Responsive/release">Release Items</a></li>
+            <li><a href="/Responsive/manage_ris">Manage RIS</a></li>
+       </ul>
+    </li> IMS.@class.USER.C_officeID == 13 ||
+
+            @if (IMS.@class.USER.C_role == 7)
+            {
+            <li>
+                <a id="stockin_link" ><i class="fa fa-sign-in"></i> <span class="nav-label">Wis Entry </span></a>
+            </li>
+            <li>
+                <a  id="approve_ris_link"><i class="fa fa-files-o"></i> <span class="nav-label">Approve RIS</span><span id="count" class="label label-info pull-right">0</span>  </a>
+            </li>
+            <li>
+                <a id="printing_link"><i class="fa fa-print"></i> <span class="nav-label">Printing</span> </a>
+            </li>*@
+           @*<li>
+            <a href="/Responsive/Borrow"><i class="fa fa-edit"></i> <span class="nav-label">Borrow Item</span><span class="fa arrow"></span></a>
+        </li>
+
+             <li>
+                <a id="emergency_link"><i class="fa fa-ambulance"></i> <span class="nav-label">Emergency RIS</span> </a>
+            </li>
+            <li>
+             <a id="return_borrow"><i class="fa fa-arrow-circle-left"></i> <span class="nav-label">Payment RIS</span> </a>
+            </li>
+                @*
+     <li>
+        <a id="return_borrowed_items"><i class="fa fa-ambulance"></i> <span class="nav-label">Return Borrowed Items</span> </a>
+    </li>
+
+
+    <li>
+        <a id="monitoring_link"><i class="fa fa-edit"></i> <span class="nav-label">Monitoring</span> </a>
+    </li>
+
+            }
+
+            @if (IMS.@class.USER.C_officeID == 13 || IMS.@class.USER.C_role == 7)
+            {
+                <li>
+                    <a id="user_link"><i class="fa fa-user"></i> <span class="nav-label">Add User</span><span class="label label-warning pull-right">Restricted</span></a>
+                </li>
+            } *@
+        </ul>
+</div> 
+
+
+<script>
+
+
+    $(document).ready(function () {
+        doStuff();
+        //setInterval(doStuff, 10000);
+    })
+
+
+    function doStuff() {
+        var url = "@Url.Action("count_approval", "Responsive")";
+        $.post(url, function (data) { 
+            $("#count").html(data);
+        })
+    }
+   
+</script>

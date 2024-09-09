@@ -1,0 +1,158 @@
+﻿ 
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col row">
+        <div class="col col-sm-12">
+            <div class="col ibox-content" style="display:block">
+                <h2>Warehouse Running Balance</h2>
+                <div class="col row"> 
+                    <section class="col col-lg-12 col-sm-12 col-md-12" style="margin-top:50px">
+                        
+
+                        @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("running_balance")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemid").Title("").Hidden();
+                        @*columns.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= stat_id ? checked='checked':'' # class='chkbx' />")
+                    .HeaderTemplate("<input type='checkbox' id='masterCheckBox' class='masterCheckBox' onclick='checkAll(this)' />").Width(50);*@
+                        columns.Bound("itemname").Title("Item Name").Width(250);
+                        //     columns.Bound("eName").Title("Personel").Width(200);
+                        columns.Bound("quantity").Title("Quantity").Width(100);
+                        columns.Bound("unit").Title("Unit").Width(100);
+                        //columns.Bound("request_quantity").Title("Request Quantity").Width(100).HtmlAttributes(new { @style = "color:black;font-weight:bold" });
+                    })
+                                              .Pageable()
+                                              .Selectable()
+                                              .HtmlAttributes(new { style = "width:90%;height:auto;" })
+                                              .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                              .DataSource(dataSource => dataSource
+                                              .Ajax()
+                                              .ServerOperation(false)
+                                              .PageSize(10000)
+                                             .Model(model =>
+                                             {
+                                                 model.Id("itemid");
+                                                 model.Field(a => a.itemname).Editable(false);
+                                                 model.Field(a => a.quantity).Editable(false);
+                                                 model.Field(a => a.unit).Editable(false);
+                                                 //model.Field(a => a.request_quantity).Editable(true);
+                                             })
+                                              .Read(read => read.Action("for_warehouse", "Responsive"))
+                                              )
+                        )
+                    </section>
+                </div>
+                <div class="row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function checkAll(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#running_balance').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['stat_id'] != state)
+                this.dirty = true;
+            this['stat_id'] = state;
+        });
+        grid.refresh();
+    }
+    function submitRequest() {
+
+        var officeid = $("#Office").val();
+        var officename = $("#Office").data('kendoComboBox').text();
+        var empid = $("#byoffemployee").val();
+
+        if(officeid == "")
+        {
+            swal("Please select Office!","", "error");
+        }
+        else if(empid == "")
+        {
+            swal("Please select Employee!","", "error");
+        }
+        else
+        {
+            var grid = $("#running_balance").data("kendoGrid");
+
+            // Get selected rows
+            var sel = $("input:checked", grid.tbody).closest('tr');
+            var zero = 0;
+            var itemnames = [];
+            var items = [];
+            var arr = [];
+
+            $.each(sel, function (idx, row) {
+                var item = grid.dataItem(row);
+                var itemid = item.itemid;
+                var itemname = item.itemname;
+                var unit = item.unit;
+                var quantity = item.quantity;
+                var request_quantity = item.request_quantity;
+                if(request_quantity == 0 || request_quantity < 0)
+                {
+                    zero+=1;
+                    itemnames.push({itemname: itemname})
+                }
+                if(request_quantity > quantity)
+                {
+                    zero+=1;
+                    itemnames.push({itemname: itemname})
+                }
+                items.push({ itemid: itemid, itemname: itemname,unit:unit,request_quantity:request_quantity})
+                // arr.push(transcode)
+            });
+
+
+
+            if(items == "")
+            {
+                swal("Select Item!","", "error");
+            }
+            else
+            {
+                if(zero == 0)
+                {
+                    swal({ title: "Submit Request?", text: "", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Yes", showLoaderOnConfirm: true, closeOnConfirm: false }, function (isConfirm) {
+                        if (isConfirm) {
+                            $.post("@Url.Content("~/Responsive/submitRequestNew")", {items,officeid,empid,officename}, function (r) {
+                                if(r == "1")
+                                {
+                                    $(".my_audio").trigger('play');
+                                    $(".sweet-overlay, .sweet-alert").remove();
+                                    swal("Request Submitted","", "success");
+                                    $("#running_balance").data("kendoGrid").dataSource.read();
+
+                                }
+                                else
+                                {
+                                    $(".sweet-overlay, .sweet-alert").remove();
+                                    swal("Opps ",r, "error");
+                                    $("#running_balance").data("kendoGrid").dataSource.read();
+                                }
+                            })
+                        }
+
+                            //swal("Loading", "done", "success"); $(".sweet-overlay, .sweet-alert").remove();
+                        else {
+                            $(".sweet-overlay, .sweet-alert").remove();
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Please Check Quantity",JSON.stringify(itemnames), "error");
+                }
+            }
+        }
+    }
+
+
+    $(document).ready(function () {
+
+    })
+</script>

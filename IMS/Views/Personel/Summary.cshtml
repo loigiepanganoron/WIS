@@ -1,0 +1,236 @@
+﻿
+<style>
+    .k-grid tbody tr {
+        height: 50px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+    }
+
+    .alert-success {
+        background-color: #f1f9f7;
+        border: 1px solid #e0f1e9;
+        color: #1d9d74;
+        /*border: 5px solid transparent;*/
+        border-radius: 4px;
+    }
+
+    .k {
+        font-size: 35px;
+        line-height: 1.42857143;
+        font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
+
+    .l {
+        font-size: 14px;
+        line-height: 1.42857143;
+        font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
+    .green {
+        background-color:#69eb5a;
+    }
+</style>
+
+<script>
+    function dataBound(e) {
+        var grid = $("#TotalB").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].total > 0) {
+                grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("green");
+            }
+        }
+    }
+</script>
+<div style="width:650px;height:100px;float:left;margin-left:60px;padding:10px 0px 20px 30px; white-space: nowrap;" class="alert alert-success">
+    <div style="width:100%;height:40%">
+        <div style="width:60%;float:left">
+            <label class="k" style="width:300px">Summary </label>
+        </div>
+        <div style="width:33%;height:50px;float:left">
+            <div style="width:60px;height:60px;border:1px solid #e0f1e9;padding:10px 10px 10px 13px;float:right;" class="ani-hover-heartbeat" onclick="gorabels()">
+                <i style="width:50px;font-size:35px" class="fa fa-print"> </i>
+                <label style="font-size:15px;margin-top:-5px">Print</label>
+            </div>
+        </div>
+    </div>
+    <div style="white-space: nowrap;width:100%;height:30px;float:left">
+        <label style="float:left" class="l"> Currently Selected :</label>
+        <label id="off1" style="float:left;margin-left:5px" class="l"> All Office </label>
+    </div>
+</div>
+
+
+<div id="noise" style="width:280px;height:100px;background-color:#1fa67a;float:right;margin-top:0px;margin-right:-30px;padding-left:4px;border-bottom:2px solid #02603b">
+    <div style="width:250px;margin-top:35px;margin-left:30px">
+        <label style="color:white;font-size:17px;margin-left:45px;margin-top:-20px"> Select  Office</label>
+        @(Html.Kendo().DropDownList()
+                            .Name("officelist")
+                            .DataTextField("OfficeName")
+                            .DataValueField("OfficeId")
+                            .OptionLabel("All")
+                            .HtmlAttributes(new { @style = "width: 200px" })
+                            .Filter("contains")
+                            .AutoBind(true)
+                            .MinLength(1)
+                            .DataSource(source => source.Read(read => read.Action("GetOffices", "Home")))
+                            .Events(a => a.Change("selectofice"))
+        )
+    </div>
+</div>
+
+<div id="triangle-topleft" style="float:right;margin-top:100px;margin-right:-280px"> </div>
+
+<script>
+    function selectofice(a) {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var id = rowData.OfficeId;
+        var off = rowData.OfficeName;
+
+        var all = $("#officelist").data("kendoDropDownList").text();
+        $('#off1').text(all);
+        if (all == "All") {
+            $('#TotalA').data('kendoGrid').dataSource.read({ officeid: 0, all: all })
+            $('#TotalB').data('kendoGrid').dataSource.read({ officeid: 0, all: all })
+        }
+        else {
+            $('#TotalA').data('kendoGrid').dataSource.read({ officeid: id, all: all })
+            $('#TotalB').data('kendoGrid').dataSource.read({ officeid: id, all: all })
+        }
+    }
+
+    $(document).ready(function () {
+        $('#officelist').data('kendoDropDownList').list.width('500px');
+    })
+</script>
+
+
+<div style="padding:50px 25px 0px 60px;float:left;width:100%">
+
+    <div style="width:45%;float:left">
+        <div id="noise" style="height:50px" class="myheader"> Total of Available Items </div>
+        @(Html.Kendo().Grid<dynamic>()
+                .Name("TotalA")
+                .Columns(columns =>
+                {
+                    columns.Bound("itemname").Title("Item Name").Width(300);
+                    columns.Bound("ntotal").Title("Quantity");
+                })
+                          .Selectable()
+                          .AutoBind(false)
+                          .Pageable()
+                          .Sortable()
+                          .HtmlAttributes(new { style = "height:auto;" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(10)
+                                          .Read(read => read.Action("Totalavailable", "Personel", new { officeid = ViewBag.id, all = ViewBag.all }))
+                          .Sort(a => a.Add("itemname").Ascending())
+                          )
+        )
+    </div>
+
+
+    <div style="width:45%;float:left;margin-left:40px">
+        <div id="noise" style="height:50px" class="myheader">Total of Released Items</div>
+        @(Html.Kendo().Grid<dynamic>()
+                .Name("TotalB")
+                .Columns(columns =>
+                {
+                    columns.Bound("itemname").Title("Item Name").Width(300);
+                    columns.Bound("ntotal").Title("Quantity");
+                    columns.Bound("total").Title("gora").Hidden();
+                })
+                          .Selectable()
+                          .Pageable()
+                          .Sortable()
+                          .AutoBind(false)
+                          .HtmlAttributes(new { style = "height:auto;" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(10)
+                          .Read(read => read.Action("TotalOut", "Personel", new { officeid = ViewBag.id, all = ViewBag.all }))
+                          .Sort(a => a.Add("itemname").Ascending())
+                          )
+                          .Events(e => e.DataBound("dataBound"))
+        )
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var all = $("#officelist").data("kendoDropDownList").text();
+        var ol = "All"
+        $('#off1').text(all);
+        if (all == "") {
+            alert("hai blank")
+        }
+        else {
+            $('#TotalA').data('kendoGrid').dataSource.read({ officeid: 0, all: ol })
+            $('#TotalB').data('kendoGrid').dataSource.read({ officeid: 0, all: ol })
+        }
+    })
+    function gorabels() {
+        $.get("@Url.Content("~/Personel/printernapud")", function (r) {
+            $("#printnapud").html(r)
+            $("#printnapud").data("kendoWindow").center().open()
+        })
+    }
+</script>
+
+@(Html.Kendo().Window()
+    .Name("printnapud")
+    .Draggable()
+    .Title("Print")
+        .HtmlAttributes(new { style = "width:400px;height:260px" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+
+
+<style>
+    h2 {
+        text-shadow: none;
+    }
+
+    .k-grid tbody tr {
+        height: 50px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .k-grid table {
+        table-layout: fixed;
+    }
+
+    .bk {
+        background-color: #f1f9f7;
+        border: 1px solid #e0f1e9;
+        color: #1d9d74;
+        /*border: 5px solid transparent;*/
+        border-radius: 4px;
+    }
+
+    .n {
+        font-size: 15px;
+        line-height: 1.42857143;
+        font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
+
+    .kn {
+        font-size: 20px;
+        line-height: 1.42857143;
+        font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
+</style>
+
+
+@*, new { officeid = ViewBag.id, all = ViewBag.all }*@

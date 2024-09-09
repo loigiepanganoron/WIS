@@ -1,0 +1,34 @@
+﻿
+
+<div id="tabcontent">
+    @(Html.Kendo().Grid<dynamic>()
+                .Name("balance")
+                .Columns(columns =>
+                {
+                    columns.Bound("").Title("").Width(100);
+                    columns.Bound("").Title("Item Name").Width(200);
+                    columns.Bound("").Title("Office").Width(200);
+
+                })
+                          .Pageable()
+                          .Selectable()
+            //.Scrollable()
+            //.HtmlAttributes(new { style = "height:auto" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(15)
+            //   .Read(read => read.Action("readtransact", "Home", new { officeid = ViewBag.id }))
+            // .Sort(a => a.Add("itemname").Ascending())
+                          )
+            // .Events(e => e.Change("wisimg"))
+    )
+
+</div>
+
+<style>
+    #tabcontent {
+        width: 100%;
+        height: auto;
+    }
+</style>

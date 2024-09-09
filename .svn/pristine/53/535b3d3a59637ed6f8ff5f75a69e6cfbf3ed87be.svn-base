@@ -1,0 +1,234 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Login_Layout.cshtml";
+}
+<link href="@Url.Content("~/Content/themes/kendo.custom.css")" rel="stylesheet" type="text/css" />
+
+
+<style>
+ .small-box-login {
+        background-color: #1fa67a;
+        width: 20px;
+        height: 20px;
+        float: left;
+    }
+ .abbr {
+    font-size:45px;
+    width:340px;
+    text-align:left;
+    font-weight:600;
+}
+</style>
+
+
+<div id="log-wrapper">
+    <div class="log-header" style="overflow:hidden">
+        <div class="lfloat">
+            <div style="width:120px">
+                <div class="small-box-login" style="opacity:.9"></div>
+                <div class="small-box-login" style="opacity:.3"></div>
+                <div class="small-box-login" style="opacity:.7"></div>
+                <div class="small-box-login" style="opacity:.1"></div>
+                <div class="small-box-login" style="opacity:.02"></div>
+                <div class="small-box-login" style="opacity:.05"></div>
+            </div>
+            <div style="width:120px">
+                <div class="small-box-login" style="opacity:.8"></div>
+                <div class="small-box-login" style="opacity:.7"></div>
+                <div class="small-box-login" style="opacity:.5"></div>
+                <div class="small-box-login" style="opacity:.3"></div>
+                <div class="small-box-login" style="opacity:.05"></div>
+                <div class="small-box-login" style="opacity:.02"></div>
+
+            </div>
+            <div style="width:120px">
+                <div class="small-box-login" style="opacity:.5"></div>
+                <div class="small-box-login" style="opacity:.9"></div>
+                <div class="small-box-login" style="opacity:.6"></div>
+                <div class="small-box-login" style="opacity:.02"></div>
+                <div class="small-box-login" style="opacity:.01"></div>
+                <div class="small-box-login" style="opacity:.02"></div>
+            </div>
+            <div style="width:120px">
+                <div class="small-box-login" style="opacity:.7"></div>
+                <div class="small-box-login" style="opacity:.4"></div>
+                <div class="small-box-login" style="opacity:.5"></div>
+                <div class="small-box-login" style="opacity:.03"></div>
+                <div class="small-box-login" style="opacity:.02"></div>
+                <div class="small-box-login" style="opacity:.02"></div>
+            </div>
+            <div style="width:120px">
+                <div class="small-box-login" style="opacity:.6"></div>
+                <div class="small-box-login" style="opacity:.2"></div>
+                <div class="small-box-login" style="opacity:.7"></div>
+                <div class="small-box-login" style="opacity:.03"></div>
+                <div class="small-box-login" style="opacity:.02"></div>
+                <div class="small-box-login" style="opacity:.05"></div>
+            </div>
+            <div style="width:120px">
+                <div class="small-box-login" style="opacity:.1"></div>
+                <div class="small-box-login" style="opacity:.5"></div>
+                <div class="small-box-login" style="opacity:.1"></div>
+                <div class="small-box-login" style="opacity:.5"></div>
+                <div class="small-box-login" style="opacity:.03"></div>
+                <div class="small-box-login" style="opacity:.01"></div>
+            </div>
+        </div>
+        <div class="rfloat">
+            <div style="width:80px">
+                <div class="small-box-login" style="opacity:.03"></div>
+                <div class="small-box-login" style="opacity:.3"></div>
+                <div class="small-box-login" style="opacity:.5"></div>
+                <div class="small-box-login" style="opacity:.8"></div>
+            </div>
+            <div style="width:80px">
+                <div class="small-box-login" style="opacity:.02"></div>
+                <div class="small-box-login" style="opacity:.4"></div>
+                <div class="small-box-login" style="opacity:.2"></div>
+                <div class="small-box-login" style="opacity:.6"></div>
+            </div>
+            <div style="width:80px">
+                <div class="small-box-login" style="opacity:.01"></div>
+                <div class="small-box-login" style="opacity:.04"></div>
+                <div class="small-box-login" style="opacity:.5"></div>
+                <div class="small-box-login" style="opacity:.6"></div>
+            </div>
+            <div style="width:80px">
+                <div class="small-box-login" style="opacity:.03"></div>
+                <div class="small-box-login" style="opacity:.01"></div>
+                <div class="small-box-login" style="opacity:.07"></div>
+                <div class="small-box-login" style="opacity:.8"></div>
+            </div>
+            <div style="width:80px">
+                <div class="small-box-login" style="opacity:.01"></div>
+                <div class="small-box-login" style="opacity:.09"></div>
+                <div class="small-box-login" style="opacity:.05"></div>
+                <div class="small-box-login" style="opacity:.5"></div>
+            </div>
+            <div style="width:80px">
+                <div class="small-box-login" style="opacity:.4"></div>
+                <div class="small-box-login" style="opacity:.03"></div>
+                <div class="small-box-login" style="opacity:.4"></div>
+                <div class="small-box-login" style="opacity:.08"></div>
+            </div>
+        </div>
+        <div style="position:absolute;">
+         
+
+            <div class="abbr font-stroke" style="margin:0px 0 0 80px; ">IMS</div>
+            <div class="main-Title font-stroke" style="margin:10px 0 0 65px; ">Inventory Monitoring System</div>
+        </div>
+        <div>
+            <img style="float:right;height:100px;width:100px;margin-top:-10px" src="~/Content/images/inventory.png"> 
+         </div>
+        </div>
+    <div class="log-panel bg-darker" style="height:30px"></div>
+    <div class="log-panel font-stroke fg-white nice" style="font-size:20px;height:40px; font-weight:100;line-height:2.0; text-align:center;background-color:#1fa67a">Login to your domain account</div>
+    <div class="log-page-content">
+        <div class="page-block acenter">
+            <div class="input-control text" style="width:320px">
+                <input id="username" class="autoselect" type="text" placeholder="Username" />
+            </div>
+        </div>
+        <div class="page-block acenter">
+            <div class="input-control password" style="width:320px">
+                <input id="pwd" class="autoselect" type="password" placeholder="Password" />
+                <button class="btn-reveal"></button>
+            </div>
+        </div>
+        <div class="page-block aright" style="width:345px; margin-top:5px">
+            <button class="k-button" onclick="checkParameter()"> Login <i class="icon-arrow-right-3"></i></button>
+        </div>
+        @*<div class="page-block aleft" style="width:340px; font-size:20px; margin-left:20px;">
+                Forgot your password ?
+            </div>
+            <div class="page-block aleft" style="width:340px; font-size:12px; margin-left:20px;">
+                no worries, click <a onclick="sentEmail()" style="cursor:pointer">here</a> to send your password to your mobile.
+            </div>*@
+    </div>
+    <div class="log-footer" >
+        <div class="page-block acenter" style="margin-top:10px">
+            <span>Copyright © 2014. All Rights Reserved. </span>
+            <span style="display:block">Provincial Government of Agusan del Sur (PGAS)</span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    function sentEmail() {
+        var username = $('#username').val() 
+        if (username.length > 0) {
+
+        }
+        else {
+            swal('please specify username')
+        }
+    }
+
+    function checkParameter() {
+        var criteria = $('#fcriteria').data('kendoComboBox');
+        var extDomain = "pgas.gov"
+        var email = $('#username').val()
+        var att = "@@"
+        var completeEmail = ""
+        if (email.indexOf(extDomain) > -1) {
+            completeEmail = $('#username').val()
+        }
+        else {
+            completeEmail = email + att + extDomain
+        }
+
+        $.ajax({
+            type: 'POST',
+            traditional: true,
+            url: "@Url.Content("~/Login/CheckParameter")",
+            data: {
+                emailaddress: completeEmail,
+                passcode: $("#pwd").val()
+            },
+            
+            success: function (result) {
+                
+                setTimeout(function () {
+                    if (result = "success") {
+
+                        @*$.ajax({
+                            url: "@Url.Content("~/Login/_myRoleID")",
+                            type: 'GET',
+                        success: function (result)
+                        {
+                            if (result == "1")
+                            {
+                                window.location = "@Url.Content("~/Home/ByOffice")";
+                            }
+                            if (result == "5")
+                            {
+                                window.location = "@Url.Content("~/Plc/PLC")";
+                            }
+                            else if (result == "3")
+                            {
+                                window.location = "@Url.Content("~/Personel/Wis")";
+                            }
+                            else
+                            {*@
+                                window.location = "@Url.Content("~/Home/Welcome")";
+                    //        }
+                    //    }
+                    //})
+                }
+                    else {
+                        swal({
+                            title: "Invalid Parameters!!",
+                            text: "Please Contact System Administrator",
+                            type: "error",
+                            confirmButtonText: "Try Again"
+                        });
+                        return (false)
+                    }
+               }, 1000)
+            }
+        })
+    }
+</script>

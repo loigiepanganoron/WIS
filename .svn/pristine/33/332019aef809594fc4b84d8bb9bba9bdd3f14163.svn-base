@@ -1,0 +1,204 @@
+﻿
+@{
+    ViewBag.Title = "User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+    $(document).ready(function () {
+        $("#filter3").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#usergrid").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "emailaddress", operator: "contains", value: value });
+                orfilter.filters.push({ field: "emailaddress", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+    })
+</script>
+
+
+<div style="height:auto">
+<div id="noise" style="width:200px;height:40px;float:left;padding-top:5px;border-bottom-right-radius:25px;"><label style="color:white;font-size:15px;text-align:center"> User Registration</label></div>
+<div style="width:100%;height:auto;padding:50px 50px 50px 50px">
+
+    <div style="width:100%;margin-top:30px;margin-right:-250px">
+        <div>
+          @(Html.Kendo().ComboBox()
+            .Name("UserType")
+            .DataTextField("usertype")
+            .DataValueField("roleid")
+            .Placeholder("User role!")
+            .HtmlAttributes(new { @style = "width: 200px" })
+            .Filter("contains")
+            .AutoBind(true)
+            .MinLength(1)
+           .DataSource(source => source.Read(read => read.Action("usertype", "Home")))
+            
+           )
+        </div>
+        <div>
+            @(Html.Kendo().ComboBox()
+            .Name("User")
+            .DataTextField("emailaddress")
+            .DataValueField("eid")
+            .Placeholder("Search Email Address Here!")
+            .HtmlAttributes(new { @style = "width: 400px" })
+            .Filter("contains")
+            .AutoBind(true)
+            .MinLength(2)
+           .DataSource(source => source.Read(read => read.Action("userList", "Home")))
+            )
+ 
+            <button id="button" class="k-primary fill " onclick="Add()">Save</button>
+            <button style="float:right" id="button" class="k-primary fill " onclick="printna()">Print</button>
+
+        </div>
+
+    </div>
+
+
+    <div style="width:100%;height:auto;margin-top:20px">
+        <div id="noise" class="myheader">Users</div>
+        <span id="EmpSearch" class="k-textbox k-space-right " style="width:100%">
+            <input placeholder="Search User" id="filter3" class="k-input autoselect" type="text" style="width:100%;font-family:Arial; font-size:14px "><a href="#" class="k-icon k-i-search" style="margin-top:-10px">&nbsp;</a>
+        </span>
+        @(Html.Kendo().Grid<dynamic>()
+            .Name("usergrid")
+            .Columns(columns =>
+            {
+                columns.Bound("SwipEmployeeID").Title("Swipeid").Hidden();
+                columns.Bound("emailaddress").Title("Email  Address");
+                columns.Bound("usertype").Title("User Type");
+                columns.Bound("eid").Title("Employee ID");
+                columns.Bound("x").Title("").ClientTemplate("<div style=\"text-align:center\"\"> <a class=\"mif-cross\" style=\"font-size:20px\" onclick=\"deleteuser(#:ID#)\"> </a></div>");
+
+            })
+            .Pageable()
+                //.Scrollable()
+
+            .Selectable()
+            .HtmlAttributes(new { style = "height:auto;" })
+            .DataSource(dataSource => dataSource
+            .Ajax()
+
+            .ServerOperation(false)
+            .PageSize(20)
+             .Read(read => read.Action("SavedUsers", "Home"))
+
+            ))
+    </div>
+    <div class="color-line"> </div>
+
+
+</div>
+</div>
+
+<script>
+    function Add() {
+
+        
+      
+            if ($("#UserType").val() == "") {
+                swal({
+                    title: "",
+                    text: "Select User Role First!",
+                    type: "error",
+                    confirmButtonText: "Ok"
+                });
+                return (false)
+            }
+            if ($("#User").val() == "") {
+                swal({
+                    title: "",
+                    text: "Select Email Address First!",
+                    type: "error",
+                    confirmButtonText: "Ok"
+                });
+                return (false)
+            }
+            
+            $.post("@Url.Content("~/Home/Adduser")", { roleid: $('#UserType').val(), eid: $('#User').val() }, function (r) {
+             
+
+                if (r == "1") {
+
+                    swal({
+                        title: '',
+                        text: 'User Was Added!',
+                        type: 'success'
+                    });
+                    $("#usergrid").data("kendoGrid").dataSource.read();
+                    $('#usergrid').data('kendoGrid').refresh();
+                }
+                else {
+                    swal({
+                        title: '',
+                        text: r,
+                        type: 'error'
+                    });
+                }
+
+
+            });
+    }
+
+
+    function deleteuser(ID) {
+
+        swal({
+            text:"Are you sure you want to delete this User?",
+            title: "",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Yes, I am sure!',
+            cancelButtonText: "No, cancel it!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
+
+                        $.get("@Url.Content("~/Home/Deleteuser")", { id: ID, }, function (d) {
+                        //alert(d)
+                            if (d == "1") {
+
+                                swal({
+                                    title: '',
+                                    text: 'User Was Deleted!',
+                                    type: 'success'
+                                });
+                                $("#usergrid").data("kendoGrid").dataSource.read();
+
+                            }
+                            else {
+                                swal({
+                                    title: '',
+                                    text: d,
+                                    type: 'error'
+                                });
+                            }
+                        });
+                    }
+
+
+                    else {
+                        swal("", "Deleting User Was Cancelled ", "error");
+                    }
+                   
+                });
+
+        $("#usergrid").data("kendoGrid").dataSource.read();
+    }
+    function printna() {
+
+        window.open("@Url.Content("~/Reports/report.aspx?repID=")" + 3, "Report", "status=1", "location=1");
+    }
+    
+    </script>

@@ -1,0 +1,95 @@
+﻿
+<div style="width:100%;height:100%;">
+    <div style="padding:20px 20px 10px 20px;">
+        <div style="float:right">
+            @(Html.Kendo().DropDownList()
+          .Name("plcmenu")
+          .OptionLabel("All")
+          .Enable(false)
+          .BindTo(new List<string>() {
+              "IN",
+              "OUT",
+          })
+         .HtmlAttributes(new { style = "width:70px;" })
+            )
+        </div>
+
+        <div class="rh">
+            <label class="em">Select Item:</label>
+            @(Html.Kendo().ComboBox()
+                .Name("plcri")
+                .DataTextField("itemname")
+                .DataValueField("itemid")
+                .Placeholder("All")
+                .HtmlAttributes(new { @style = "width: 200px;" })
+                .Filter("contains")
+                .Enable(false)
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("plcitems", "Plc")))
+            )
+        </div>
+
+        <div class="rh">
+            <label class="em">Start Date: </label>
+            @(Html.Kendo().DatePicker()
+                    .Name("from")
+                    .Value(DateTime.Today)
+                    .HtmlAttributes(new { @style = "width: 150px" })
+            )
+        </div>
+        <div class="rh" style="margin-left:25px">
+            <label class="em">End Date: </label>
+            @(Html.Kendo().DatePicker()
+                    .Name("to")
+                    .Value(DateTime.Today)
+                    .HtmlAttributes(new { @style = "width: 150px" })
+            )
+        </div>
+
+        <div style="float:right;margin-top:50px">
+            <button class="noise" style="padding:5px 0px 0px 0px;width:80px;height:25px;float:left;border-radius:5px;background-color:#0cb954;" onmouseover="this.style.background = '#1fa67a'" onmouseout="    this.style.background = '#0cb954'" onclick="plcprint()">
+                <p style="color:white;font-size:14px;">
+                    PRINT
+                </p>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function plcprint()
+    {
+        {
+            
+            var in_out = $("#plcmenu").data("kendoDropDownList").text();
+            var itemid = $("#plcri").data('kendoComboBox').value();
+            var from = document.getElementById("from").value;
+            var to = document.getElementById("to").value;
+         
+            if ((new Date(from).getTime() > new Date(to).getTime())) {
+                swal("Error", "End Date Must Be Greater Than Start Date")
+            }
+            else {
+                if ($("#plcri").val() != "")
+                    window.open("@Url.Content("~/Reports/reportplc.aspx?repID=")" + 1 + "&in_out=" +in_out+ "&itemid=" + itemid + "&from=" + from + "&to=" + to, "Report", "status=1", "location=1");
+
+                else if ($("#plcri").val() == "")
+                    window.open("@Url.Content("~/Reports/reportplc.aspx?repID=")" + 1 + "&in_out=" +in_out+ "&itemid="+0+  "&from=" + from + "&to=" + to, "Report", "status=1", "location=1");
+            }
+        }
+    }
+</script>
+
+
+<style>
+    .rh {
+        float: left;
+        margin-top: 5px;
+    }
+
+    .em {
+        font-size: 14px;
+    }
+</style>

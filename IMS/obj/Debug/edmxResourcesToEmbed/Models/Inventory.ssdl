@@ -1,0 +1,1101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="IMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="l_barangay">
+    <Key>
+      <PropertyRef Name="bid" />
+    </Key>
+    <Property Name="bid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="munid" Type="int" />
+    <Property Name="prkid" Type="int" />
+    <Property Name="brgyid" Type="int" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="brgycode" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="l_municipality">
+    <Key>
+      <PropertyRef Name="munid" />
+    </Key>
+    <Property Name="munid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="districtid" Type="int" />
+    <Property Name="munno" Type="varchar(max)" />
+    <Property Name="provid" Type="int" />
+    <Property Name="isactive" Type="tinyint" />
+    <Property Name="lat" Type="varchar(max)" />
+    <Property Name="lng" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="l_province">
+    <Key>
+      <PropertyRef Name="lid" />
+    </Key>
+    <Property Name="lid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="provid" Type="int" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="prvno" Type="varchar(max)" />
+    <Property Name="isactive" Type="tinyint" />
+  </EntityType>
+  <EntityType Name="l_purok">
+    <Key>
+      <PropertyRef Name="purokid" />
+    </Key>
+    <Property Name="purokid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="munid" Type="int" />
+    <Property Name="brgyid" Type="int" />
+    <Property Name="prkid" Type="int" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="prkcode" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="menu">
+    <Key>
+      <PropertyRef Name="MenuID" />
+    </Key>
+    <Property Name="MenuID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ParentID" Type="int" />
+    <Property Name="MenuLevel" Type="int" />
+    <Property Name="Description" Type="varchar" MaxLength="500" />
+    <Property Name="MenuTitle" Type="varchar" MaxLength="200" />
+    <Property Name="Action" Type="varchar" MaxLength="100" />
+    <Property Name="Controller" Type="varchar" MaxLength="100" />
+    <Property Name="Icon" Type="varchar" MaxLength="100" />
+    <Property Name="MenuOrder" Type="int" />
+    <Property Name="ActionCode" Type="int" />
+    <Property Name="is_for" Type="int" />
+  </EntityType>
+  <EntityType Name="plc">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ename" Type="nvarchar" MaxLength="50" />
+    <Property Name="date" Type="datetime" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="50" />
+    <Property Name="in_out" Type="nvarchar" MaxLength="50" />
+    <Property Name="quantity" Type="float" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="srcid" Type="int" />
+    <Property Name="unitcost" Type="money" />
+    <Property Name="eid" Type="int" />
+    <Property Name="reid" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.plcitems' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="plcitems">
+    <Key>
+      <PropertyRef Name="itemid" />
+    </Key>
+    <Property Name="itemid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="50" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="unitcost" Type="nvarchar" MaxLength="50" />
+    <Property Name="srcid" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.report_log' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="report_log">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="qrcode" Type="nvarchar(max)" />
+    <Property Name="generated_on" Type="datetime" />
+    <Property Name="generated_by" Type="nvarchar" MaxLength="500" />
+    <Property Name="report_generated" Type="nvarchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="tbl_generate_trans_code">
+    <Key>
+      <PropertyRef Name="entry_id" />
+    </Key>
+    <Property Name="entry_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id" Type="int" />
+    <Property Name="new_transcode" Type="nvarchar" MaxLength="50" />
+    <Property Name="date_entry" Type="date" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.tbl_itemcode' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tbl_itemcode">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="itemcode" Type="nvarchar(max)" />
+    <Property Name="item_description" Type="nvarchar(max)" />
+    <Property Name="price" Type="money" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="itemid" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.tbl_items_per_transaction_code' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tbl_items_per_transaction_code">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="officename" Type="nvarchar(max)" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="transaction_code" Type="nvarchar(max)" />
+    <Property Name="itemname" Type="nvarchar(max)" />
+    <Property Name="unit" Type="nvarchar(max)" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="price" Type="money" />
+    <Property Name="ris" Type="int" />
+    <Property Name="released" Type="int" />
+    <Property Name="officecode" Type="nvarchar" MaxLength="50" />
+    <Property Name="mainoffice" Type="int" />
+    <Property Name="accountid" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'IMS.dbo.tbl_l_converted_item_unit' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="tbl_l_converted_item_unit">
+          <Property Name="id" Type="int" />
+          <Property Name="itemid" Type="int" />
+          <Property Name="original_unit" Type="nvarchar" MaxLength="10" />
+          <Property Name="converted_unit" Type="nvarchar" MaxLength="10" />
+          <Property Name="quantity_per_original_unit" Type="int" />
+        </EntityType>-->
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.tbl_manual_items' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tbl_manual_items">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="200" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tbl_t_deleted_logs">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="150" />
+    <Property Name="price" Type="money" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="trans_code" Type="nvarchar" MaxLength="150" />
+    <Property Name="controlno" Type="nvarchar" MaxLength="150" />
+    <Property Name="delete_date" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tbl_t_edited_logs">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ris_transaction_id" Type="int" />
+    <Property Name="prev_quantity" Type="int" />
+    <Property Name="date_edited" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tbl_t_notedby">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="eid" Type="int" />
+    <Property Name="officeid" Type="int" />
+  </EntityType>
+  <EntityType Name="tbl_t_Office">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OfficeID" Type="int" />
+    <Property Name="OfficeName" Type="nvarchar" MaxLength="100" />
+    <Property Name="OfficeAbbr" Type="nvarchar" MaxLength="50" />
+    <Property Name="mainofficeid" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.tbl_t_paid' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tbl_t_paid">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="150" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="borrower_eid" Type="int" />
+    <Property Name="reciever_eid" Type="int" />
+    <Property Name="ris_id" Type="int" />
+    <Property Name="unit_cost" Type="money" />
+  </EntityType>
+  <EntityType Name="tbl_t_ris_preparation">
+    <Key>
+      <PropertyRef Name="preparation_id" />
+    </Key>
+    <Property Name="preparation_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="controlno" Type="nvarchar" MaxLength="50" />
+    <Property Name="date_time" Type="datetime" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="officename" Type="nvarchar" MaxLength="150" />
+    <Property Name="status" Type="int" />
+    <Property Name="release" Type="bit" />
+    <Property Name="edited" Type="bit" />
+    <Property Name="agree" Type="bit" />
+    <Property Name="preparedby" Type="int" />
+    <Property Name="deleted" Type="bit" />
+    <Property Name="date_approve" Type="datetime" />
+    <Property Name="receive" Type="bit" />
+    <Property Name="transaction_type" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tbl_t_sento_admin">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="office_id" Type="int" />
+    <Property Name="phone_number" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.tbl_wis_allocated' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tbl_wis_allocated">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="office" Type="nvarchar(max)" />
+    <Property Name="itemname" Type="nvarchar(max)" />
+    <Property Name="quantity" Type="float" />
+    <Property Name="unitcost" Type="money" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="cyear" Type="int" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="itemid" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.tbl_wis_transaction' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tbl_wis_transaction">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="eid" Type="int" />
+    <Property Name="itemcode" Type="nvarchar(max)" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar(max)" />
+    <Property Name="date" Type="datetime" />
+    <Property Name="quantity" Type="float" />
+    <Property Name="unitcost" Type="money" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="in_out" Type="nvarchar" MaxLength="50" />
+    <Property Name="descript" Type="nvarchar" MaxLength="50" />
+    <Property Name="srcid" Type="int" />
+    <Property Name="accountid" Type="int" />
+    <Property Name="tid" Type="int" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+    <Property Name="obj" Type="int" />
+    <Property Name="reid" Type="int" />
+    <Property Name="ris_id" Type="int" />
+    <Property Name="transcode" Type="nvarchar(max)" />
+    <Property Name="officename" Type="nvarchar(max)" />
+    <Property Name="starting_balance" Type="int" />
+    <Property Name="ref_id_wrt" Type="int" />
+    <Property Name="year" Type="int" />
+    <Property Name="quarter" Type="int" />
+    <Property Name="mooe_no" Type="int" />
+    <Property Name="dbm_bb" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.transact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="transact">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="eid" Type="int" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="500" />
+    <Property Name="date" Type="datetime" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="unitcost" Type="money" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="in_out" Type="nvarchar" MaxLength="50" />
+    <Property Name="descript" Type="nvarchar" MaxLength="50" />
+    <Property Name="srcid" Type="int" />
+    <Property Name="accountid" Type="int" />
+    <Property Name="tid" Type="int" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+    <Property Name="obj" Type="int" />
+    <Property Name="reid" Type="int" />
+  </EntityType>
+  <EntityType Name="transaction">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="eid" Type="int" />
+    <Property Name="item_id" Type="int" />
+    <Property Name="stock_date" Type="datetime" />
+    <Property Name="quantity" Type="float" />
+    <Property Name="in_out" Type="nvarchar" MaxLength="50" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="description" Type="varchar" MaxLength="100" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="150" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="reid" Type="int" />
+    <Property Name="ename" Type="nvarchar" MaxLength="50" />
+    <Property Name="controlno" Type="nvarchar" MaxLength="50" />
+    <Property Name="unitcost" Type="float" />
+    <Property Name="ref_id" Type="bigint" />
+  </EntityType>
+  <EntityType Name="units">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="unitname" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="role" Type="int" />
+    <Property Name="eid" Type="int" />
+    <Property Name="EmpName" Type="nvarchar" MaxLength="150" />
+    <Property Name="OfficeID" Type="int" />
+    <Property Name="skin" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="userRole">
+    <Key>
+      <PropertyRef Name="roleid" />
+    </Key>
+    <Property Name="usertype" Type="nvarchar" MaxLength="50" />
+    <Property Name="roleid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.wis_borrowed_items' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="wis_borrowed_items">
+    <Key>
+      <PropertyRef Name="bid" />
+    </Key>
+    <Property Name="bid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="150" />
+    <Property Name="price" Type="money" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="date" Type="date" />
+    <Property Name="officename" Type="nvarchar" MaxLength="100" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="transaction_code" Type="nvarchar" MaxLength="100" />
+    <Property Name="status" Type="int" />
+    <Property Name="paid" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.wis_ris_status' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="wis_ris_status">
+    <Key>
+      <PropertyRef Name="ris_id" />
+    </Key>
+    <Property Name="ris_id" Type="int" Nullable="false" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="officename" Type="nvarchar" MaxLength="50" />
+    <Property Name="date" Type="date" />
+    <Property Name="status" Type="int" />
+    <Property Name="username" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.wis_ris_transactions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="wis_ris_transactions">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="itemid" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="officename" Type="nvarchar" MaxLength="200" />
+    <Property Name="itemid" Type="int" Nullable="false" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="200" />
+    <Property Name="price" Type="money" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="quantity" Type="float" />
+    <Property Name="status" Type="int" />
+    <Property Name="date_approved" Type="datetime" />
+    <Property Name="date_returned" Type="datetime" />
+    <Property Name="date_submited" Type="datetime" />
+    <Property Name="risid" Type="int" StoreGeneratedPattern="Computed" />
+    <Property Name="trans_code" Type="nvarchar" MaxLength="50" />
+    <Property Name="controlno" Type="nvarchar" MaxLength="50" />
+    <Property Name="ref_id" Type="int" />
+    <Property Name="to_be_deleted" Type="bit" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'IMS.dbo.view_ending_inventory_remaining' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="view_ending_inventory_remaining">
+          <Property Name="itemid" Type="int" />
+          <Property Name="itemname" Type="nvarchar(max)" />
+          <Property Name="unitcost" Type="money" />
+          <Property Name="unit" Type="nvarchar" MaxLength="100" />
+          <Property Name="transcode" Type="nvarchar(max)" />
+          <Property Name="remaining" Type="int" />
+        </EntityType>-->
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'IMS.dbo.view_ending_inventory_source' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="view_ending_inventory_source">
+          <Property Name="itemid" Type="int" />
+          <Property Name="itemname" Type="nvarchar(max)" />
+          <Property Name="unitcost" Type="money" />
+          <Property Name="in_out" Type="nvarchar" MaxLength="50" />
+          <Property Name="unit" Type="nvarchar" MaxLength="100" />
+          <Property Name="transcode" Type="nvarchar(max)" />
+          <Property Name="quantity" Type="int" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" />
+          <Property Name="quantity_out" Type="int" />
+          <Property Name="tcode" Type="nvarchar(max)" />
+        </EntityType>-->
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'IMS.dbo.view_items_where_to_get' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="view_items_where_to_get">
+          <Property Name="itemid" Type="int" />
+          <Property Name="itemname" Type="nvarchar(max)" />
+          <Property Name="unitcost" Type="money" />
+          <Property Name="unit" Type="nvarchar" MaxLength="100" />
+          <Property Name="total_in" Type="int" />
+          <Property Name="transcode" Type="nvarchar(max)" />
+          <Property Name="total_out" Type="int" />
+          <Property Name="available" Type="int" />
+          <Property Name="year" Type="int" />
+          <Property Name="quarter" Type="int" />
+          <Property Name="mooe_no" Type="int" />
+          <Property Name="dbm_bb" Type="int" />
+        </EntityType>-->
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vw_searchAvailable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vw_searchAvailable">
+    <Key>
+      <PropertyRef Name="mooe_no" />
+      <PropertyRef Name="dbm_bb" />
+    </Key>
+    <Property Name="itemname" Type="nvarchar(max)" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="year" Type="int" />
+    <Property Name="quarter" Type="varchar" MaxLength="11" />
+    <Property Name="mooe_no" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="dbm_bb" Type="varchar" MaxLength="12" Nullable="false" />
+    <Property Name="account" Type="varchar" MaxLength="48" />
+    <Property Name="remaining" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vw_stockviewing_wis' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vw_stockviewing_wis">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="50" />
+    <Property Name="unitcost" Type="money" />
+    <Property Name="total" Type="int" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vw_where_to_get_existing_item' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vw_where_to_get_existing_item">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar(max)" />
+    <Property Name="unitcost" Type="money" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+    <Property Name="total_in" Type="int" />
+    <Property Name="transcode" Type="nvarchar(max)" />
+    <Property Name="date" Type="datetime" />
+    <Property Name="total_out" Type="int" />
+    <Property Name="available" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwAll' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwAll">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="500" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="total" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwAllout' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwAllout">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="500" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+    <Property Name="total" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwbyofficeout' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwbyofficeout">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="int" />
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+    <Property Name="item_id" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="150" />
+    <Property Name="total" Type="int" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwplcallout' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwplcallout">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="50" />
+    <Property Name="unit" Type="nvarchar" MaxLength="50" />
+    <Property Name="total" Type="float" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'IMS.dbo.vwplcchart' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="vwplcchart">
+          <Property Name="itemid" Type="int" />
+          <Property Name="unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="itemname" Type="nvarchar" MaxLength="50" />
+          <Property Name="TOTAL" Type="float" />
+          <Property Name="TOTALOUT" Type="float" />
+        </EntityType>-->
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'IMS.dbo.vwplcgrid' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="vwplcgrid">
+          <Property Name="itemid" Type="int" />
+          <Property Name="unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="itemname" Type="nvarchar" MaxLength="50" />
+          <Property Name="averageunitcost" Type="money" />
+          <Property Name="total" Type="float" />
+        </EntityType>-->
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'IMS.dbo.vwplcreport' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="vwplcreport">
+          <Property Name="itemname" Type="nvarchar" MaxLength="50" />
+          <Property Name="totalin" Type="float" />
+          <Property Name="totalout" Type="float" />
+          <Property Name="unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="unitcost" Type="money" />
+          <Property Name="totalcostout" Type="float" />
+          <Property Name="totalcostin" Type="float" />
+        </EntityType>-->
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwQtyOnHand' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwQtyOnHand">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="int" />
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+    <Property Name="item_id" Type="int" />
+    <Property Name="IN_STOCK" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwrecieve' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwrecieve">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="int" />
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="500" />
+    <Property Name="total" Type="int" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwrptSummaryAll' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwrptSummaryAll">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="500" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+    <Property Name="available" Type="int" />
+    <Property Name="released" Type="int" />
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwstockoutgrid' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwstockoutgrid">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="int" />
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="500" />
+    <Property Name="total" Type="int" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+    <Property Name="unitcost" Type="money" />
+    <Property Name="srcid" Type="int" />
+    <Property Name="accountid" Type="int" />
+    <Property Name="tid" Type="int" />
+    <Property Name="obj" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwtransact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwtransact">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="eid" Type="int" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="date" Type="datetime" />
+    <Property Name="itemname" Type="nvarchar" MaxLength="500" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="unit" Type="nvarchar" MaxLength="100" />
+    <Property Name="in_out" Type="nvarchar" MaxLength="50" />
+    <Property Name="eName" Type="nvarchar" MaxLength="67" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="descript" Type="nvarchar" MaxLength="50" />
+    <Property Name="reid" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwTransactions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwTransactions">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="eid" Type="int" />
+    <Property Name="item_id" Type="int" />
+    <Property Name="stock_date" Type="datetime" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="in_out" Type="nvarchar" MaxLength="50" />
+    <Property Name="eName" Type="nvarchar" MaxLength="67" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="description" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwUsers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwUsers">
+    <Key>
+      <PropertyRef Name="d" />
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="SwipEmployeeID" Type="varchar" MaxLength="10" />
+    <Property Name="emailaddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="passcode" Type="varchar" MaxLength="30" />
+    <Property Name="eid" Type="bigint" />
+    <Property Name="d" Type="bigint" Nullable="false" />
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="usertype" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <Function Name="Ending_inventory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="date" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="InsertValue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="transaction_code" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="Notify_Office_Admin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="notification_code" Type="varchar" Mode="In" />
+    <Parameter Name="officeid" Type="int" Mode="In" />
+    <Parameter Name="transaction_code" Type="nvarchar" Mode="In" />
+    <Parameter Name="ris_code" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="plcrep" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="from" Type="nvarchar" Mode="In" />
+    <Parameter Name="to" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="Proc_GetNewOfficeRis" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="tble" Type="nvarchar" Mode="In" />
+    <Parameter Name="prefix" Type="nvarchar" Mode="In" />
+    <Parameter Name="field" Type="nvarchar" Mode="In" />
+    <Parameter Name="year" Type="int" Mode="In" />
+    <Parameter Name="month" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Proc_GetNewTranNo_ris" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="tble" Type="nvarchar" Mode="In" />
+    <Parameter Name="prefix" Type="nvarchar" Mode="In" />
+    <Parameter Name="field" Type="nvarchar" Mode="In" />
+    <Parameter Name="year" Type="int" Mode="In" />
+    <Parameter Name="month" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Proc_ManualTransNo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="tble" Type="nvarchar" Mode="In" />
+    <Parameter Name="prefix" Type="nvarchar" Mode="In" />
+    <Parameter Name="field" Type="nvarchar" Mode="In" />
+    <Parameter Name="year" Type="int" Mode="In" />
+    <Parameter Name="month" Type="int" Mode="In" />
+  </Function>
+  <Function Name="submit_request" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="query" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="controlno" Type="nvarchar" Mode="In" />
+    <Parameter Name="save_transaction" Type="nvarchar(max)" Mode="In" />
+  </Function>
+  <Function Name="totalsum" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="itemid" Type="int" Mode="In" />
+    <Parameter Name="transcode" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="wisrep" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="from" Type="nvarchar" Mode="In" />
+    <Parameter Name="to" Type="nvarchar" Mode="In" />
+    <Parameter Name="offid" Type="int" Mode="In" />
+  </Function>
+  <EntityContainer Name="IMSModelStoreContainer">
+    <EntitySet Name="l_barangay" EntityType="Self.l_barangay" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="l_municipality" EntityType="Self.l_municipality" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="l_province" EntityType="Self.l_province" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="l_purok" EntityType="Self.l_purok" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="menu" EntityType="Self.menu" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="plc" EntityType="Self.plc" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_generate_trans_code" EntityType="Self.tbl_generate_trans_code" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_t_deleted_logs" EntityType="Self.tbl_t_deleted_logs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_t_edited_logs" EntityType="Self.tbl_t_edited_logs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_t_notedby" EntityType="Self.tbl_t_notedby" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_t_Office" EntityType="Self.tbl_t_Office" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_t_ris_preparation" EntityType="Self.tbl_t_ris_preparation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_t_sento_admin" EntityType="Self.tbl_t_sento_admin" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="transaction" EntityType="Self.transaction" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="units" EntityType="Self.units" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="userRole" EntityType="Self.userRole" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="plcitems" EntityType="Self.plcitems" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[plcitems].[itemid] AS [itemid], 
+[plcitems].[itemname] AS [itemname], 
+[plcitems].[unit] AS [unit], 
+[plcitems].[unitcost] AS [unitcost], 
+[plcitems].[srcid] AS [srcid]
+FROM [dbo].[plcitems] AS [plcitems]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="report_log" EntityType="Self.report_log" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[report_log].[id] AS [id], 
+[report_log].[qrcode] AS [qrcode], 
+[report_log].[generated_on] AS [generated_on], 
+[report_log].[generated_by] AS [generated_by], 
+[report_log].[report_generated] AS [report_generated]
+FROM [dbo].[report_log] AS [report_log]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tbl_itemcode" EntityType="Self.tbl_itemcode" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[tbl_itemcode].[id] AS [id], 
+[tbl_itemcode].[itemcode] AS [itemcode], 
+[tbl_itemcode].[item_description] AS [item_description], 
+[tbl_itemcode].[price] AS [price], 
+[tbl_itemcode].[unit] AS [unit], 
+[tbl_itemcode].[itemid] AS [itemid]
+FROM [dbo].[tbl_itemcode] AS [tbl_itemcode]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tbl_items_per_transaction_code" EntityType="Self.tbl_items_per_transaction_code" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[tbl_items_per_transaction_code].[id] AS [id], 
+[tbl_items_per_transaction_code].[officeid] AS [officeid], 
+[tbl_items_per_transaction_code].[officename] AS [officename], 
+[tbl_items_per_transaction_code].[quantity] AS [quantity], 
+[tbl_items_per_transaction_code].[transaction_code] AS [transaction_code], 
+[tbl_items_per_transaction_code].[itemname] AS [itemname], 
+[tbl_items_per_transaction_code].[unit] AS [unit], 
+[tbl_items_per_transaction_code].[itemid] AS [itemid], 
+[tbl_items_per_transaction_code].[price] AS [price], 
+[tbl_items_per_transaction_code].[ris] AS [ris], 
+[tbl_items_per_transaction_code].[released] AS [released], 
+[tbl_items_per_transaction_code].[officecode] AS [officecode], 
+[tbl_items_per_transaction_code].[mainoffice] AS [mainoffice], 
+[tbl_items_per_transaction_code].[accountid] AS [accountid]
+FROM [dbo].[tbl_items_per_transaction_code] AS [tbl_items_per_transaction_code]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tbl_manual_items" EntityType="Self.tbl_manual_items" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[tbl_manual_items].[id] AS [id], 
+[tbl_manual_items].[itemname] AS [itemname], 
+[tbl_manual_items].[unit] AS [unit]
+FROM [dbo].[tbl_manual_items] AS [tbl_manual_items]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tbl_t_paid" EntityType="Self.tbl_t_paid" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[tbl_t_paid].[id] AS [id], 
+[tbl_t_paid].[itemid] AS [itemid], 
+[tbl_t_paid].[itemname] AS [itemname], 
+[tbl_t_paid].[officeid] AS [officeid], 
+[tbl_t_paid].[quantity] AS [quantity], 
+[tbl_t_paid].[unit] AS [unit], 
+[tbl_t_paid].[borrower_eid] AS [borrower_eid], 
+[tbl_t_paid].[reciever_eid] AS [reciever_eid], 
+[tbl_t_paid].[ris_id] AS [ris_id], 
+[tbl_t_paid].[unit_cost] AS [unit_cost]
+FROM [dbo].[tbl_t_paid] AS [tbl_t_paid]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tbl_wis_allocated" EntityType="Self.tbl_wis_allocated" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[tbl_wis_allocated].[id] AS [id], 
+[tbl_wis_allocated].[office] AS [office], 
+[tbl_wis_allocated].[itemname] AS [itemname], 
+[tbl_wis_allocated].[quantity] AS [quantity], 
+[tbl_wis_allocated].[unitcost] AS [unitcost], 
+[tbl_wis_allocated].[unit] AS [unit], 
+[tbl_wis_allocated].[cyear] AS [cyear], 
+[tbl_wis_allocated].[officeid] AS [officeid], 
+[tbl_wis_allocated].[itemid] AS [itemid]
+FROM [dbo].[tbl_wis_allocated] AS [tbl_wis_allocated]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tbl_wis_transaction" EntityType="Self.tbl_wis_transaction" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[tbl_wis_transaction].[id] AS [id], 
+[tbl_wis_transaction].[eid] AS [eid], 
+[tbl_wis_transaction].[itemcode] AS [itemcode], 
+[tbl_wis_transaction].[itemid] AS [itemid], 
+[tbl_wis_transaction].[itemname] AS [itemname], 
+[tbl_wis_transaction].[date] AS [date], 
+[tbl_wis_transaction].[quantity] AS [quantity], 
+[tbl_wis_transaction].[unitcost] AS [unitcost], 
+[tbl_wis_transaction].[officeid] AS [officeid], 
+[tbl_wis_transaction].[in_out] AS [in_out], 
+[tbl_wis_transaction].[descript] AS [descript], 
+[tbl_wis_transaction].[srcid] AS [srcid], 
+[tbl_wis_transaction].[accountid] AS [accountid], 
+[tbl_wis_transaction].[tid] AS [tid], 
+[tbl_wis_transaction].[unit] AS [unit], 
+[tbl_wis_transaction].[obj] AS [obj], 
+[tbl_wis_transaction].[reid] AS [reid], 
+[tbl_wis_transaction].[ris_id] AS [ris_id], 
+[tbl_wis_transaction].[transcode] AS [transcode], 
+[tbl_wis_transaction].[officename] AS [officename], 
+[tbl_wis_transaction].[starting_balance] AS [starting_balance], 
+[tbl_wis_transaction].[ref_id_wrt] AS [ref_id_wrt], 
+[tbl_wis_transaction].[year] AS [year], 
+[tbl_wis_transaction].[quarter] AS [quarter], 
+[tbl_wis_transaction].[mooe_no] AS [mooe_no], 
+[tbl_wis_transaction].[dbm_bb] AS [dbm_bb]
+FROM [dbo].[tbl_wis_transaction] AS [tbl_wis_transaction]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="transact" EntityType="Self.transact" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[transact].[id] AS [id], 
+[transact].[eid] AS [eid], 
+[transact].[itemid] AS [itemid], 
+[transact].[itemname] AS [itemname], 
+[transact].[date] AS [date], 
+[transact].[quantity] AS [quantity], 
+[transact].[unitcost] AS [unitcost], 
+[transact].[officeid] AS [officeid], 
+[transact].[in_out] AS [in_out], 
+[transact].[descript] AS [descript], 
+[transact].[srcid] AS [srcid], 
+[transact].[accountid] AS [accountid], 
+[transact].[tid] AS [tid], 
+[transact].[unit] AS [unit], 
+[transact].[obj] AS [obj], 
+[transact].[reid] AS [reid]
+FROM [dbo].[transact] AS [transact]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="wis_borrowed_items" EntityType="Self.wis_borrowed_items" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[wis_borrowed_items].[bid] AS [bid], 
+[wis_borrowed_items].[itemid] AS [itemid], 
+[wis_borrowed_items].[itemname] AS [itemname], 
+[wis_borrowed_items].[price] AS [price], 
+[wis_borrowed_items].[quantity] AS [quantity], 
+[wis_borrowed_items].[unit] AS [unit], 
+[wis_borrowed_items].[date] AS [date], 
+[wis_borrowed_items].[officename] AS [officename], 
+[wis_borrowed_items].[officeid] AS [officeid], 
+[wis_borrowed_items].[transaction_code] AS [transaction_code], 
+[wis_borrowed_items].[status] AS [status], 
+[wis_borrowed_items].[paid] AS [paid]
+FROM [dbo].[wis_borrowed_items] AS [wis_borrowed_items]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="wis_ris_status" EntityType="Self.wis_ris_status" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[wis_ris_status].[ris_id] AS [ris_id], 
+[wis_ris_status].[officeid] AS [officeid], 
+[wis_ris_status].[officename] AS [officename], 
+[wis_ris_status].[date] AS [date], 
+[wis_ris_status].[status] AS [status], 
+[wis_ris_status].[username] AS [username]
+FROM [dbo].[wis_ris_status] AS [wis_ris_status]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="wis_ris_transactions" EntityType="Self.wis_ris_transactions" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[wis_ris_transactions].[id] AS [id], 
+[wis_ris_transactions].[officeid] AS [officeid], 
+[wis_ris_transactions].[officename] AS [officename], 
+[wis_ris_transactions].[itemid] AS [itemid], 
+[wis_ris_transactions].[itemname] AS [itemname], 
+[wis_ris_transactions].[price] AS [price], 
+[wis_ris_transactions].[unit] AS [unit], 
+[wis_ris_transactions].[quantity] AS [quantity], 
+[wis_ris_transactions].[status] AS [status], 
+[wis_ris_transactions].[date_approved] AS [date_approved], 
+[wis_ris_transactions].[date_returned] AS [date_returned], 
+[wis_ris_transactions].[date_submited] AS [date_submited], 
+[wis_ris_transactions].[risid] AS [risid], 
+[wis_ris_transactions].[trans_code] AS [trans_code], 
+[wis_ris_transactions].[controlno] AS [controlno], 
+[wis_ris_transactions].[ref_id] AS [ref_id], 
+[wis_ris_transactions].[to_be_deleted] AS [to_be_deleted]
+FROM [dbo].[wis_ris_transactions] AS [wis_ris_transactions]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vw_searchAvailable" EntityType="Self.vw_searchAvailable" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vw_searchAvailable].[itemname] AS [itemname], 
+[vw_searchAvailable].[unit] AS [unit], 
+[vw_searchAvailable].[itemid] AS [itemid], 
+[vw_searchAvailable].[year] AS [year], 
+[vw_searchAvailable].[quarter] AS [quarter], 
+[vw_searchAvailable].[mooe_no] AS [mooe_no], 
+[vw_searchAvailable].[dbm_bb] AS [dbm_bb], 
+[vw_searchAvailable].[account] AS [account], 
+[vw_searchAvailable].[remaining] AS [remaining]
+FROM [dbo].[vw_searchAvailable] AS [vw_searchAvailable]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vw_stockviewing_wis" EntityType="Self.vw_stockviewing_wis" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vw_stockviewing_wis].[trnid] AS [trnid], 
+[vw_stockviewing_wis].[itemid] AS [itemid], 
+[vw_stockviewing_wis].[itemname] AS [itemname], 
+[vw_stockviewing_wis].[unitcost] AS [unitcost], 
+[vw_stockviewing_wis].[total] AS [total], 
+[vw_stockviewing_wis].[unit] AS [unit]
+FROM [dbo].[vw_stockviewing_wis] AS [vw_stockviewing_wis]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vw_where_to_get_existing_item" EntityType="Self.vw_where_to_get_existing_item" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vw_where_to_get_existing_item].[id] AS [id], 
+[vw_where_to_get_existing_item].[itemid] AS [itemid], 
+[vw_where_to_get_existing_item].[itemname] AS [itemname], 
+[vw_where_to_get_existing_item].[unitcost] AS [unitcost], 
+[vw_where_to_get_existing_item].[unit] AS [unit], 
+[vw_where_to_get_existing_item].[total_in] AS [total_in], 
+[vw_where_to_get_existing_item].[transcode] AS [transcode], 
+[vw_where_to_get_existing_item].[date] AS [date], 
+[vw_where_to_get_existing_item].[total_out] AS [total_out], 
+[vw_where_to_get_existing_item].[available] AS [available]
+FROM [dbo].[vw_where_to_get_existing_item] AS [vw_where_to_get_existing_item]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwAll" EntityType="Self.vwAll" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwAll].[trnid] AS [trnid], 
+[vwAll].[itemname] AS [itemname], 
+[vwAll].[unit] AS [unit], 
+[vwAll].[itemid] AS [itemid], 
+[vwAll].[total] AS [total]
+FROM [dbo].[vwAll] AS [vwAll]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwAllout" EntityType="Self.vwAllout" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwAllout].[trnid] AS [trnid], 
+[vwAllout].[itemid] AS [itemid], 
+[vwAllout].[itemname] AS [itemname], 
+[vwAllout].[unit] AS [unit], 
+[vwAllout].[total] AS [total]
+FROM [dbo].[vwAllout] AS [vwAllout]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwbyofficeout" EntityType="Self.vwbyofficeout" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwbyofficeout].[officeid] AS [officeid], 
+[vwbyofficeout].[trnid] AS [trnid], 
+[vwbyofficeout].[item_id] AS [item_id], 
+[vwbyofficeout].[itemname] AS [itemname], 
+[vwbyofficeout].[total] AS [total], 
+[vwbyofficeout].[unit] AS [unit]
+FROM [dbo].[vwbyofficeout] AS [vwbyofficeout]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwplcallout" EntityType="Self.vwplcallout" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwplcallout].[trnid] AS [trnid], 
+[vwplcallout].[itemid] AS [itemid], 
+[vwplcallout].[itemname] AS [itemname], 
+[vwplcallout].[unit] AS [unit], 
+[vwplcallout].[total] AS [total]
+FROM [dbo].[vwplcallout] AS [vwplcallout]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwQtyOnHand" EntityType="Self.vwQtyOnHand" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwQtyOnHand].[officeid] AS [officeid], 
+[vwQtyOnHand].[trnid] AS [trnid], 
+[vwQtyOnHand].[item_id] AS [item_id], 
+[vwQtyOnHand].[IN_STOCK] AS [IN_STOCK]
+FROM [dbo].[vwQtyOnHand] AS [vwQtyOnHand]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwrecieve" EntityType="Self.vwrecieve" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwrecieve].[officeid] AS [officeid], 
+[vwrecieve].[trnid] AS [trnid], 
+[vwrecieve].[itemid] AS [itemid], 
+[vwrecieve].[itemname] AS [itemname], 
+[vwrecieve].[total] AS [total], 
+[vwrecieve].[unit] AS [unit]
+FROM [dbo].[vwrecieve] AS [vwrecieve]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwrptSummaryAll" EntityType="Self.vwrptSummaryAll" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwrptSummaryAll].[itemid] AS [itemid], 
+[vwrptSummaryAll].[itemname] AS [itemname], 
+[vwrptSummaryAll].[unit] AS [unit], 
+[vwrptSummaryAll].[available] AS [available], 
+[vwrptSummaryAll].[released] AS [released], 
+[vwrptSummaryAll].[trnid] AS [trnid]
+FROM [dbo].[vwrptSummaryAll] AS [vwrptSummaryAll]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwstockoutgrid" EntityType="Self.vwstockoutgrid" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwstockoutgrid].[officeid] AS [officeid], 
+[vwstockoutgrid].[trnid] AS [trnid], 
+[vwstockoutgrid].[itemid] AS [itemid], 
+[vwstockoutgrid].[itemname] AS [itemname], 
+[vwstockoutgrid].[total] AS [total], 
+[vwstockoutgrid].[unit] AS [unit], 
+[vwstockoutgrid].[unitcost] AS [unitcost], 
+[vwstockoutgrid].[srcid] AS [srcid], 
+[vwstockoutgrid].[accountid] AS [accountid], 
+[vwstockoutgrid].[tid] AS [tid], 
+[vwstockoutgrid].[obj] AS [obj]
+FROM [dbo].[vwstockoutgrid] AS [vwstockoutgrid]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwtransact" EntityType="Self.vwtransact" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwtransact].[id] AS [id], 
+[vwtransact].[eid] AS [eid], 
+[vwtransact].[itemid] AS [itemid], 
+[vwtransact].[date] AS [date], 
+[vwtransact].[itemname] AS [itemname], 
+[vwtransact].[quantity] AS [quantity], 
+[vwtransact].[unit] AS [unit], 
+[vwtransact].[in_out] AS [in_out], 
+[vwtransact].[eName] AS [eName], 
+[vwtransact].[officeid] AS [officeid], 
+[vwtransact].[descript] AS [descript], 
+[vwtransact].[reid] AS [reid]
+FROM [dbo].[vwtransact] AS [vwtransact]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwTransactions" EntityType="Self.vwTransactions" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwTransactions].[ID] AS [ID], 
+[vwTransactions].[eid] AS [eid], 
+[vwTransactions].[item_id] AS [item_id], 
+[vwTransactions].[stock_date] AS [stock_date], 
+[vwTransactions].[quantity] AS [quantity], 
+[vwTransactions].[in_out] AS [in_out], 
+[vwTransactions].[eName] AS [eName], 
+[vwTransactions].[officeid] AS [officeid], 
+[vwTransactions].[description] AS [description]
+FROM [dbo].[vwTransactions] AS [vwTransactions]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwUsers" EntityType="Self.vwUsers" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwUsers].[SwipEmployeeID] AS [SwipEmployeeID], 
+[vwUsers].[emailaddress] AS [emailaddress], 
+[vwUsers].[passcode] AS [passcode], 
+[vwUsers].[eid] AS [eid], 
+[vwUsers].[d] AS [d], 
+[vwUsers].[ID] AS [ID], 
+[vwUsers].[usertype] AS [usertype]
+FROM [dbo].[vwUsers] AS [vwUsers]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

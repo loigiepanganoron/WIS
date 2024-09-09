@@ -1,0 +1,35 @@
+﻿
+
+<div id="tabcontent">
+    @(Html.Kendo().Grid<dynamic>()
+                .Name("history_out")
+                .Columns(columns =>
+                {
+                    columns.Bound("itemname").Title("Item Name").Width(300);
+                    columns.Bound("totalin").Title("Quantity").Width(100);
+                    columns.Bound("date").Title("Date").Width(100);
+                    columns.Bound("officename").Title("Office").Width(200);
+                })
+                          .Pageable()
+                          .Selectable()
+            //.Scrollable()
+            //.HtmlAttributes(new { style = "height:auto" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(15)
+                                  .Read(read => read.Action("history_out_read", "Wis"))
+            // .Sort(a => a.Add("itemname").Ascending())
+                          )
+            // .Events(e => e.Change("wisimg"))
+    )
+
+</div>
+
+<style>
+    #tabcontent {
+        width: 100%;
+        height: auto;
+    }
+</style>
+

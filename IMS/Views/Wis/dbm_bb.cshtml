@@ -1,0 +1,63 @@
+﻿
+<div style="width:100%;height:auto;">
+    <div style="width:100%;height:auto;float:left">
+        @(Html.Kendo().ComboBox()
+                        .Name("dbm_bb")
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .Placeholder("Select Source")
+                        .HtmlAttributes(new { @style = "width: 180px;" })
+                        .Filter("contains")
+                        .AutoBind(true)
+                        .MinLength(1)
+                        .Suggest(true)
+                        .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "DBM", Value = "1" }, new SelectListItem() { Text = "BULK BIDDING", Value = "2" } })
+        )
+    </div>
+
+    <div style="width:100%;height:auto;float:left;margin-top:35px">
+        @(Html.Kendo().Grid<dynamic>()
+                .Name("dbm_bb_Grid")
+                .Columns(columns =>
+                {
+                    columns.Bound("itemname").Title("Item Name").Width(200);
+                    columns.Bound("totalin").Title("Quantity").Width(100);
+                    columns.Bound("total").Title("Quantity").Width(100).Hidden();
+                    columns.Bound("totalin").Title("Request").Width(100);
+                })
+                          .Pageable()
+                          .Selectable()
+                          .HtmlAttributes(new { style = "height:auto" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(12)
+                              //       .Read(read => read.Action("wis_item_owner", "Wis", new { itemid = ViewBag.id }))
+                          .Sort(a => a.Add("itemname").Ascending())
+                          )
+        )
+    </div>
+
+
+    <a>
+        <div id="asd" style="width:80px;background-color:#1a8d68;height:35px;border-radius:4px;text-align:center;float:right;margin-right:50px;margin-top:40px">
+            <label style="font-size:15px;color:white"> SAVE </label>
+        </div>
+    </a>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#asd').mouseover(function () {
+            $(this).css('background', 'grey');
+        });
+        $('#asd').mouseout(function () {
+            $(this).css('background', '#1a8d68');
+        });
+        $('#asd').click(function () {
+            $(this).css('background', 'black');
+        });
+    })
+</script>

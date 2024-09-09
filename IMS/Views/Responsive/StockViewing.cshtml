@@ -1,0 +1,64 @@
+﻿<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <label> Search Item</label>        
+                    <input placeholder="Search Item" id="searchere" type="text" style="width:100%;height:35px">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    @(Html.Kendo().Grid<dynamic>()
+                    .Name("stockviewing")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemid").Title("").Hidden();
+                        columns.Bound("itemname").Title("Itemname").Width(250);
+                        columns.Bound("total").Title("Available").Width(120);
+                        columns.Bound("unit").Title("Unit").Width(100);
+                    })
+                              .Pageable()
+
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(20)
+                              .Read(read => read.Action("get_available_item", "Responsive"))
+                              .Sort(a => a.Add("itemname").Ascending())
+                              )
+                    )
+
+
+  
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#searchere").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#stockviewing").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "itemname", operator: "contains", value: value });
+                orfilter.filters.push({ field: "itemname", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+    })
+</script>

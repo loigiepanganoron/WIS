@@ -1,0 +1,17 @@
+﻿
+
+<textarea type="text" class="k-textbox" id="descript" name="descript" style="width: 265px; height:100px; word-wrap: break-word;" maxlength="100"/>
+
+<button id="button" onclick="Out2()" class="k-primary fill">Proceed</button>
+<script>
+    function Out2() {
+        $.post("@Url.Content("~/Home/stockOut")", { desc: $("#descript").val(), itemID: $('#items').val(), qty: $('#qty').val(), eid: 0 }, function (r) {
+            $("#stockView2").data("kendoGrid").dataSource.read({ itemid: id });
+            $('#stockView2').data('kendoGrid').refresh();
+            $('#stockView').data('kendoGrid').dataSource.read();
+            $('#stockView').data('kendoGrid').refresh();
+            $('#desc').data('kendoWindow').close();
+            $('#windowin_out').data('kendoWindow').close();
+        });
+    }
+</script>

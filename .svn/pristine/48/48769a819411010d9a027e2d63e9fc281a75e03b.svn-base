@@ -1,0 +1,92 @@
+﻿
+<script type="text/javascript">
+
+    function newbound(e) {
+        var grid = $("#Monitor1").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].total == 0) {
+                grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("hide");
+            }
+        }
+    }
+    function boundout(e) {
+        var grid = $("#Monitor").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].tobeout == 0) {
+                grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("hide");
+            }
+        }
+    }
+</script>
+<style>
+    .hide {
+        visibility: hidden;
+    }
+</style>
+
+
+<div style="width:100%;margin-top:0px">
+
+    <div id="noise" style="height:20px;width:100%;border-top-left-radius:10px;border-top-right-radius:10px"><label style="color:white;font-size:15px;text-align:center;">FOR RELEASE</label> </div>
+    @(Html.Kendo().Grid<dynamic>()
+                .Name("Monitor1")
+                .Columns(columns =>
+                {
+                    columns.Bound("itemname").Title("Item Name");
+                    columns.Bound("ntotal").Title("Quantity").Width(100);
+                })
+                          .Scrollable()
+                          .Pageable()
+                          .Sortable()
+                          .HtmlAttributes(new { style = "height:220;" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(30)
+                                           .Read(read => read.Action("readOut", "Home", new { officeid = ViewBag.id }))
+                          .Sort(a => a.Add("itemname").Ascending()))
+                          .Events(e => e.DataBound("newbound"))
+    )
+
+
+    <div style="margin-top:25px">
+        <div id="noise" style="height:20px;width:100%;border-top-left-radius:10px;border-top-right-radius:10px"><label style="color:white;font-size:15px;text-align:center;">RECIEVED ITEMS</label> </div>
+        @(Html.Kendo().Grid<dynamic>()
+                .Name("Monitor")
+                .Columns(columns =>
+                {
+                    columns.Bound("itemname").Title("Item Name");
+                    columns.Bound("ntotal").Title("Quantity").Width(80);
+                    columns.Bound("tobeout").Title("Quantity").Hidden();
+                })
+
+                         .Scrollable()
+                          .Pageable()
+                          .Sortable()
+                          .HtmlAttributes(new { style = "height:220px;" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(30)
+                         .Read(read => read.Action("released", "Home"))
+                          .Sort(a => a.Add("itemName").Ascending())
+                          )
+                          .Events(e => e.DataBound("boundout"))
+        )
+        <br>
+        <br>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var id = $('#mgaopis1').data('kendoComboBox').value();
+
+        $('#Monitor1').data('kendoGrid').dataSource.read({ officeid: id })
+        $('#Monitor').data('kendoGrid').dataSource.read({ officeid: id })
+    })
+</script>

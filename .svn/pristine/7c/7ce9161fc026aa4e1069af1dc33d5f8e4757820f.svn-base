@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "Maintenance";
+}
+
+<script>
+    function addcategory() {
+
+        $.get("@Url.Content("~/Maintenance/adc")", function (r) {
+            $("#adc").html(r)
+            $("#adc").data("kendoWindow").open()
+        })
+    }
+</script>
+
+<div style="padding:0px 20px 0px 20px;width:100%;float:left">
+    <div style="width:46%;height:auto;float:left">
+        <h3>Maintenance for PLC</h3>
+
+        <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-radius:5px;background-color:#0cb954;margin-top:0px;" onclick="show()">
+            <p style="color:white;font-size:14px;">
+                Add Unit
+            </p>
+        </button>
+
+        <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-radius:5px;background-color:#0cb954;margin-top:0px;" onclick="addcategory()">
+            <p style="color:white;font-size:14px;">
+                Add Category
+            </p>
+        </button>
+
+        <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-radius:5px;background-color:#0cb954;margin-top:0px;">
+            <p style="color:white;font-size:14px;">
+                Add User
+            </p>
+        </button>
+    </div>
+    <div style="width:46%;height:auto;float:left;margin-left:40px">
+        <h3>Maintenance Per Office</h3>
+        <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-radius:5px;background-color:#0cb954;margin-top:0px;">
+            <p style="color:white;font-size:14px;">
+                Add Category
+            </p>
+        </button>
+
+
+        <button class="noise" style="padding:3px 0px 0px 0px;width:120px;height:30px;float:left;border-radius:5px;background-color:#0cb954;margin-top:0px;">
+            <p style="color:white;font-size:14px;">
+                Add User
+            </p>
+        </button>
+    </div>
+
+    <div style="float:left;width:46%;height:auto">
+        <h3>Maintenance for PGSO</h3>
+    </div>
+
+</div>
+<script>
+    function show() {
+        $.get("@Url.Content("~/Maintenance/Addunit")", function (r) {
+            $("#addunit").html(r)
+            $("#addunit").data("kendoWindow").open()
+        })
+    }
+</script>
+
+@(Html.Kendo().Window()
+    .Name("addunit")
+    .Draggable()
+    .Title("Add Unit")
+    .HtmlAttributes(new { style = "width:400px;height:300px" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+@(Html.Kendo().Window()
+    .Name("adc")
+    .Draggable()
+    .Title("Add Category")
+    .HtmlAttributes(new { style = "width:500px;height:400px" })
+    .Modal(true)
+    .Visible(!ViewData.ModelState.IsValid)
+)

@@ -1,0 +1,105 @@
+﻿<script>
+    function getthis() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var id = rowData.itemid;
+        var unit = rowData.unit;
+        document.getElementById("unit").value = unit;
+    }
+</script>
+<div style="width:100%">
+    <div style="height:35px;width:100%;text-align:center;padding-top:10px" id="noise"><p style="font-size:25px;color:white;"> Stock In</p> </div>
+    <div style="margin-top:20px">
+        <table>
+            <tr>
+                <th>Item</th>
+                <th>Unit</th>
+                <th>Qty</th>
+            </tr>
+            <tr>
+                <td>
+                    @(Html.Kendo().ComboBox()
+                .Name("items2")
+                .DataTextField("itemName")
+                .DataValueField("itemid")
+                .Placeholder("Search item here...")
+                .HtmlAttributes(new { @style = "width: 200px" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("InList", "Home")))
+                          .Events(e => e.Change("getthis"))
+                    )
+                </td>
+                <td>
+                    <input disabled="disabled" style="width:45px;height:20px;float:right;margin-right:-25px" type="text" name="unit" id="unit">
+                </td>
+                <td>
+                    <input style="width:45px;height:20px;float:right;margin-right:-25px" type="text" id="qty2" name="qty2" placeholder="0" />
+                </td>
+            </tr>
+        </table>
+        <div style="margin-top:20px">
+            <button id="button" onclick="In()" class="k-primary fill">Save</button>
+        </div>
+    </div>
+
+   
+</div>
+
+<script>
+    function In() {
+
+        var qty2 = $('#qty2').val();
+        var item = $('#items2').data('kendoComboBox').value();
+
+        if (qty2 == '0') {
+            swal('', 'Enter quantity!', 'error');
+        }
+        if (item == "") {
+            swal('', 'Select item first!', 'error');
+        }
+        if (qty2 == "") {
+            swal('', 'Enter quantity!', 'error');
+        }
+        if (item != "" && qty2 != '0' && qty2 != "") {
+            $.post("@Url.Content("~/Home/stockIn")",
+                { itemID: $('#items2').val(), qty: $('#qty2').val() }, function (r) {
+                    $('#stockView').data('kendoGrid').dataSource.read();
+                    $('#stockView').data('kendoGrid').refresh();
+                    $('#stockView2').data('kendoGrid').dataSource.read();
+                    $('#stockView2').data('kendoGrid').refresh();
+
+                    $("#items2").data("kendoComboBox").dataSource.read();
+                    $('#qty2').val('');
+                    swal('', 'Entry Successfully Save!', 'success');
+                    $('#windowin_out').data('kendoWindow').refresh();
+                });
+        }
+    }
+</script>
+
+
+
+<style>
+    th {
+        font-size: 15px;
+        font-weight: normal;
+        border: solid 1px #b7b6b6;
+        border-collapse: collapse;
+        height: 30px;
+        text-align: center;
+    }
+
+    td {
+        border: solid 1px #cecece;
+    }
+
+    table {
+        margin-top: -5px;
+    }
+
+    #errmsg {
+        color: yellow;
+    }
+</style>

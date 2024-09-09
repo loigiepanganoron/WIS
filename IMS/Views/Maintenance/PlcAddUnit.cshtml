@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewBag.Title = "PlcAddUnit";
+}
+
+<script>
+    function  deleteunit(id) {
+
+        swal({
+            text:"Are you sure you want to delete this Unit?",
+            title: "",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Yes, I am sure!',
+            cancelButtonText: "No, cancel it!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+                function (isConfirm) {
+                    if (isConfirm) {
+
+                        $.get("@Url.Content("~/Maintenance/deleteunit")", { id: id, }, function (d) {
+                            //alert(d)
+                            if (d == "1") {
+
+                                swal({
+                                    title: '',
+                                    text: 'Unit Was Deleted!',
+                                    type: 'success'
+                                });
+                                $("#plcunitgrid").data("kendoGrid").dataSource.read();
+
+                            }
+                            else {
+                                swal({
+                                    title: '',
+                                    text: d,
+                                    type: 'error'
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        swal("", "Deleting Unit Was Cancelled ", "error");
+                    }
+                });
+    }
+
+
+    function  addunit() {
+        var unit = $('#unit').val()
+
+        var data = { "unit": unit }
+
+
+        if (unit == "")
+        {
+            swal('', 'Opps input is invalid ', 'error')
+        }
+
+        else
+        {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("saveunit", "Maintenance")',
+                data: JSON.stringify(data),
+                contentType: "application/json;charset=utf-8",
+                processData: true,
+                success: function (data) {
+
+                    if (data == 1) {
+                        $(".my_audio").trigger('play');
+                        swal('', 'Entry Successfully Save!', 'success');
+                        $("#plcunitgrid").data("kendoGrid").dataSource.read();
+                    }
+                    else {
+                        swal('', data, 'error')
+                    }
+                },
+            })
+        
+        }
+    }
+</script>
+
+    <div style="width:350px;height:40px">
+        <input id="unit" name="unit" type="text" style="width:200px;height:20px;float:left" placeholder="enter name..">
+        <button class="noise" style="padding:3px 0px 0px 0px;width:60px;height:25px;float:left;border-radius:5px;background-color:#0cb954;margin-top:0px;" onclick="addunit()">
+            <p style="color:white;font-size:14px;">
+                Add
+            </p>
+        </button>
+    </div>
+
+    
+        @(Html.Kendo().Grid<dynamic>()
+            .Name("plcunitgrid")
+            .Columns(columns =>
+            {
+
+                columns.Bound("id").Title("Unit Id");
+                columns.Bound("unitname").Title("Unit");
+                columns.Bound("x").Title("").ClientTemplate("<div style=\"text-align:center\"\"> <a class=\"mif-cross\" style=\"font-size:20px\" onclick=\"deleteunit(#:id#)\"> </a></div>");
+
+            })
+            .Pageable()
+            .Selectable()
+            .HtmlAttributes(new { style = "height:auto;" })
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .ServerOperation(false)
+            .PageSize(5)
+            .Read(read => read.Action("plcunits2", "Plc"))
+            ))
+    
+

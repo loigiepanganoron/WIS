@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="pmisModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="OfficeDescription">
+          <Key>
+            <PropertyRef Name="OfficeID" />
+          </Key>
+          <Property Name="OfficeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OfficeName" Type="nvarchar(max)" />
+          <Property Name="OfficeAbbr" Type="nvarchar" MaxLength="250" />
+          <Property Name="OfficeMedium" Type="nvarchar(max)" />
+          <Property Name="OfficeCode" Type="nvarchar" MaxLength="10" />
+          <Property Name="OfficeHead" Type="nvarchar" MaxLength="50" />
+          <Property Name="OfficeHeadID" Type="nvarchar" MaxLength="50" />
+          <Property Name="OfficeDesignation" Type="nvarchar" MaxLength="150" />
+          <Property Name="Fund" Type="nvarchar" MaxLength="5" />
+          <Property Name="Order" Type="int" />
+          <Property Name="OfficeCodeGSIS" Type="nvarchar" MaxLength="50" />
+          <Property Name="SectorCode" Type="int" />
+          <Property Name="NationalAgency" Type="bit" />
+          <Property Name="project" Type="bit" />
+          <Property Name="locatedinCapitol" Type="bit" />
+          <Property Name="HeadCelNo" Type="nvarchar" MaxLength="100" />
+          <Property Name="isActiveOffice" Type="int" />
+          <Property Name="Plantilla_Ordering" Type="int" />
+          <Property Name="isMain" Type="int" />
+          <Property Name="IsPhysical" Type="smallint" />
+          <Property Name="email_admin" Type="varchar" MaxLength="50" />
+          <Property Name="email_emp_grouped" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'pmis.dbo.vwLoginParameter' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwLoginParameter">
+          <Key>
+            <PropertyRef Name="euid" />
+          </Key>
+          <Property Name="euid" Type="int" Nullable="false" />
+          <Property Name="eid" Type="bigint" />
+          <Property Name="SwipEmployeeID" Type="nvarchar" MaxLength="10" />
+          <Property Name="passcode" Type="varchar" MaxLength="500" />
+          <Property Name="RoleId" Type="int" />
+          <Property Name="emailaddress" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'pmis.dbo.vwMergeAllEmployee' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwMergeAllEmployee">
+          <Key>
+            <PropertyRef Name="eid" />
+            <PropertyRef Name="trNo" />
+            <PropertyRef Name="Department" />
+            <PropertyRef Name="AppointCoverage" />
+            <PropertyRef Name="Telephone" />
+            <PropertyRef Name="bloodtype" />
+            <PropertyRef Name="CanHaveTravel" />
+            <PropertyRef Name="Concurrent" />
+          </Key>
+          <Property Name="SwipeId" Type="nvarchar" MaxLength="10" />
+          <Property Name="eid" Type="bigint" Nullable="false" />
+          <Property Name="trNo" Type="bigint" Nullable="false" />
+          <Property Name="RowNo" Type="bigint" />
+          <Property Name="EmpName" Type="nvarchar" MaxLength="77" />
+          <Property Name="Position" Type="nvarchar" MaxLength="250" />
+          <Property Name="Department" Type="int" Nullable="false" />
+          <Property Name="OfficeAbbr" Type="nvarchar" MaxLength="250" />
+          <Property Name="OfficeName" Type="nvarchar(max)" />
+          <Property Name="EmailAdd" Type="nvarchar" MaxLength="100" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="employmentstatus_id" Type="tinyint" />
+          <Property Name="AppointCoverage" Type="datetime" Nullable="false" />
+          <Property Name="Cause" Type="nvarchar" MaxLength="100" />
+          <Property Name="Telephone" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="bloodtype" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TimeCode" Type="tinyint" />
+          <Property Name="CanHaveTravel" Type="int" Nullable="false" />
+          <Property Name="Concurrent" Type="int" Nullable="false" />
+          <Property Name="BirthD" Type="nvarchar" MaxLength="13" />
+          <Property Name="Salary" Type="money" />
+          <Property Name="EmpNameFull" Type="nvarchar" MaxLength="76" />
+        </EntityType>
+        <EntityContainer Name="pmisModelStoreContainer">
+          <EntitySet Name="OfficeDescription" EntityType="Self.OfficeDescription" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vwLoginParameter" EntityType="Self.vwLoginParameter" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[vwLoginParameter].[euid] AS [euid], 
+[vwLoginParameter].[eid] AS [eid], 
+[vwLoginParameter].[SwipEmployeeID] AS [SwipEmployeeID], 
+[vwLoginParameter].[passcode] AS [passcode], 
+[vwLoginParameter].[RoleId] AS [RoleId], 
+[vwLoginParameter].[emailaddress] AS [emailaddress]
+FROM [dbo].[vwLoginParameter] AS [vwLoginParameter]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vwMergeAllEmployee" EntityType="Self.vwMergeAllEmployee" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[vwMergeAllEmployee].[SwipeId] AS [SwipeId], 
+[vwMergeAllEmployee].[eid] AS [eid], 
+[vwMergeAllEmployee].[trNo] AS [trNo], 
+[vwMergeAllEmployee].[RowNo] AS [RowNo], 
+[vwMergeAllEmployee].[EmpName] AS [EmpName], 
+[vwMergeAllEmployee].[Position] AS [Position], 
+[vwMergeAllEmployee].[Department] AS [Department], 
+[vwMergeAllEmployee].[OfficeAbbr] AS [OfficeAbbr], 
+[vwMergeAllEmployee].[OfficeName] AS [OfficeName], 
+[vwMergeAllEmployee].[EmailAdd] AS [EmailAdd], 
+[vwMergeAllEmployee].[Status] AS [Status], 
+[vwMergeAllEmployee].[employmentstatus_id] AS [employmentstatus_id], 
+[vwMergeAllEmployee].[AppointCoverage] AS [AppointCoverage], 
+[vwMergeAllEmployee].[Cause] AS [Cause], 
+[vwMergeAllEmployee].[Telephone] AS [Telephone], 
+[vwMergeAllEmployee].[bloodtype] AS [bloodtype], 
+[vwMergeAllEmployee].[TimeCode] AS [TimeCode], 
+[vwMergeAllEmployee].[CanHaveTravel] AS [CanHaveTravel], 
+[vwMergeAllEmployee].[Concurrent] AS [Concurrent], 
+[vwMergeAllEmployee].[BirthD] AS [BirthD], 
+[vwMergeAllEmployee].[Salary] AS [Salary], 
+[vwMergeAllEmployee].[EmpNameFull] AS [EmpNameFull]
+FROM [dbo].[vwMergeAllEmployee] AS [vwMergeAllEmployee]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="pmisModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="pmisEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="OfficeDescriptions" EntityType="pmisModel.OfficeDescription" />
+          <EntitySet Name="vwLoginParameters" EntityType="pmisModel.vwLoginParameter" />
+          <EntitySet Name="vwMergeAllEmployees" EntityType="pmisModel.vwMergeAllEmployee" />
+        </EntityContainer>
+        <EntityType Name="OfficeDescription">
+          <Key>
+            <PropertyRef Name="OfficeID" />
+          </Key>
+          <Property Name="OfficeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OfficeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OfficeAbbr" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OfficeMedium" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OfficeCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="OfficeHead" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OfficeHeadID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OfficeDesignation" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Fund" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Order" Type="Int32" />
+          <Property Name="OfficeCodeGSIS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SectorCode" Type="Int32" />
+          <Property Name="NationalAgency" Type="Boolean" />
+          <Property Name="project" Type="Boolean" />
+          <Property Name="locatedinCapitol" Type="Boolean" />
+          <Property Name="HeadCelNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="isActiveOffice" Type="Int32" />
+          <Property Name="Plantilla_Ordering" Type="Int32" />
+          <Property Name="isMain" Type="Int32" />
+          <Property Name="IsPhysical" Type="Int16" />
+          <Property Name="email_admin" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email_emp_grouped" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="vwLoginParameter">
+          <Key>
+            <PropertyRef Name="euid" />
+          </Key>
+          <Property Name="euid" Type="Int32" Nullable="false" />
+          <Property Name="eid" Type="Int64" />
+          <Property Name="SwipEmployeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="passcode" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="RoleId" Type="Int32" />
+          <Property Name="emailaddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="vwMergeAllEmployee">
+          <Key>
+            <PropertyRef Name="eid" />
+            <PropertyRef Name="trNo" />
+            <PropertyRef Name="Department" />
+            <PropertyRef Name="AppointCoverage" />
+            <PropertyRef Name="Telephone" />
+            <PropertyRef Name="bloodtype" />
+            <PropertyRef Name="CanHaveTravel" />
+            <PropertyRef Name="Concurrent" />
+          </Key>
+          <Property Name="SwipeId" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="eid" Type="Int64" Nullable="false" />
+          <Property Name="trNo" Type="Int64" Nullable="false" />
+          <Property Name="RowNo" Type="Int64" />
+          <Property Name="EmpName" Type="String" MaxLength="77" FixedLength="false" Unicode="true" />
+          <Property Name="Position" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Department" Type="Int32" Nullable="false" />
+          <Property Name="OfficeAbbr" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OfficeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EmailAdd" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="employmentstatus_id" Type="Byte" />
+          <Property Name="AppointCoverage" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Cause" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Telephone" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="bloodtype" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TimeCode" Type="Byte" />
+          <Property Name="CanHaveTravel" Type="Int32" Nullable="false" />
+          <Property Name="Concurrent" Type="Int32" Nullable="false" />
+          <Property Name="BirthD" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+          <Property Name="Salary" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="EmpNameFull" Type="String" MaxLength="76" FixedLength="false" Unicode="true" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="pmisModelStoreContainer" CdmEntityContainer="pmisEntities">
+          <EntitySetMapping Name="OfficeDescriptions">
+            <EntityTypeMapping TypeName="pmisModel.OfficeDescription">
+              <MappingFragment StoreEntitySet="OfficeDescription">
+                <ScalarProperty Name="email_emp_grouped" ColumnName="email_emp_grouped" />
+                <ScalarProperty Name="email_admin" ColumnName="email_admin" />
+                <ScalarProperty Name="IsPhysical" ColumnName="IsPhysical" />
+                <ScalarProperty Name="isMain" ColumnName="isMain" />
+                <ScalarProperty Name="Plantilla_Ordering" ColumnName="Plantilla_Ordering" />
+                <ScalarProperty Name="isActiveOffice" ColumnName="isActiveOffice" />
+                <ScalarProperty Name="HeadCelNo" ColumnName="HeadCelNo" />
+                <ScalarProperty Name="locatedinCapitol" ColumnName="locatedinCapitol" />
+                <ScalarProperty Name="project" ColumnName="project" />
+                <ScalarProperty Name="NationalAgency" ColumnName="NationalAgency" />
+                <ScalarProperty Name="SectorCode" ColumnName="SectorCode" />
+                <ScalarProperty Name="OfficeCodeGSIS" ColumnName="OfficeCodeGSIS" />
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="Fund" ColumnName="Fund" />
+                <ScalarProperty Name="OfficeDesignation" ColumnName="OfficeDesignation" />
+                <ScalarProperty Name="OfficeHeadID" ColumnName="OfficeHeadID" />
+                <ScalarProperty Name="OfficeHead" ColumnName="OfficeHead" />
+                <ScalarProperty Name="OfficeCode" ColumnName="OfficeCode" />
+                <ScalarProperty Name="OfficeMedium" ColumnName="OfficeMedium" />
+                <ScalarProperty Name="OfficeAbbr" ColumnName="OfficeAbbr" />
+                <ScalarProperty Name="OfficeName" ColumnName="OfficeName" />
+                <ScalarProperty Name="OfficeID" ColumnName="OfficeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwLoginParameters">
+            <EntityTypeMapping TypeName="pmisModel.vwLoginParameter">
+              <MappingFragment StoreEntitySet="vwLoginParameter">
+                <ScalarProperty Name="emailaddress" ColumnName="emailaddress" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="passcode" ColumnName="passcode" />
+                <ScalarProperty Name="SwipEmployeeID" ColumnName="SwipEmployeeID" />
+                <ScalarProperty Name="eid" ColumnName="eid" />
+                <ScalarProperty Name="euid" ColumnName="euid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwMergeAllEmployees">
+            <EntityTypeMapping TypeName="pmisModel.vwMergeAllEmployee">
+              <MappingFragment StoreEntitySet="vwMergeAllEmployee">
+                <ScalarProperty Name="EmpNameFull" ColumnName="EmpNameFull" />
+                <ScalarProperty Name="Salary" ColumnName="Salary" />
+                <ScalarProperty Name="BirthD" ColumnName="BirthD" />
+                <ScalarProperty Name="Concurrent" ColumnName="Concurrent" />
+                <ScalarProperty Name="CanHaveTravel" ColumnName="CanHaveTravel" />
+                <ScalarProperty Name="TimeCode" ColumnName="TimeCode" />
+                <ScalarProperty Name="bloodtype" ColumnName="bloodtype" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="Cause" ColumnName="Cause" />
+                <ScalarProperty Name="AppointCoverage" ColumnName="AppointCoverage" />
+                <ScalarProperty Name="employmentstatus_id" ColumnName="employmentstatus_id" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="EmailAdd" ColumnName="EmailAdd" />
+                <ScalarProperty Name="OfficeName" ColumnName="OfficeName" />
+                <ScalarProperty Name="OfficeAbbr" ColumnName="OfficeAbbr" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+                <ScalarProperty Name="RowNo" ColumnName="RowNo" />
+                <ScalarProperty Name="trNo" ColumnName="trNo" />
+                <ScalarProperty Name="eid" ColumnName="eid" />
+                <ScalarProperty Name="SwipeId" ColumnName="SwipeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Default" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

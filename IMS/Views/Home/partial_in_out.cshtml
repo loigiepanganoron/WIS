@@ -1,0 +1,86 @@
+﻿<script>
+    $(document).ready(function () {
+        window.setTimeout(function () {filterNum() }, 1000);
+        //$("#qty").keyup(function () { filterNum(); });
+        filterNum();
+    })
+    function filterNum() {
+        $.get("@Url.Content("~/Home/filterNum")", { itemid: $("#items").val() }, function (r) {
+            $("#qty").data("kendoNumericTextBox").max(r);
+            //alert(r)
+        })
+    }
+</script>
+
+<div style="width:100%">
+    <div style="height:35px;width:100%;text-align:center;padding-top:10px" id="noise"><p style="font-size:25px;color:white;"> Stock Out</p> </div>
+    <div style="margin-left:12%;margin-top:20px">
+        <div style="margin-top:20px">
+            @(Html.Kendo().ComboBox()
+                .Name("items")
+                .DataTextField("itemName")
+                .DataValueField("itemid")
+                .Placeholder("Search item here...")
+                .SelectedIndex(0)
+                .Events(e => e.Change("filterNum"))
+                .HtmlAttributes(new { @style = "width: 300px" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("dropdownVal", "Home")))
+            )
+        </div>
+        <div style="margin-top:20px">
+            @(Html.Kendo().NumericTextBox<Int32>()
+                .Name("qty")
+                .Format("0")
+                .Min(1)
+                .Placeholder("Enter Quantity... ")
+                .HtmlAttributes(new { style = "width:300px" })
+            )
+        </div>
+        <div style="margin-top:20px">
+            @(Html.Kendo().ComboBox()
+                .Name("Employee")
+                .DataTextField("empName")
+                .DataValueField("eid")
+                .Placeholder("Search Name here...")
+                .HtmlAttributes(new { @style = "width: 300px" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("employeeList", "Home")))
+            )
+        </div>
+        <div style="margin-top:20px">
+            <button id="button" onclick="Out()" class="k-primary fill" >Save</button>
+        </div>
+    </div>
+
+</div>
+<div class="color-line" style="clear:both;margin-top:80px"></div>
+@(Html.Kendo().Window()
+    .Name("desc")
+    .Draggable()
+    .Title("Details")
+    .HtmlAttributes(new { style = "width:310px;height:190px" })
+    .Modal(true)
+    .Visible(!ViewData.ModelState.IsValid)
+)
+<script>
+    function Out() {
+        if ($("#Employee").val() == "") {
+            $.get("@Url.Content("~/Home/_desc")", function (r) {
+                $("#desc").html(r)
+                $("#desc").data("kendoWindow").center().open()
+            })
+        }
+        else {
+            $.post("@Url.Content("~/Home/stockOut")", { desc: "", itemID: $('#items').val(), qty: $('#qty').val(), eid: $("#Employee").val() }, function (r) {
+                $("#stockView2").data("kendoGrid").dataSource.read({ itemid: id });
+                $('#stockView2').data('kendoGrid').refresh();
+                $('#windowin_out').data('kendoWindow').close();
+            });
+        }
+    }
+</script>

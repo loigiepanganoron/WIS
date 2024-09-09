@@ -1,0 +1,135 @@
+﻿
+
+<script>
+    $(document).ready(function () {
+
+        $('#create_ris').on('click', '.checkbox', dai);
+        //history_in.table.on("click", ".chkbx", selectRow);
+
+        $("#showSelection").bind("click", function () {
+            
+            var checked = [];
+            for (var i in checkedIds) {
+                if (checkedIds[i]) {
+                    checked.push(i);
+                }
+            }
+            alert(checked);
+
+        });
+    })
+
+
+    var checkedIds = {};
+
+    //on click of the checkbox:
+    function dai() {
+
+        var checked = this.checked,
+            row = $(this).closest("tr"),
+            grid = $("#create_ris").data("kendoGrid"),
+            dataItem = grid.dataItem(row);
+
+        checkedIds[dataItem.itemid] = checked;
+        if (checked) {
+            //-select the row
+            row.addClass("k-state-selected");
+        }
+        else {
+            //-remove selection
+            row.removeClass("k-state-selected");
+        }
+    }
+      
+
+        //on dataBound event restore previous selected rows:
+        function onDataBound(e) {
+
+            var view = this.dataSource.view();
+            for (var i = 0; i < view.length; i++) {
+                if ([view[i].itemid]) {
+                    this.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                        .addClass("k-state-selected")
+                        .find(".checkbox")
+                        .attr("checked", "checked");
+                }
+            }
+
+        }
+
+</script>
+
+<script>
+function hide(e) {
+    var grid = $("#create_ris").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].ntotal == " ") {
+                //grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("k-grid-edit-row");
+                this.closeCell();
+            }
+        }
+    }
+</script>
+
+<script>
+    function submit_ris() {
+        var vgrid = $("#create_ris").data("kendoGrid");
+        //Getting grid items
+        var items = vgrid.dataSource.data();
+
+        if (items.quantity < items.ntotal)
+        {
+            alert("Quantity must equal to or less than the allocated Quantity")
+        }  
+
+        for (i = 0; i < items.length; i++) {
+                var item = items[i];
+                alert(item.quantity);
+            }
+    }
+</script>
+
+@(Html.Kendo().Grid<IMS.Models.item>()
+                .Name("create_ris")
+                .Columns(columns =>
+                {
+                    //columns.Bound("").Title("").Width(30).ClientTemplate("<input type='checkbox' class='checkbox' />");
+                    columns.Bound(p => p.itemid).Title("itemid").Hidden();
+                    columns.Bound(p => p.itemname).Title("Item Name");
+                    columns.Bound(p => p.unit).Title("unit").Hidden();
+                    //columns.Bound(p => p.totalin).Title("in").Hidden();
+                    columns.Bound(p => p.ntotal).Title("Total").Width(100);
+                    columns.Bound(p => p.totalin).Title("Allocated").Width(100);
+                    columns.Bound(p => p.quantity).Title("Quantity").Width(100);
+                    
+                })
+                            .Editable(editable => editable.Mode(GridEditMode.InCell))
+                          .Pageable()
+                         .Selectable()
+                          .HtmlAttributes(new { style = "height:auto" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .Batch(true)
+                          .ServerOperation(false)
+                          .PageSize(12)
+                          .Read(read => read.Action("create_ris", "Wis"))
+                          .Sort(a => a.Add("itemname").Ascending())
+                              .Model(model =>
+                                  {
+                                      model.Id(p => p.itemid);
+                                      model.Field(p => p.itemname).Editable(false);
+                                      model.Field(p => p.totalin).Editable(false);
+                                      model.Field(p => p.ntotal).Editable(false);
+                                      //model.Field(p => p.quantity).Editable(false);
+                                  })
+                          )
+                             .Events(e => e.DataBound("hide"))
+)
+
+<a onclick="submit_ris()">
+<div style="width:100px;background-color:#1a8d68;height:30px;border-radius:4px;text-align:center;float:right;margin-right:20px;margin-top:30px">
+    <label style="font-size:15px;color:white"> Submit RIS </label>
+</div>
+</a>

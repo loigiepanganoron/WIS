@@ -1,0 +1,688 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="IMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="IMSEntities" annotation:LazyLoadingEnabled="true">
+    <FunctionImport Name="plcrep" ReturnType="Collection(IMSModel.plcrep_Result)">
+      <Parameter Name="from" Mode="In" Type="String" />
+      <Parameter Name="to" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="totalsum" ReturnType="Collection(Int32)">
+      <Parameter Name="itemid" Mode="In" Type="Int32" />
+      <Parameter Name="transcode" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Proc_GetNewTranNo_ris">
+      <Parameter Name="tble" Mode="In" Type="String" />
+      <Parameter Name="prefix" Mode="In" Type="String" />
+      <Parameter Name="field" Mode="In" Type="String" />
+      <Parameter Name="year" Mode="In" Type="Int32" />
+      <Parameter Name="month" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="wisrep" ReturnType="Collection(IMSModel.wisrep_Result)">
+      <Parameter Name="from" Mode="In" Type="String" />
+      <Parameter Name="to" Mode="In" Type="String" />
+      <Parameter Name="offid" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Ending_inventory" ReturnType="Collection(IMSModel.Ending_inventory_Result)">
+      <Parameter Name="date" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Proc_ManualTransNo">
+      <Parameter Name="tble" Mode="In" Type="String" />
+      <Parameter Name="prefix" Mode="In" Type="String" />
+      <Parameter Name="field" Mode="In" Type="String" />
+      <Parameter Name="year" Mode="In" Type="Int32" />
+      <Parameter Name="month" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="submit_request" ReturnType="Collection(String)">
+      <Parameter Name="query" Mode="In" Type="String" />
+      <Parameter Name="controlno" Mode="In" Type="String" />
+      <Parameter Name="save_transaction" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="InsertValue">
+      <Parameter Name="transaction_code" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Notify_Office_Admin" ReturnType="Collection(String)">
+      <Parameter Name="notification_code" Mode="In" Type="String" />
+      <Parameter Name="officeid" Mode="In" Type="Int32" />
+      <Parameter Name="transaction_code" Mode="In" Type="String" />
+      <Parameter Name="ris_code" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Proc_GetNewOfficeRis">
+      <Parameter Name="tble" Mode="In" Type="String" />
+      <Parameter Name="prefix" Mode="In" Type="String" />
+      <Parameter Name="field" Mode="In" Type="String" />
+      <Parameter Name="year" Mode="In" Type="Int32" />
+      <Parameter Name="month" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="l_barangay" EntityType="IMSModel.l_barangay" />
+    <EntitySet Name="l_municipality" EntityType="IMSModel.l_municipality" />
+    <EntitySet Name="l_province" EntityType="IMSModel.l_province" />
+    <EntitySet Name="l_purok" EntityType="IMSModel.l_purok" />
+    <EntitySet Name="menus" EntityType="IMSModel.menu" />
+    <EntitySet Name="plcs" EntityType="IMSModel.plc" />
+    <EntitySet Name="tbl_generate_trans_code" EntityType="IMSModel.tbl_generate_trans_code" />
+    <EntitySet Name="tbl_t_deleted_logs" EntityType="IMSModel.tbl_t_deleted_logs" />
+    <EntitySet Name="tbl_t_edited_logs" EntityType="IMSModel.tbl_t_edited_logs" />
+    <EntitySet Name="tbl_t_notedby" EntityType="IMSModel.tbl_t_notedby" />
+    <EntitySet Name="tbl_t_Office" EntityType="IMSModel.tbl_t_Office" />
+    <EntitySet Name="tbl_t_ris_preparation" EntityType="IMSModel.tbl_t_ris_preparation" />
+    <EntitySet Name="tbl_t_sento_admin" EntityType="IMSModel.tbl_t_sento_admin" />
+    <EntitySet Name="transactions" EntityType="IMSModel.transaction" />
+    <EntitySet Name="units" EntityType="IMSModel.unit" />
+    <EntitySet Name="users" EntityType="IMSModel.user" />
+    <EntitySet Name="userRoles" EntityType="IMSModel.userRole" />
+    <EntitySet Name="plcitems" EntityType="IMSModel.plcitem" />
+    <EntitySet Name="report_log" EntityType="IMSModel.report_log" />
+    <EntitySet Name="tbl_itemcode" EntityType="IMSModel.tbl_itemcode" />
+    <EntitySet Name="tbl_items_per_transaction_code" EntityType="IMSModel.tbl_items_per_transaction_code" />
+    <EntitySet Name="tbl_manual_items" EntityType="IMSModel.tbl_manual_items" />
+    <EntitySet Name="tbl_t_paid" EntityType="IMSModel.tbl_t_paid" />
+    <EntitySet Name="tbl_wis_allocated" EntityType="IMSModel.tbl_wis_allocated" />
+    <EntitySet Name="tbl_wis_transaction" EntityType="IMSModel.tbl_wis_transaction" />
+    <EntitySet Name="transacts" EntityType="IMSModel.transact" />
+    <EntitySet Name="wis_borrowed_items" EntityType="IMSModel.wis_borrowed_items" />
+    <EntitySet Name="wis_ris_status" EntityType="IMSModel.wis_ris_status" />
+    <EntitySet Name="wis_ris_transactions" EntityType="IMSModel.wis_ris_transactions" />
+    <EntitySet Name="vw_searchAvailable" EntityType="IMSModel.vw_searchAvailable" />
+    <EntitySet Name="vw_stockviewing_wis" EntityType="IMSModel.vw_stockviewing_wis" />
+    <EntitySet Name="vw_where_to_get_existing_item" EntityType="IMSModel.vw_where_to_get_existing_item" />
+    <EntitySet Name="vwAlls" EntityType="IMSModel.vwAll" />
+    <EntitySet Name="vwAllouts" EntityType="IMSModel.vwAllout" />
+    <EntitySet Name="vwbyofficeouts" EntityType="IMSModel.vwbyofficeout" />
+    <EntitySet Name="vwplcallouts" EntityType="IMSModel.vwplcallout" />
+    <EntitySet Name="vwQtyOnHands" EntityType="IMSModel.vwQtyOnHand" />
+    <EntitySet Name="vwrecieves" EntityType="IMSModel.vwrecieve" />
+    <EntitySet Name="vwrptSummaryAlls" EntityType="IMSModel.vwrptSummaryAll" />
+    <EntitySet Name="vwstockoutgrids" EntityType="IMSModel.vwstockoutgrid" />
+    <EntitySet Name="vwtransacts" EntityType="IMSModel.vwtransact" />
+    <EntitySet Name="vwTransactions" EntityType="IMSModel.vwTransaction" />
+    <EntitySet Name="vwUsers" EntityType="IMSModel.vwUser" />
+  </EntityContainer>
+  <ComplexType Name="plcrep_Result">
+    <Property Type="String" Name="itemname" Nullable="true" MaxLength="50" />
+    <Property Type="Double" Name="totalin" Nullable="true" />
+    <Property Type="Double" Name="totalout" Nullable="true" />
+    <Property Type="String" Name="unit" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="unitcost" Nullable="true" Precision="19" />
+    <Property Type="Double" Name="totalcostout" Nullable="true" />
+    <Property Type="Double" Name="totalcostin" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="wisrep_Result">
+    <Property Type="String" Name="itemname" Nullable="true" MaxLength="500" />
+    <Property Type="Int32" Name="totalin" Nullable="true" />
+    <Property Type="Int32" Name="totalout" Nullable="true" />
+    <Property Type="String" Name="unit" Nullable="true" MaxLength="100" />
+    <Property Type="Decimal" Name="unitcost" Nullable="true" Precision="19" />
+    <Property Type="Decimal" Name="totalcostout" Nullable="true" Precision="19" />
+    <Property Type="Decimal" Name="totalcostin" Nullable="true" Precision="19" />
+  </ComplexType>
+  <ComplexType Name="Ending_inventory_Result">
+    <Property Type="Int32" Name="itemid" Nullable="true" />
+    <Property Type="String" Name="itemname" Nullable="true" MaxLength="150" />
+    <Property Type="Decimal" Name="unitcost" Nullable="true" Precision="19" />
+    <Property Type="String" Name="unit" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="total_remaining" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="l_barangay">
+    <Key>
+      <PropertyRef Name="bid" />
+    </Key>
+    <Property Name="bid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="munid" Type="Int32" />
+    <Property Name="prkid" Type="Int32" />
+    <Property Name="brgyid" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="brgycode" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="l_municipality">
+    <Key>
+      <PropertyRef Name="munid" />
+    </Key>
+    <Property Name="munid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="districtid" Type="Int32" />
+    <Property Name="munno" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="provid" Type="Int32" />
+    <Property Name="isactive" Type="Byte" />
+    <Property Name="lat" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="lng" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="l_province">
+    <Key>
+      <PropertyRef Name="lid" />
+    </Key>
+    <Property Name="lid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="provid" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="prvno" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="isactive" Type="Byte" />
+  </EntityType>
+  <EntityType Name="l_purok">
+    <Key>
+      <PropertyRef Name="purokid" />
+    </Key>
+    <Property Name="purokid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="munid" Type="Int32" />
+    <Property Name="brgyid" Type="Int32" />
+    <Property Name="prkid" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="prkcode" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="menu">
+    <Key>
+      <PropertyRef Name="MenuID" />
+    </Key>
+    <Property Name="MenuID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ParentID" Type="Int32" />
+    <Property Name="MenuLevel" Type="Int32" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="MenuTitle" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Action" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Controller" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Icon" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="MenuOrder" Type="Int32" />
+    <Property Name="ActionCode" Type="Int32" />
+    <Property Name="is_for" Type="Int32" />
+  </EntityType>
+  <EntityType Name="plc">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ename" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="date" Type="DateTime" Precision="3" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="in_out" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="quantity" Type="Double" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="srcid" Type="Int32" />
+    <Property Name="unitcost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="reid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tbl_generate_trans_code">
+    <Key>
+      <PropertyRef Name="entry_id" />
+    </Key>
+    <Property Name="entry_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id" Type="Int32" />
+    <Property Name="new_transcode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="date_entry" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityType Name="tbl_t_deleted_logs">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="price" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="trans_code" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="controlno" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="delete_date" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="tbl_t_edited_logs">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ris_transaction_id" Type="Int32" />
+    <Property Name="prev_quantity" Type="Int32" />
+    <Property Name="date_edited" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="tbl_t_notedby">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="officeid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tbl_t_Office">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OfficeID" Type="Int32" />
+    <Property Name="OfficeName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeAbbr" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="mainofficeid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tbl_t_ris_preparation">
+    <Key>
+      <PropertyRef Name="preparation_id" />
+    </Key>
+    <Property Name="preparation_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="controlno" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="date_time" Type="DateTime" Precision="3" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="officename" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="status" Type="Int32" />
+    <Property Name="release" Type="Boolean" />
+    <Property Name="edited" Type="Boolean" />
+    <Property Name="agree" Type="Boolean" />
+    <Property Name="preparedby" Type="Int32" />
+    <Property Name="deleted" Type="Boolean" />
+    <Property Name="date_approve" Type="DateTime" Precision="3" />
+    <Property Name="receive" Type="Boolean" />
+    <Property Name="transaction_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tbl_t_sento_admin">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="office_id" Type="Int32" />
+    <Property Name="phone_number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="transaction">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="item_id" Type="Int32" />
+    <Property Name="stock_date" Type="DateTime" Precision="3" />
+    <Property Name="quantity" Type="Double" />
+    <Property Name="in_out" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="itemname" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="reid" Type="Int32" />
+    <Property Name="ename" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="controlno" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="unitcost" Type="Double" />
+    <Property Name="ref_id" Type="Int64" />
+  </EntityType>
+  <EntityType Name="unit">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="unitname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="role" Type="Int32" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="EmpName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeID" Type="Int32" />
+    <Property Name="skin" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="userRole">
+    <Key>
+      <PropertyRef Name="roleid" />
+    </Key>
+    <Property Name="usertype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="roleid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <EntityType Name="plcitem">
+    <Key>
+      <PropertyRef Name="itemid" />
+    </Key>
+    <Property Name="itemid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="itemname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="unitcost" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="srcid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="report_log">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="qrcode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="generated_on" Type="DateTime" Precision="3" />
+    <Property Name="generated_by" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="report_generated" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tbl_itemcode">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="itemcode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="item_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="price" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="itemid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tbl_items_per_transaction_code">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="officename" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="transaction_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="itemname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="unit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="price" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="ris" Type="Int32" />
+    <Property Name="released" Type="Int32" />
+    <Property Name="officecode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="mainoffice" Type="Int32" />
+    <Property Name="accountid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tbl_manual_items">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="itemname" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tbl_t_paid">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="borrower_eid" Type="Int32" />
+    <Property Name="reciever_eid" Type="Int32" />
+    <Property Name="ris_id" Type="Int32" />
+    <Property Name="unit_cost" Type="Decimal" Precision="19" Scale="4" />
+  </EntityType>
+  <EntityType Name="tbl_wis_allocated">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="office" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="itemname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="quantity" Type="Double" />
+    <Property Name="unitcost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="cyear" Type="Int32" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="itemid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tbl_wis_transaction">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="itemcode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="date" Type="DateTime" Precision="3" />
+    <Property Name="quantity" Type="Double" />
+    <Property Name="unitcost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="in_out" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="descript" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="srcid" Type="Int32" />
+    <Property Name="accountid" Type="Int32" />
+    <Property Name="tid" Type="Int32" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="obj" Type="Int32" />
+    <Property Name="reid" Type="Int32" />
+    <Property Name="ris_id" Type="Int32" />
+    <Property Name="transcode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="officename" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="starting_balance" Type="Int32" />
+    <Property Name="ref_id_wrt" Type="Int32" />
+    <Property Name="year" Type="Int32" />
+    <Property Name="quarter" Type="Int32" />
+    <Property Name="mooe_no" Type="Int32" />
+    <Property Name="dbm_bb" Type="Int32" />
+  </EntityType>
+  <EntityType Name="transact">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="date" Type="DateTime" Precision="3" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="unitcost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="in_out" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="descript" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="srcid" Type="Int32" />
+    <Property Name="accountid" Type="Int32" />
+    <Property Name="tid" Type="Int32" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="obj" Type="Int32" />
+    <Property Name="reid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="wis_borrowed_items">
+    <Key>
+      <PropertyRef Name="bid" />
+    </Key>
+    <Property Name="bid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="price" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="date" Type="DateTime" Precision="0" />
+    <Property Name="officename" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="transaction_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="status" Type="Int32" />
+    <Property Name="paid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="wis_ris_status">
+    <Key>
+      <PropertyRef Name="ris_id" />
+    </Key>
+    <Property Name="ris_id" Type="Int32" Nullable="false" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="officename" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="date" Type="DateTime" Precision="0" />
+    <Property Name="status" Type="Int32" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="wis_ris_transactions">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="itemid" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="officename" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="itemid" Type="Int32" Nullable="false" />
+    <Property Name="itemname" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="price" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="quantity" Type="Double" />
+    <Property Name="status" Type="Int32" />
+    <Property Name="date_approved" Type="DateTime" Precision="3" />
+    <Property Name="date_returned" Type="DateTime" Precision="3" />
+    <Property Name="date_submited" Type="DateTime" Precision="3" />
+    <Property Name="risid" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="trans_code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="controlno" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ref_id" Type="Int32" />
+    <Property Name="to_be_deleted" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="vw_searchAvailable">
+    <Key>
+      <PropertyRef Name="mooe_no" />
+      <PropertyRef Name="dbm_bb" />
+    </Key>
+    <Property Name="itemname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="year" Type="Int32" />
+    <Property Name="quarter" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+    <Property Name="mooe_no" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="dbm_bb" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+    <Property Name="account" Type="String" MaxLength="48" FixedLength="false" Unicode="false" />
+    <Property Name="remaining" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vw_stockviewing_wis">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="unitcost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="total" Type="Int32" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="vw_where_to_get_existing_item">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="unitcost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="total_in" Type="Int32" />
+    <Property Name="transcode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="date" Type="DateTime" Precision="3" />
+    <Property Name="total_out" Type="Int32" />
+    <Property Name="available" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vwAll">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+    <Property Name="itemname" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="total" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vwAllout">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="total" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vwbyofficeout">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+    <Property Name="item_id" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="total" Type="Int32" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="vwplcallout">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="total" Type="Double" />
+  </EntityType>
+  <EntityType Name="vwQtyOnHand">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+    <Property Name="item_id" Type="Int32" />
+    <Property Name="IN_STOCK" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vwrecieve">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="total" Type="Int32" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="vwrptSummaryAll">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="available" Type="Int32" />
+    <Property Name="released" Type="Int32" />
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vwstockoutgrid">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="trnid" Type="Int64" Nullable="false" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="itemname" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="total" Type="Int32" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="unitcost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="srcid" Type="Int32" />
+    <Property Name="accountid" Type="Int32" />
+    <Property Name="tid" Type="Int32" />
+    <Property Name="obj" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vwtransact">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="date" Type="DateTime" Precision="3" />
+    <Property Name="itemname" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="unit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="in_out" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="eName" Type="String" MaxLength="67" FixedLength="false" Unicode="true" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="descript" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="reid" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vwTransaction">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="eid" Type="Int32" />
+    <Property Name="item_id" Type="Int32" />
+    <Property Name="stock_date" Type="DateTime" Precision="3" />
+    <Property Name="quantity" Type="Int32" />
+    <Property Name="in_out" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="eName" Type="String" MaxLength="67" FixedLength="false" Unicode="true" />
+    <Property Name="officeid" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="vwUser">
+    <Key>
+      <PropertyRef Name="d" />
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="SwipEmployeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="emailaddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="passcode" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="eid" Type="Int64" />
+    <Property Name="d" Type="Int64" Nullable="false" />
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="usertype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

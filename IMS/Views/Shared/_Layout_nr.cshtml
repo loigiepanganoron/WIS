@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href="~/favicon-16.png" type="image/png">
+    <title>Inventory Monitoring System </title>
+  
+    <link href="@Url.Content("~/Content/font-awesome-4.5.0/css/font-awesome.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+
+    
+    <link href="@Url.Content("~/Content/metroui/css/metro-bootstrap.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/metroui/css/docs.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/metroui/css/metro-icons.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/metroui/css/metro.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/css/global.min.css")" rel="stylesheet" type="text/css" />
+
+
+    <script src="@Url.Content("~/Content/sweetalert-master/dist/sweetalert.min.js")"></script>
+    <link href="@Url.Content("~/Content/sweetalert-master/dist/sweetalert.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/sweetalert-master/themes/facebook/facebook.css")" rel="stylesheet" type="text/css" />
+
+
+    <link href="@Url.Content("~/Content/kendo/2015.3.1111/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+   <link href="@Url.Content("~/Content/themes/char/char.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/kendo.custom.css")" rel="stylesheet" type="text/css" />
+
+    
+    <link href="@Url.Content("~/Content/customtheme/kendo.custom.css")" rel="stylesheet" type="text/css" />
+    
+    <link href="@Url.Content("~/Content/kendo/2015.3.1111/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2015.3.1111/kendo.dataviz.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2015.3.1111/kendo.dataviz.metro.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    
+
+
+    <!-- #region Kendo Scripts -->
+
+    <script src="@Url.Content("~/Scripts/kendo/2015.3.1111/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2015.3.1111/jszip.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2015.3.1111/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2015.3.1111/kendo.aspnetmvc.min.js")"></script>
+
+    <!-- #endregion -->
+    <!-- #region Metro Scripts -->
+
+    <script src="@Url.Content("~/Scripts/header-loader.js")"></script>
+    <script src="@Url.Content("~/Scripts/metro.js")"></script>
+
+</head>
+
+
+<body class="metro">
+    @*<div class="Notification-Fields" id="note-field"></div>*@
+        @*<div class="color-line"></div>  style="background-color:white;height:auto"  style="margin-top:5px;position:relative;height:auto"    *@
+    <div class="page-container">
+
+        <div class="header-title"> 
+            @Html.Partial("vwheader")
+        </div>
+        <div class="clear">
+        </div>
+        @*<div class="header-title">
+        </div>*@
+        @*<div class="page-sidebar-menu">
+        </div>*@
+        <div class="page-content" style="background-color:white">
+            @RenderBody()
+        </div>
+            <div class="page-footer" style="border:1px solid;border-top-color:#177e5d;height:65px;width:1000px;background-color:#1a8d68;float:left;overflow:hidden;">
+                @Html.Partial("vwfooter")
+            </div>
+   </div>
+                 
+
+     
+    <audio class="my_audio" controls preload="none" style="visibility:hidden;width:150px">
+        <source src="~/Content/music/pling.mp3" type="audio/mpeg" id="play" />
+    </audio>
+
+    <audio controls="controls" style="visibility:hidden;width:150px">
+        <source src="~/Content/welcome/5af4035658ffb63cb813afa5.mp3" type="audio/mpeg" />
+    </audio>
+    <audio controls="controls" style="visibility:hidden;width:150px">
+        <source src="~/Content/welcome/5af4035658ffb63cb813afa5.ogg" type="audio/ogg" />
+    </audio>
+</body>
+
+</html>

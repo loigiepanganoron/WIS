@@ -1,0 +1,112 @@
+﻿<script>
+    function notif() {
+        swal('', 'Success, proceed to submitted RIS to see if it was added', 'success');
+    }
+</script>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-3">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("ris_grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemid").Title("").Hidden();
+                        columns.Bound("unitcost").Title("").Hidden();
+                        columns.Bound("itemname").Title("Itemname").Width(250);
+                        columns.Bound("total").Title("Available").Width(120);
+                        columns.Bound("quantity").Title("Request").Width(120);
+                        columns.Bound("unit").Title("Unit").Width(100);
+                    })
+                               .ToolBar(toolbar =>
+                                            {
+                                                toolbar.Save();
+                                            })
+                            .Editable(editable => editable.Mode(GridEditMode.InCell))
+                              .Pageable()
+                              .Selectable()
+                              .Events(e=> e.SaveChanges("notif"))
+                              .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .Batch(true)
+                              .ServerOperation(false)
+                              .Model(model =>
+            {
+                model.Id(p => p.itemid);
+                model.Field(p => p.itemname).Editable(false);
+                model.Field(p => p.total).Editable(false);
+                model.Field(p => p.unit).Editable(false);
+
+            })
+                              .ServerOperation(false)
+                              .PageSize(10)
+                              .Read(read => read.Action("get_available_item", "Responsive"))
+                              .Update(read => read.Action("submit_ris", "Responsive"))
+                              .Sort(a => a.Add("itemname").Ascending())
+
+                              )
+            )
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .highlighted-row {
+        background-color: red;
+        color: white;
+    }
+
+    .nm {
+        font-size: 15px;
+        margin-left: 4px;
+    }
+
+    .k-grid-edit-row > td > .text-box {
+        width: 100%;
+        color: black;
+    }
+    /*#btn-sub {
+            background-color: #1fa67a;
+            border-radius: 5px;
+            color: white;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 12px;
+            text-align: center;
+            height: 30px;
+            font-weight: normal;
+        }*/
+
+    .bk {
+        background-color: #f1f9f7;
+        border: 1px solid #e0f1e9;
+        color: #1d9d74;
+        /*border: 5px solid transparent;*/
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    #errmsg {
+        color: red;
+    }
+
+    .k-grid tbody tr {
+        height: 30px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .k-grid table {
+        table-layout: fixed;
+    }
+</style>
+

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="SEND_SMS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sendTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="msg" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="isid" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SEND_SMSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SEND_SMSResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SEND_SMSSoapIn">
+    <wsdl:part name="parameters" element="tns:SEND_SMS" />
+  </wsdl:message>
+  <wsdl:message name="SEND_SMSSoapOut">
+    <wsdl:part name="parameters" element="tns:SEND_SMSResponse" />
+  </wsdl:message>
+  <wsdl:message name="SEND_SMSHttpGetIn">
+    <wsdl:part name="sendTo" type="s:string" />
+    <wsdl:part name="msg" type="s:string" />
+    <wsdl:part name="isid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SEND_SMSHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SEND_SMSHttpPostIn">
+    <wsdl:part name="sendTo" type="s:string" />
+    <wsdl:part name="msg" type="s:string" />
+    <wsdl:part name="isid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SEND_SMSHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="SMSWebServiceSoap">
+    <wsdl:operation name="SEND_SMS">
+      <wsdl:input message="tns:SEND_SMSSoapIn" />
+      <wsdl:output message="tns:SEND_SMSSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="SMSWebServiceHttpGet">
+    <wsdl:operation name="SEND_SMS">
+      <wsdl:input message="tns:SEND_SMSHttpGetIn" />
+      <wsdl:output message="tns:SEND_SMSHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="SMSWebServiceHttpPost">
+    <wsdl:operation name="SEND_SMS">
+      <wsdl:input message="tns:SEND_SMSHttpPostIn" />
+      <wsdl:output message="tns:SEND_SMSHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SMSWebServiceSoap" type="tns:SMSWebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SEND_SMS">
+      <soap:operation soapAction="http://tempuri.org/SEND_SMS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SMSWebServiceSoap12" type="tns:SMSWebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SEND_SMS">
+      <soap12:operation soapAction="http://tempuri.org/SEND_SMS" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SMSWebServiceHttpGet" type="tns:SMSWebServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="SEND_SMS">
+      <http:operation location="/SEND_SMS" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SMSWebServiceHttpPost" type="tns:SMSWebServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="SEND_SMS">
+      <http:operation location="/SEND_SMS" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SMSWebService">
+    <wsdl:port name="SMSWebServiceSoap" binding="tns:SMSWebServiceSoap">
+      <soap:address location="http://192.168.2.104/SMSWebService/SMSWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SMSWebServiceSoap12" binding="tns:SMSWebServiceSoap12">
+      <soap12:address location="http://192.168.2.104/SMSWebService/SMSWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SMSWebServiceHttpGet" binding="tns:SMSWebServiceHttpGet">
+      <http:address location="http://192.168.2.104/SMSWebService/SMSWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SMSWebServiceHttpPost" binding="tns:SMSWebServiceHttpPost">
+      <http:address location="http://192.168.2.104/SMSWebService/SMSWebService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

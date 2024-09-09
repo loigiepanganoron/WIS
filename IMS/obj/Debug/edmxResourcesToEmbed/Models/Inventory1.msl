@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="IMSModel1StoreContainer" CdmEntityContainer="IMSEntities1">
+    <EntitySetMapping Name="transactions">
+      <EntityTypeMapping TypeName="IMSModel1.transaction">
+        <MappingFragment StoreEntitySet="transaction">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="item_id" ColumnName="item_id" />
+          <ScalarProperty Name="stock_date" ColumnName="stock_date" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="in_out" ColumnName="in_out" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="description" ColumnName="description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="users">
+      <EntityTypeMapping TypeName="IMSModel1.user">
+        <MappingFragment StoreEntitySet="user">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="role" ColumnName="role" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="userRoles">
+      <EntityTypeMapping TypeName="IMSModel1.userRole">
+        <MappingFragment StoreEntitySet="userRole">
+          <ScalarProperty Name="usertype" ColumnName="usertype" />
+          <ScalarProperty Name="roleid" ColumnName="roleid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwQtyOnHands">
+      <EntityTypeMapping TypeName="IMSModel1.vwQtyOnHand">
+        <MappingFragment StoreEntitySet="vwQtyOnHand">
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="trnid" ColumnName="trnid" />
+          <ScalarProperty Name="item_id" ColumnName="item_id" />
+          <ScalarProperty Name="IN_STOCK" ColumnName="IN_STOCK" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwTransactions">
+      <EntityTypeMapping TypeName="IMSModel1.vwTransaction">
+        <MappingFragment StoreEntitySet="vwTransactions">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="item_id" ColumnName="item_id" />
+          <ScalarProperty Name="stock_date" ColumnName="stock_date" />
+          <ScalarProperty Name="quantity" ColumnName="quantity" />
+          <ScalarProperty Name="in_out" ColumnName="in_out" />
+          <ScalarProperty Name="eName" ColumnName="eName" />
+          <ScalarProperty Name="officeid" ColumnName="officeid" />
+          <ScalarProperty Name="description" ColumnName="description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwUsers">
+      <EntityTypeMapping TypeName="IMSModel1.vwUser">
+        <MappingFragment StoreEntitySet="vwUsers">
+          <ScalarProperty Name="SwipEmployeeID" ColumnName="SwipEmployeeID" />
+          <ScalarProperty Name="emailaddress" ColumnName="emailaddress" />
+          <ScalarProperty Name="passcode" ColumnName="passcode" />
+          <ScalarProperty Name="eid" ColumnName="eid" />
+          <ScalarProperty Name="d" ColumnName="d" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="usertype" ColumnName="usertype" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,426 @@
+﻿<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <label>What year?</label>
+                            <select name="yearpicker_print_ris" id="yearpicker_print_ris" style="width:100%;height:35px" onclick="year()"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ibox-content">
+                        <label>Select Transaction Number</label>
+
+                        @(Html.Kendo().ComboBox()
+                .Name("transcode_print_ris")
+        .DataTextField("transno")
+        .DataValueField("cyear")
+        .Placeholder("Search...")
+        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+        .Filter("contains")
+        .AutoBind(false)
+        .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("apr_bb", "Responsive")))
+                .Events(a => a.Change("loadgrid"))
+                        )
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox-content">
+                        <h3>Recent Transactions</h3>
+                        <div>
+                            <input placeholder="  Search Office" id="sh" type="text" style="width:100%;height:35px">
+                        </div>
+                        <br>
+                        @(Html.Kendo().Grid<dynamic>()
+                    .Name("history_out")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("id").Title("id").Hidden();
+                        columns.Bound("officeid").Title("officeid").Hidden();
+                        //columns.Bound("transcode").Title("Transaction Code").Width(150);
+                        columns.Bound("officename").Title("Office Code").Width(100);
+                        columns.Bound("itemname").Title("Item Name").Width(300);
+                        columns.Bound("quantity").Title("Quantity").Width(80);
+                        columns.Bound("unit").Title("Unit").Width(80);
+                        columns.Bound("date").Title("Date").Width(100).ClientTemplate("#= date? kendo.toString(kendo.parseDate(date), 'MMM d, yyyy') : '' #");
+                    })
+                              .Pageable()
+                              .Scrollable()
+                              .Selectable()
+                                      .HtmlAttributes(new { style = "width:100%" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(10)
+                              .Read(read => read.Action("get_out_history", "Responsive"))
+                              )
+                        )
+                    </div>
+                </div>
+            </div>
+          </div>
+        
+        <div class="col-lg-6">
+            <div class="ibox-content">
+                <label>Print RIS per Office</label>
+                <div>
+                    <input placeholder="  Search Office" id="searchere" type="text" style="width:100%;height:35px">
+                </div>
+                <br>
+                @(Html.Kendo().Grid<dynamic>()
+                    .Name("print_ris_grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("id").Title("").Hidden();
+                        columns.Bound("transcode").Title("Transaction").Width(150);
+                        columns.Bound("officename").Title("Office").Width(150);
+                        columns.Bound("officeid").Title("").Hidden();
+                        columns.Command(command => command.Custom("Release").Click("release")).HtmlAttributes(new { @style = "color:white;text-align:center" });
+                        columns.Command(command => command.Custom("Print").Click("print_ris")).HtmlAttributes(new { @style = "color:white;text-align:center" });
+                    })
+                              .Pageable()  
+                              .Scrollable()
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:auto" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(10)
+                              .Read(read => read.Action("get_ris_print", "Responsive"))
+                              .Sort(a => a.Add("").Ascending())
+                              )
+                )
+
+                <br />
+                <br />
+
+                <button class="btn btn-sm btn-primary" onclick="check()">
+                    <strong>
+                         Check Availability
+                    </strong>
+                </button>
+            </div>
+        </div>
+
+        <div id="modal-form" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("pop_up_items")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("borrowed_quantity").Hidden();
+                        columns.Bound("id").Title("id").Hidden();
+                        columns.Bound("officeid").Title("officeid").Hidden();
+                        columns.Bound("itemid").Title("itemid").Hidden();
+                        columns.Bound("available").Title("").Hidden();
+                        columns.Bound("transcode").Title("Transaction Code").Width(150);
+                        columns.Bound("officename").Title("Office Code").Width(100);
+                        columns.Bound("itemname").Title("Item Name").Width(300);
+                        columns.Bound("unit").Title("Unit").Width(80);
+                        columns.Bound("rprice").Title("Price").Width(80).Format("{0:N}");
+                        columns.Bound("qty").Title("Quantity").Width(80).Format("{0:N}");
+                        columns.Bound("toprint").Title("RIS").Width(80).HtmlAttributes(new { @style = "color:black" });
+
+                        columns.Command(command => command.Custom("CONFIRM").Click("confirm")).Width(80).HtmlAttributes(new { @style = "color:white" });
+                    })
+                              .Pageable()
+                              .Selectable()
+                              .Editable(editable => editable.Mode(GridEditMode.InCell))
+
+                              .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .Model(model =>
+                                                         {
+                                                             model.Id(p => p.id);
+                                                             model.Field(p => p.itemname).Editable(false);
+                                                             model.Field(p => p.officeid).Editable(false);
+                                                             model.Field(p => p.itemid).Editable(false);
+                                                             model.Field(p => p.transcode).Editable(false);
+                                                             model.Field(p => p.officename).Editable(false);
+                                                             model.Field(p => p.unit).Editable(false);
+                                                             model.Field(p => p.rprice).Editable(false);
+                                                             model.Field(p => p.qty).Editable(false);
+                                                             model.Field(p => p.toprint).Editable(true);
+                                                         })
+                              .PageSize(10)
+                              .Read(read => read.Action("get_item_by_tnum_offid", "Responsive"))
+                              )
+                              //  .Events(g => g.DataBound("dataBound"))
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modal-form-check" class="modal fade" aria-hidden="true">
+            <div style="width:25%;margin:auto;margin-top:5%">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <label>Available Transaction Codes</label>
+                        <div>
+                            @(Html.Kendo().ComboBox()
+                .Name("list_of_offices")
+        .DataTextField("officename")
+        .DataValueField("officeid")
+        .Placeholder("Search...")
+        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+        .Filter("contains")
+        .AutoBind(false)
+        .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("get_list_offices", "Responsive")))
+               .Events(a => a.Change("to_find_grid"))
+                            )
+                        </div>
+                        <br>
+                        @(Html.Kendo().Grid<dynamic>()
+                    .Name("find_available")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("transcode").Title("Transaction Code").Width(150);
+                    })
+                              .Pageable()
+                              .Scrollable()
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:auto" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(10)
+                              .Read(read => read.Action("get_avail", "Responsive"))
+                              .Sort(a => a.Add("").Ascending())
+                              )
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        for (i = new Date().getFullYear() ; i > 1900; i--) {
+            $('#yearpicker_print_ris').append($('<option />').val(i).html(i));
+        }
+    })
+    $(document).ready(function () {
+        var year = $('#yearpicker_print_ris').val();
+        $("#transcode_print_ris").data("kendoComboBox").dataSource.read({ year: year });
+    })
+</script>
+<script>
+    function year() {
+        var year = $('#yearpicker_print_ris').val();
+        $("#transcode_print_ris").data("kendoComboBox").dataSource.read({ year: year });
+    }
+</script>
+<script>
+    function loadgrid() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var code = rowData.transno;
+        $('#print_ris_grid').data('kendoGrid').dataSource.read({ transcode: code })
+        $('#history_out').data('kendoGrid').dataSource.read({ transcode: code })
+    }
+    function print_ris(e) {
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var transcode = dataItem.transcode;
+        var officeid = dataItem.officeid;
+        var officename = dataItem.officename;
+        window.open("@Url.Content("~/Reports/print_ris.aspx?repID=")" + 1 + "&transcode=" + transcode + "&officeid=" + officeid + "&officename=" + officename, "Report", "status=1", "location=1");
+        
+    }
+    function release(e) {
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var transcode = dataItem.transcode;
+        var officeid = dataItem.officeid;
+
+
+        $('#pop_up_items').data('kendoGrid').dataSource.read({ transcode: transcode, officeid: officeid })
+        $('#modal-form').modal('toggle');
+    }
+    function check() {
+       // $('#pop_up_items').data('kendoGrid').dataSource.read({ transcode: transcode, officeid: officeid })
+        $('#modal-form-check').modal('toggle');
+    }
+    function to_find_grid()
+    {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var officeid = rowData.officeid;
+        $('#find_available').data('kendoGrid').dataSource.read({officeid: officeid })
+    }
+
+</script>
+<script>
+    function confirm(e) {
+
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var officeid = dataItem.officeid;
+        var officename = dataItem.officename;
+        var quantity = dataItem.qty;
+        var transcode = dataItem.transcode;
+        var itemname = dataItem.itemname;
+        var itemid = dataItem.itemid;
+        var unit = dataItem.unit;
+        var price = dataItem.rprice;
+        var qty = parseInt(quantity);
+        var ris = dataItem.ris;
+        var toprint = dataItem.toprint;
+        var id = dataItem.id;
+        var available = dataItem.available;
+        var borrowed_quantity = dataItem.borrowed_quantity;
+          
+
+        var data = {
+            "officeid": officeid,
+            "officename":officename,
+            "ris": ris,
+            "transcode": transcode,
+            "itemname": itemname,
+            "itemid": itemid,
+            "unit": unit,
+            "rprice": price,
+            "toprint": toprint,
+            "id": id
+        }
+        if (toprint > available ) {
+            setTimeout(function () {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 4000
+                };
+                toastr.error('ERROR', 'Invalid RIS!');
+
+            }, 500);
+        }
+        else if (toprint < borrowed_quantity)
+        {
+            setTimeout(function () {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 4000
+                };
+                toastr.error('ERROR', 'Must replace borrowed item first!');
+            }, 500);
+        }
+        else {
+            swal({
+                title: "Are you sure?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, proceed!",
+                cancelButtonText: "No!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+      function (isConfirm) {
+          if (isConfirm) {
+              $.get("@Url.Content("~/Responsive/filterNum_release")", { transcode: transcode, itemid: itemid }, function (r) {
+                  
+                  if (available > r)
+                  {
+                      setTimeout(function () {
+                          toastr.options = {
+                              closeButton: true,
+                              progressBar: true,
+                              showMethod: 'slideDown',
+                              timeOut: 4000
+                          };
+                          toastr.error('ERROR', 'Quantity must not greater than '+ r+' or maybe item has been borrowed!');
+                      }, 500);
+                  }
+                  else if (available <= r)
+                  {
+                      $.ajax({
+                          type: "POST",
+                          url: '@Url.Action("confirm_out", "Responsive")',
+                          data: JSON.stringify(data),
+                          contentType: "application/json;charset=utf-8",
+                          processData: true,
+                          success: function (data) {
+                              if (data == 1) {
+
+                                  var tcode = $('#transcode_print_ris').data('kendoComboBox').text();
+                                  swal('Success', '', 'success')
+                                  $('#print_ris_grid').data('kendoGrid').dataSource.read({ transcode: tcode });
+                                  $('#history_out').data('kendoGrid').dataSource.read({ transcode: tcode })
+                                  $('#pop_up_items').data('kendoGrid').dataSource.read({ transcode: transcode, officeid: officeid })
+                              }
+                              else {
+                                  swal('', data, 'error')
+                              }
+                          }
+                      })
+                  }
+              })
+          }
+          else {
+              swal("Cancelled", "", "error");
+          }
+      });
+        }
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $("#searchere").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#print_ris_grid").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "officename", operator: "contains", value: value });
+                orfilter.filters.push({ field: "officename", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+
+        $("#sh").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#history_out").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "officename", operator: "contains", value: value });
+                orfilter.filters.push({ field: "officename", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+
+    })
+</script>
+<style>
+    .k-grid tbody tr {
+        height: 30px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    
+    .modal-dialog {
+        width: 80%;
+    }
+</style>
+

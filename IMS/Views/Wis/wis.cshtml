@@ -1,0 +1,122 @@
+﻿<script>
+    function dbm_bb() {
+        $.get("@Url.Content("~/Wis/dbm_bb" )", function (r) {
+
+            $("#entry").html(r)
+            $("#entry").data("kendoWindow").center().open()
+        })
+    }
+
+    function ris() {
+        $.get("@Url.Content("~/Wis/ris" )", function (r) {
+
+            $("#ris").html(r)
+            $("#ris").data("kendoWindow").center().open()
+        })
+    }
+</script>
+
+ <div>
+    <div style="padding-top:20px;width:100%;height:auto;float:left">
+
+        <div style="width:200px;background-color:#1a8d68;height:40px;border-radius:4px;padding-top:5px;text-align:center;float:left">
+                <label style="font-size:15px;color:white"> INVENTORY </label> 
+        </div>
+
+        <div style="width:150px;background-color:#1a8d68;height:40px;border-radius:4px;padding-top:5px;text-align:center;float:left;margin-left:350px" onclick="dbm_bb()">
+            <label style=" font-size:15px;color:white">
+            DBM/BD Entry </label>
+        </div>
+        <a onclick="ris()">
+            <div style="width:100px;background-color:#1a8d68;height:40px;border-radius:4px;padding-top:5px;text-align:center;float:left;margin-left:20px">
+                <label style="font-size:15px;color:white"> Create RIS </label>
+            </div>
+        </a>
+         <div style="width:120px;background-color:#1a8d68;height:40px;border-radius:4px;padding-top:5px;text-align:center;float:left;margin-left:20px">
+            <label style="font-size:15px;color:white"> Submitted RIS </label>
+        </div>
+    </div>
+ 
+    <div style="width:100%;height:auto;float:left;margin-top:30px">
+                <div id="top-tabstrip" style="float:left">
+                         @(Html.Kendo().TabStrip()   
+                            .Name("top_tabstrip")
+                            .Animation(animation =>
+                            animation.Open(effect =>
+                            effect.Fade(FadeDirection.In)))
+                            .HtmlAttributes(new { style = "width:auto;height:auto" })
+                            .Items(tabstrip =>
+                                      {
+                                          tabstrip.Add().Selected(true).Text("IN STOCK").LoadContentFrom("instock", "Wis");
+
+                                      })
+                           .Items(tabstrip =>
+                                      {
+                                          tabstrip.Add().Selected(false).Text("BALANCE ").LoadContentFrom("balance", "Wis");
+                                      })
+                         )
+                  </div>
+    </div>
+
+
+
+
+
+     <div style="width:200px;background-color:#1a8d68;height:40px;border-radius:4px;padding-top:5px;text-align:center;float:left;margin-top:40px">
+         <label style="font-size:15px;color:white"> HISTORY </label>
+     </div>
+
+    <div style="width:100%;height:auto;float:left;margin-top:40px">
+        @(Html.Kendo().TabStrip()
+               .Name("mid_tabstrip")
+               .Animation(animation =>
+                  animation.Open(effect =>
+                      effect.Fade(FadeDirection.In)))
+               .HtmlAttributes(new { style = "width:auto;height:auto" })
+                        .Items(tabstrip =>
+                                      {
+                                          tabstrip.Add().Selected(true).Text("IN").LoadContentFrom("history_in", "Wis");
+
+                                      })
+                        .Items(tabstrip =>
+                                      {
+                                          tabstrip.Add().Selected(false).Text("OUT").LoadContentFrom("history_out", "Wis");
+                                      })
+                       .Items(tabstrip =>
+                                      {
+                                          tabstrip.Add().Selected(false).Text("BORROWED ITEM").LoadContentFrom("borrow", "Wis");
+                                      })
+        )
+    </div>
+     
+
+     </div>
+
+@(Html.Kendo().Window()
+    .Name("entry")
+    .Draggable()
+    .Title("DBM/BULK BIDDING ")
+    .HtmlAttributes(new { style = "width:750px;height:auto" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+
+@(Html.Kendo().Window()
+    .Name("ris")
+    .Draggable()
+    .Title("RIS ")
+    .HtmlAttributes(new { style = "width:750px;height:auto" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+
+
+<style>
+    #content-container {
+    width:100%;
+    }
+    #top-tabstrip {
+    height: auto;
+    width: 100%;                    
+    }
+</style>

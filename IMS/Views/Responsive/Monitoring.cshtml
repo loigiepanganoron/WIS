@@ -1,0 +1,168 @@
+﻿<div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <label>What year?</label>
+                        <select name="yearpicker_mon" id="yearpicker_mon" style="width:100%;height:35px" onclick="clickyr_mon()"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="ibox-content">
+                    <label>Select Transaction Number</label>
+
+                    @(Html.Kendo().ComboBox()
+                .Name("transcode_mon")
+        .DataTextField("transno")
+        .DataValueField("cyear")
+        .Placeholder("Search...")
+        .HtmlAttributes(new { @style = "width:100%;height:28px" })
+        .Filter("contains")
+        .AutoBind(false)
+        .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("apr_bb", "Responsive")))
+       .Events(a => a.Change("loadgrid"))
+                    )
+                </div>
+            </div>
+        </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <h3>
+                Remaining Items(Per Transaction Code)
+            </h3>
+            <div>
+                <input placeholder="  Search Item.." id="item_s" type="text" style="width:100%;height:35px">
+            </div>
+            <br>
+            @(Html.Kendo().Grid<dynamic>()
+                    .Name("monitoring_grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("id").Title("").Hidden();
+                        columns.Bound("itemname").Title("Item Name").Width(300);
+                        columns.Bound("toprint").Title("Remaining").Width(150);
+                        columns.Bound("unit").Title("Unit").Width(150);
+                        
+                    })
+                              .Pageable()
+                              .Scrollable()
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:400px" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(15)
+                              .Read(read => read.Action("get_mon", "Responsive"))
+                              .Sort(a => a.Add("toprint").Ascending())
+                              )
+            )
+        </div>
+            <div class="col-lg-6">
+
+                <h3>
+                     Remaining Items(Over All)
+                </h3>
+
+                <div>
+                    <input placeholder="  Search Item.." id="item_all" type="text" style="width:100%;height:35px">
+                </div>
+                <br>
+                @(Html.Kendo().Grid<dynamic>()
+                    .Name("monitoring_grid_all")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("id").Title("").Hidden();
+                        columns.Bound("itemname").Title("Item Name").Width(300);
+                        columns.Bound("toprint").Title("Remaining ").Width(150);
+                        columns.Bound("unit").Title("Unit").Width(150);
+
+                    })
+                              .Pageable()
+                              .Scrollable()
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:400px" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(15)
+                              .Read(read => read.Action("get_mon_all", "Responsive"))
+                              .Sort(a => a.Add("toprint").Ascending())
+                              )
+                )
+            </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        for (i = new Date().getFullYear() ; i > 1900; i--) {
+            $('#yearpicker_mon').append($('<option />').val(i).html(i));
+        }
+    })
+    $(document).ready(function () {
+        var year = $('#yearpicker_mon').val();
+        $("#transcode_mon").data("kendoComboBox").dataSource.read({ year: year });
+    })
+</script>
+
+<script>
+    function clickyr_mon() {
+        var year = $('#yearpicker_mon').val();
+        $("#transcode_mon").data("kendoComboBox").dataSource.read({ year: year });
+    }
+    function loadgrid() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var code = rowData.transno;
+        $('#monitoring_grid').data('kendoGrid').dataSource.read({ transcode: code })
+       
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#item_s").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#monitoring_grid").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "itemname", operator: "contains", value: value });
+                orfilter.filters.push({ field: "itemname", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+
+        $("#item_all").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#monitoring_grid_all").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "itemname", operator: "contains", value: value });
+                orfilter.filters.push({ field: "itemname", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            }
+            else {
+                grid.dataSource.filter({});
+            }
+        }));
+    })
+</script>
+
+<style>
+    .k-grid tbody tr {
+        height: 30px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+</style>
+

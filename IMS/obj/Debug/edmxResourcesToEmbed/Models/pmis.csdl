@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="pmisModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="pmisEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="OfficeDescriptions" EntityType="pmisModel.OfficeDescription" />
+    <EntitySet Name="vwLoginParameters" EntityType="pmisModel.vwLoginParameter" />
+    <EntitySet Name="vwMergeAllEmployees" EntityType="pmisModel.vwMergeAllEmployee" />
+  </EntityContainer>
+  <EntityType Name="OfficeDescription">
+    <Key>
+      <PropertyRef Name="OfficeID" />
+    </Key>
+    <Property Name="OfficeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OfficeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeAbbr" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeMedium" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeHead" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeHeadID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeDesignation" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="Fund" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="Order" Type="Int32" />
+    <Property Name="OfficeCodeGSIS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SectorCode" Type="Int32" />
+    <Property Name="NationalAgency" Type="Boolean" />
+    <Property Name="project" Type="Boolean" />
+    <Property Name="locatedinCapitol" Type="Boolean" />
+    <Property Name="HeadCelNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="isActiveOffice" Type="Int32" />
+    <Property Name="Plantilla_Ordering" Type="Int32" />
+    <Property Name="isMain" Type="Int32" />
+    <Property Name="IsPhysical" Type="Int16" />
+    <Property Name="email_admin" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="email_emp_grouped" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="vwLoginParameter">
+    <Key>
+      <PropertyRef Name="euid" />
+    </Key>
+    <Property Name="euid" Type="Int32" Nullable="false" />
+    <Property Name="eid" Type="Int64" />
+    <Property Name="SwipEmployeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="passcode" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="RoleId" Type="Int32" />
+    <Property Name="emailaddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="vwMergeAllEmployee">
+    <Key>
+      <PropertyRef Name="eid" />
+      <PropertyRef Name="trNo" />
+      <PropertyRef Name="Department" />
+      <PropertyRef Name="AppointCoverage" />
+      <PropertyRef Name="Telephone" />
+      <PropertyRef Name="bloodtype" />
+      <PropertyRef Name="CanHaveTravel" />
+      <PropertyRef Name="Concurrent" />
+    </Key>
+    <Property Name="SwipeId" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="eid" Type="Int64" Nullable="false" />
+    <Property Name="trNo" Type="Int64" Nullable="false" />
+    <Property Name="RowNo" Type="Int64" />
+    <Property Name="EmpName" Type="String" MaxLength="77" FixedLength="false" Unicode="true" />
+    <Property Name="Position" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Department" Type="Int32" Nullable="false" />
+    <Property Name="OfficeAbbr" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="EmailAdd" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="employmentstatus_id" Type="Byte" />
+    <Property Name="AppointCoverage" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Cause" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Telephone" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="bloodtype" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TimeCode" Type="Byte" />
+    <Property Name="CanHaveTravel" Type="Int32" Nullable="false" />
+    <Property Name="Concurrent" Type="Int32" Nullable="false" />
+    <Property Name="BirthD" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+    <Property Name="Salary" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="EmpNameFull" Type="String" MaxLength="76" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

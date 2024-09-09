@@ -1,0 +1,71 @@
+﻿
+
+<script>
+    function owner() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var itemid = rowData.itemid;
+        var itemname = rowData.itemname;
+      
+        //document.getElementById("itemname").innerHTML = itemname;
+        //$('#gridItemOwner').data('kendoGrid').dataSource.read({ itemid: itemid })
+        $.get("@Url.Content("~/Wis/popupOwner" )", function (r) {
+
+            $("#popOwner").html(r)
+            $("#popOwner").data("kendoWindow").center().open()
+        })
+    }
+</script>
+ 
+
+
+<div style="width:900px;margin-left:25px">
+    @(Html.Kendo().Grid<dynamic>()
+                .Name("instock")
+                .Columns(columns =>
+                {
+                    //columns.Bound("").Title("").Width(18).ClientTemplate("<input type='checkbox' class='chkbx' />");
+                    columns.Bound("itemid").Title("").Width(10).Hidden();
+                    columns.Bound("unit").Title("").Width(10).Hidden();
+                    columns.Bound("itemname").Title("Item Name").Width(400);
+                    columns.Bound("totalin").Title("Available").Width(150);
+
+                })
+                           .Pageable()
+                          .Selectable()
+            //.Scrollable()
+            //.HtmlAttributes(new { style = "height:auto" })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .ServerOperation(false)
+                          .PageSize(15)
+                       .Read(read => read.Action("wis_instock", "Wis"))
+               .Sort(a => a.Add("itemname").Ascending())
+                          )
+                .Events(e => e.Change("owner"))
+    )
+
+    @(Html.Kendo().Button()
+        .Name("primaryTextButton")
+                .HtmlAttributes(new { type = "button", @class = "k-primary", @onclick = "getselected()" })
+        .Content("alert"))
+</div>
+
+
+
+@(Html.Kendo().Window()
+    .Name("popOwner")
+    .Draggable()
+    .Title("Allocated Quantity per Office")
+    .HtmlAttributes(new { style = "width:700px;height:auto" })
+    .Modal(true)
+ .Visible(!ViewData.ModelState.IsValid)
+)
+
+
+
+<style>
+    #tabcontent {
+    width:500px;height:auto;
+    }
+</style>

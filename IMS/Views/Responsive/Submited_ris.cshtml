@@ -1,0 +1,208 @@
+﻿
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row"> 
+        <div class="col-lg-6">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <input placeholder="Search Office..." id="byoffice" type="text" style="height:35px;width:100%" >
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <h2> Pending Request</h2>
+                    <div style="margin-top:10px">
+                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs" style="width:100px"   onclick="approve()">
+                        <strong>
+                           Approve
+                        </strong>
+                    </button>
+                    </div>
+                    <div style="margin-top:50px">
+                    @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("submitted_ris")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("stat").Title("").Hidden();
+                        columns.Template(@<text></text>).HeaderTemplate("<input id='selectall' class='chkbx' type='checkbox' onclick='ToggleChkBox(this);' />")
+                                            .ClientTemplate("<input type='checkbox' #= stat ? checked='checked':'' # class='chkbx' />").Width(30);
+                        columns.Bound("officeid").Title("").Hidden();
+                        columns.Bound("officename").Title("Office Name");
+                        columns.Bound("itemid").Title("").Hidden();
+                        columns.Bound("itemname").Title("Itemname").Width(250);
+                        columns.Bound("ris_quantity").Title("Quantity").Width(100);
+                        columns.Bound("unit").Title("Unit").Width(70);
+                        columns.Bound("status").Title("Status")
+                            .ClientTemplate("#if(status ==\"0\" )" +
+                                "{#<div style=\"text-align:center\">  <p>Need Approval</p>  </div>#}" +
+                                "else" + "{#" + "" + "#}#");
+                        ;
+                        columns.Command(command => { command.Edit(); command.Destroy(); }).Width(200);
+                        columns.Bound("risid").Title("").Hidden();
+                    })
+                              .Pageable()
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .Model(model =>
+                                 {
+                                    model.Id(p => p.risid);
+                                    model.Field(p => p.officename).Editable(false);
+                                    model.Field(p => p.itemname).Editable(false);
+                                    model.Field(p => p.unit).Editable(false);
+                                    model.Field(p => p.status).Editable(false);
+                                 })
+                              .PageSize(20)
+                              .Read(read => read.Action("read_sumitted_ris", "Responsive"))
+                              .Update(update => update.Action("update_request_ris", "Responsive"))
+                              .Destroy(update => update.Action("delete_request_ris", "Responsive"))
+                              .Sort(a => a.Add("officename").Ascending())
+                              )
+                    )  
+                        </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<style>
+    .highlighted-row {
+        background-color: red;
+        color: white;
+    }
+
+    .nm {
+        font-size: 15px;
+        margin-left: 4px;
+    }
+
+    .k-grid-edit-row > td > .text-box {
+        width: 100%;
+        color: black;
+    }
+    /*#btn-sub {
+            background-color: #1fa67a;
+            border-radius: 5px;
+            color: white;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 12px;
+            text-align: center;
+            height: 30px;
+            font-weight: normal;
+        }*/
+
+    .bk {
+        background-color: #f1f9f7;
+        border: 1px solid #e0f1e9;
+        color: #1d9d74;
+        /*border: 5px solid transparent;*/
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    #errmsg {
+        color: red;
+    }
+
+    .k-grid tbody tr {
+        height: 30px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .k-grid table {
+        table-layout: fixed;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+
+        $("#byoffice").on("keyup", (function () {
+            var value = $(this).val();
+            grid = $("#submitted_ris").data("kendoGrid");
+            var orfilter = { logic: "or", filters: [] };
+            if (value) {
+                grid.dataSource.filter({ field: "officename", operator: "contains", value: value });
+                orfilter.filters.push({ field: "officename", operator: "contains", value: value })
+                grid.dataSource.filter(orfilter);
+            } else {
+                grid.dataSource.filter({});
+            }
+        }));
+    })
+
+    $(document).ready(function () {
+
+        $('#submitted_ris').on('click', '.chkbx', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#submitted_ris').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('stat', checked);
+        })
+    })
+
+    function ToggleChkBox(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#submitted_ris').data('kendoGrid');
+        $.each(grid.dataSource.view(), function () {
+            if (this['stat'] != state)
+                this.dirty = true;
+               this['stat'] = state;
+        });
+        grid.refresh();
+    }
+    function approve() {
+        // Get reference to Grid object
+        var grid = $("#submitted_ris").data("kendoGrid");
+        // Get selected rows
+        var sel = $("input:checked", grid.tbody).closest("tr");
+        // Get data item for each
+        var items = [];
+        $.each(sel, function (idx, row) {
+            var item = grid.dataItem(row);
+            items.push(item.risid);
+        });
+        //alert ("selected :" + JSON.stringify(items))
+        //var data = JSON.stringify(items)
+     
+        if (items.length <= 0) {
+            swal('', 'Select Items to APPROVE!!', 'error');
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("approve", "Responsive")',
+                data: JSON.stringify(items),
+                contentType: "application/json",
+                processData: true,
+                success: function (data) {
+
+                    if (data == 1) {
+                        swal('', 'Approved!!', 'success');
+                        $("#submitted_ris").data("kendoGrid").dataSource.read();
+
+                    }
+                    else {
+                        swal('', data, 'error')
+                    }
+
+                },
+
+            })
+        }
+    }
+</script>

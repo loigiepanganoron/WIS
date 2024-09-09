@@ -1,0 +1,85 @@
+﻿
+
+   
+        <form role="form">
+            <div class="form-group">
+                @(Html.Kendo().ComboBox()
+                .Name("byoffemployee")
+                .DataTextField("empName")
+                .DataValueField("eid")
+                .Placeholder("Search Name here...")
+                .HtmlAttributes(new { @style = "width:90%" })
+                .Filter("contains")
+                .AutoBind(true)
+                .MinLength(1)
+                .DataSource(source => source.Read(read => read.Action("employeeList", "Home")))
+                )
+            </div>
+            @*<div class="form-group">
+                <textarea type="text" class="k-textbox" id="adddescription" name="adddescription" style="width:80%; height:auto;margin:auto; word-wrap: break-word;" maxlength="100" placeholder="Description here, if any" />
+            </div>*@
+        </form>
+        <div>
+            <button class="btn btn-sm btn-primary pull-right m-t-n-xs" onclick="outhis()">
+                <strong>
+                    Submit
+                </strong>
+            </button>
+        </div>
+ 
+
+<script>
+
+    function outhis() {
+
+
+        var reid = $('#byoffemployee').data('kendoComboBox').value();
+        var eid = "@Url.Action("_myeID", "Login")";
+        var grid = $('#byofficeout').data('kendoGrid');
+        var dataItem = grid.dataItem(grid.select().closest("tr"));
+        var itemid = dataItem.itemid;
+        var total = dataItem.quit;
+        var quantity = dataItem.quantity;
+        var unit = dataItem.unit;
+        var itemname = dataItem.itemname;
+
+        
+        if (reid == "") {
+            swal('', 'Please Select Employee!', 'error');
+        }
+        else {
+            var data = {
+
+                "itemid": itemid,
+                "itemname": itemname,
+                "quit": quantity,
+                "in_out": 'OUT',
+                "unit": unit,
+                "reid": reid,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("byofficesaveout", "Home")',
+                data: JSON.stringify(data),
+                contentType: "application/json;charset=utf-8",
+                processData: true,
+                success: function (data) {
+
+                    if (data == 1) {
+                        $(".my_audio").trigger('play');
+                        swal('', 'Entry Successfully Save!', 'success');
+                        $("#byofficeout").data("kendoGrid").dataSource.read();
+                        $("#gridbyoff").data("kendoGrid").dataSource.read();
+                       // $('#chartbyoffice').data('kendoChart').dataSource.read({ itemid: itemid })
+                    }
+                    else {
+                        swal('', data, 'error')
+                    }
+                },
+            })
+        }
+    }
+</script>
+
+

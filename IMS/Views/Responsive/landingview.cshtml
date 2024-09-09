@@ -1,0 +1,19 @@
+﻿ 
+
+@*<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row"> 
+        <iframe frameborder="0" scrolling="no" class="col-lg-12 col-md-12 col-sm-12" src="~/landing2.html" onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+
+        </iframe>
+    </div>
+</div>*@
+ <script>
+     $(document).ready(function myfunction() {
+        
+
+             $.get("@Url.Action("index", "Responsive")", function (html) {
+                 $("#here").html(html);
+             })
+         
+     })
+ </script>

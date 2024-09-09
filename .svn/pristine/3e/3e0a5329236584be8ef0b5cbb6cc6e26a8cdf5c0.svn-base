@@ -1,0 +1,151 @@
+﻿@model IEnumerable<IMS.Models.savein.samplemodel>
+<script type="text/javascript">
+    function selectnew(a) {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var id = rowData.OfficeId;
+
+        $('#out').data('kendoGrid').dataSource.read({ officeid: id })
+    }
+</script>
+<div style="width:100%">
+
+    <script>
+        function disable(e) {
+            var grid = $("#out").data("kendoGrid");
+            var gridData = grid.dataSource.view();
+
+
+            for (var i = 0; i < gridData.length; i++) {
+                if (gridData[i].total <= 5) {
+                    grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("high1");
+                };
+            }
+        }
+
+        function getrow(e) {
+            var office = $('#mgaopis1').data('kendoComboBox').value();
+            var eid = "@Url.Action("_myeID", "Login")";
+            var grid = $('#out').data('kendoGrid');
+
+            var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+            var itemid = dataItem.itemid;
+            var total = dataItem.total;
+            var quantity = dataItem.qty;
+            var descript = dataItem.descript;
+            var unitcost = dataItem.unitcost;
+            var srcid = dataItem.srcid;
+            var accountid = dataItem.accountid;
+            var tid = dataItem.tid;
+            var obj = dataItem.obj;
+            var unit = dataItem.unit;
+            var itemname = dataItem.itemname;
+            
+            
+
+
+            if (quantity > total) {
+                swal('', 'Opps quantity to be out must be equal or lesser than the total quantity of the Item.!', 'error');
+            }
+            if (quantity < '0') {
+                swal('', 'Opps quantity to be out must not less than zero!', 'error');
+            }
+            if (quantity == null) {
+                swal('', 'Enter quantity!', 'error');
+            }
+            if (quantity == '0') {
+                swal('', 'Opps quantity must not be zero!', 'error');
+            }
+            if (quantity != null && quantity != "0" && quantity <= total && quantity > '0') {
+                var dataload = {
+
+                    "itemid": itemid,
+                    "itemname":itemname,
+                    "quantity": quantity,
+                    "officeid": office,
+                    "in_out": 'OUT',
+                    "descript": descript,
+                    "unitcost":unitcost,
+                    "srcid":srcid,
+                    "accountid":accountid,
+                    "tid": tid,
+                    "unit":unit,
+                     "obj":obj,
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("SaveOut", "Home")',
+                    data: JSON.stringify(dataload),
+                    contentType: "application/json;charset=utf-8",
+                    processData: true,
+                    success: function (data) {
+
+                        if (data == 1) {
+                            swal('', 'Entry Successfully Save!', 'success');
+                            $("#out").data("kendoGrid").dataSource.read({ officeid: office });
+                            $("#byoffice").data("kendoGrid").dataSource.read({ officeid: office });
+                        }
+                        else {
+                            swal('', data, 'error')
+                        }
+                    },
+                })
+            }
+            else {
+                swal('', 'Opps you enter invalid quantity!', 'error');
+            }
+        }
+    </script>
+
+    <br>
+    <div id="noise" style="height:20px;width:100%;border-top-left-radius:10px;border-top-right-radius:10px"><label style="color:white;font-size:15px;text-align:center;">STOCK OUT</label> </div>
+    @(Html.Kendo().Grid<IMS.Models.savein.samplemodel>()
+    .Name("out")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.itemname).Title("Item").Width(150);
+        columns.Bound(p => p.ntotal).Title("Total").Width(55);
+        columns.Bound(p => p.qty).Title("Out").Width(50);
+        columns.Bound(p => p.descript).Title("Desc").Width(50);
+        columns.Command(command => command.Custom("Add").Click("getrow")).Width(80);
+    })
+            // .Scrollable()
+    .Selectable()
+    .Editable(editable => editable.Mode(GridEditMode.InCell))
+    .Pageable()
+    .Navigatable()
+            //.HtmlAttributes(new { style = "height:550px" })
+
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(9)
+        .ServerOperation(false)
+        .Model(model =>
+    {
+        model.Id(p => p.itemid);
+        model.Field(p => p.itemname).Editable(false);
+        model.Field(p => p.ntotal).Editable(false);
+    })
+        .Read("readOut", "Home", new { officeid = ViewBag.id })
+            .Sort(a => a.Add("itemname").Ascending()))
+                    .Events(e => e.DataBound("disable"))
+    )
+    <br>
+    <br>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var id = $('#mgaopis1').data('kendoComboBox').value();
+        $('#out').data('kendoGrid').dataSource.read({ officeid: id })
+    });
+</script>
+
+
+<style>
+    .high1 {
+        background-color: #e0ac05;
+        color: white;
+    }
+</style>

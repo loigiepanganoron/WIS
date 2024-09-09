@@ -1,0 +1,325 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Login_Layout.cshtml";
+}
+ 
+<script src="@Url.Content("~/Content/sweetalert-master/dist/sweetalert.min.js")"></script>
+<link href="@Url.Content("~/Content/sweetalert-master/dist/sweetalert.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/sweetalert-master/themes/facebook/facebook.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Content/metroui/js/jquery/jquery.min.js")"></script>
+
+ 
+
+  
+<div id="modal-approved" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog" style="width:50%">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <h3>Create Your Account</h3>
+                </div>
+                <div class="row ibox-content" style="width:80%;margin:auto">
+                    <p class="pull-left"> Select Your Office </p>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <select id="officename" class="selectpicker form-control" data-live-search="true" data-size="10"  ></select>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row ibox-content" style="width:80%;margin:auto">
+                    <p class="pull-left">Employee Name</p>
+                    @*<label for="something" style="width:100%">
+                        <input id="something" list="somethingelse" class="input-large form-control" placeholder="Search Name...">
+                        <datalist id="somethingelse"></datalist>
+                    </label>*@
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <select id="employeename" class="selectpicker form-control" data-live-search="true" data-size="10"  ></select>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <button class="btn  btn-primary" onclick="create_account()">Create Account </button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="top-content">
+    <div class="inner-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 form-box">
+                    <div class="form-top">
+                        <div class="form-top-left">
+                            <h3>Login to your WIS Account</h3>
+                            <p>Enter your username and password to log on:</p>
+                        </div>
+                        <div class="form-top-right">
+                            <i class="fa fa-lock"></i>
+                        </div>
+                    </div>
+                    <div class="form-bottom">
+                        <form>
+                            <div class="form-group">
+                                <label class="sr-only" for="form-username">Username</label>
+                                @*<input type="text" name="form-username" placeholder="Username..." class="form-username form-control" id="form-username">*@
+                                <input type="text" name="form-username" placeholder="Username..." class="form-username form-control" id="username">
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="form-password">Password</label>
+                               @* <input type="password" name="form-password" placeholder="Password..." class="form-password form-control" id="form-password">*@
+                                <input type="password" name="form-password" placeholder="Password..." class="form-password form-control" id="pwd">
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="showPass" />
+                                <small style="color:white">Show Password</small>
+                            </div>
+
+                            <a onclick="checkParameter()"><div style="width:100%"  class="red" >Sign in!</div></a> 
+                          <a href="#" onclick="show_form()"> <small style="color:white">Create Account</small></a>
+                     </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 text">
+                    <p>©2022 TACURONG</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*role="form" action="" method="post" class="login-form"*@
+
+<script>
+
+
+    $(document).ready(function () {
+         
+        $.ajax({
+            url: '@Url.Action("OfficeNew", "Login")',
+            type: "GET",
+            data: {},
+            success: function (json) {
+                $.each(json, function (i, item) {
+                    $('#officename').append($('<option>', {
+                        value: item.OfficeID,
+                        text: item.OfficeName
+                    }));
+                });
+                $('.selectpicker').selectpicker('refresh');
+            },
+            error: function (json) {
+                alert(json);
+            }
+        });
+
+
+        $.ajax({
+            url: '@Url.Action("Employees", "Login")',
+            type: "GET",
+            data: {},
+            success: function (json) {
+                $.each(json, function (i, item) { 
+                            $('#employeename').append($('<option>', {
+                                text: item.EmpName,
+                                value: item.eid
+                            }));
+                        });
+                        $('.selectpicker').selectpicker('refresh');
+            },
+            error: function (json) {
+                alert(json);
+            }
+        });
+
+
+
+//    $.getJSON("OfficeNew",
+//function (json) {
+//    $.each(json, function (i, item) {
+//        $('#officename').append($('<option>', {
+//            value: item.OfficeID,
+//            text: item.OfficeName
+//        }));
+//    });
+//    $('.selectpicker').selectpicker('refresh');
+//})
+
+//    $.getJSON("Employees",
+//function (json) {
+
+//    $.each(json, function (i, item) {
+
+//        $('#employeename').append($('<option>', {
+//            text: item.EmpName,
+//            value: item.eid
+//        }));
+//    });
+//    $('.selectpicker').selectpicker('refresh');
+//})
+
+
+        //your code here
+        $(function () {
+            $('input').keydown(function (e) {
+                if (e.keyCode == 13) {
+                    $("input").attr('disabled', 'disabled');
+                    checkParameter()
+                    return false;
+                }
+            });
+        });
+        $("#showPass").change(function () {
+            var checked = $(this).is(":checked");
+            if (checked) {
+                $("#pwd").attr("type", "text");
+            } else {
+                $("#pwd").attr("type", "password");
+            }
+        });
+    });
+
+    //$(document).ready(function () {
+    //    $('#employeename').change(function () {
+    //        alert($('#employeename option:selected').text());
+    //    });
+    //});
+
+</script>
+<script>
+ 
+    function sentEmail() {
+        var username = $('#username').val()
+        if (username.length > 0) {
+
+        }
+        else {
+            swal('please specify username')
+        }
+    }
+
+    function checkParameter() {
+        var criteria = $('#fcriteria').data('kendoComboBox');
+        var extDomain = "tacurong.gov.ph"
+        var email = $('#username').val()
+        var att = "@@"
+        var completeEmail = ""
+        if (email.indexOf(extDomain) > -1) {
+            completeEmail = $('#username').val()
+        }
+        else {
+            completeEmail = email + att + extDomain
+        } 
+        swal({ title: "Requesting", text: "Signing In", type: "info",closeOnConfirm: false }, function () { setTimeout(function () {   }, 30000); });
+         
+        $.ajax({
+            type: 'POST',
+            traditional: true,
+            url: "@Url.Content("~/Login/CheckParameter")",
+            data: {
+                emailaddress: completeEmail,
+                passcode: $("#pwd").val()
+            },
+
+            success: function (result) {
+
+                setTimeout(function () {
+                    if (result == "failed") {
+                        $("input").removeAttr('disabled');
+                        swal({
+                            title: "Invalid Parameters!!",
+                            text: "Please Contact System Administrator",
+                            type: "error",
+                            confirmButtonText: "Try Again"
+                        });
+                    }
+                    else if (result == "unregistered") {
+                        $("input").removeAttr('disabled');
+                        swal({
+                            title: "",
+                            text: "Opps it seems like you dont have an account yet!",
+                            type: "error",
+                            confirmButtonText: "Try Again"
+                        });
+                         return(false)
+                  }
+                    else if (result == "success")
+                    {
+                        //window.location = "@Url.Action("landingview","Responsive")";
+                        window.location = "@Url.Content("~/Responsive/index")" 
+                    }
+                  else {
+                      $("input").removeAttr('disabled');
+                      alert("waleeyy")
+                  }
+                }, 1000)
+            }
+        })
+    }
+</script>
+
+<style>
+    
+.red {
+    text-align:center;
+	height: 50px;
+    margin: 0;
+    padding: 0 20px;
+    vertical-align: middle;
+    background: #de615e;
+    border: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 50px;
+    color: #fff;
+    -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+    text-shadow: none;
+    -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none;
+    -o-transition: all .3s; -moz-transition: all .3s; -webkit-transition: all .3s; -ms-transition: all .3s; transition: all .3s;
+}
+.red:hover { opacity: 0.6; color: #fff;cursor:pointer }
+</style>
+
+<script>
+    function show_form() {
+        $('#modal-approved').modal('toggle');
+    }
+</script>
+ 
+<script>
+    function create_account() {
+        var officeid = $('#officename').val();  
+        var eid = $('#employeename').val();
+        var empname = $("#employeename option:selected").text();
+   
+        $.post("@Url.Content("~/Login/create_account")", {officeid:officeid,eid:eid,name:empname}, function (r) {
+            if(r == "1")
+            {
+              
+                swal("", "Account Created!", "success");
+                // $("#ris").data("kendoGrid").dataSource.read();
+            }
+            else
+            {
+                swal("Opps ",r, "error");
+            }
+        })
+    }
+</script>
+
+ 
+@*<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            style: 'btn-info',
+            size: 4
+        });
+    }); 
+</script>*@
+
+

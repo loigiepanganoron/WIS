@@ -1,0 +1,109 @@
+﻿
+<div style="width:100%;height:100%">
+    <div>
+
+        @(Html.Kendo().Grid<IMS.Models.item>()
+    .Name("grid")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.itemid).Hidden();
+        columns.Bound(p => p.itemname).Width(100);
+        columns.Bound(p => p.unit).Width(100);
+        columns.Command(command => { command.Edit(); command.Destroy(); }).Width(172);
+    })
+    .ToolBar(toolbar => toolbar.Create())
+    .Editable(editable => editable.Mode(GridEditMode.InLine))
+    .Pageable()
+    .Sortable()    
+    .HtmlAttributes(new { style = "height:auto;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(5)
+        .Model(model => model.Id(p => p.itemid))
+        .Create(update => update.Action("sv", "Plc"))
+        .Read(read => read.Action("plcCategory", "Maintenance"))
+        .Update(update => update.Action("UpdateI", "Maintenance"))
+        .Destroy(update => update.Action("DestroyI", "Maintenance"))
+    ))
+    </div>
+</div>
+
+
+@*<audio class="my_audio" controls preload="none" style="visibility:hidden;width:150px">
+    <source src="~/Content/music/pling.mp3" type="audio/mpeg" id="play" />
+</audio>*@
+
+<script>
+    function sb() {
+        var itemname = $('#itm').val();
+        var unit = $('#plcunits').data("kendoComboBox").text();
+        var unitcost = $('#uc').val();
+
+        var data = {
+            "itemname": itemname,
+            "unit": unit,
+            "unitcost": unitcost,
+        }
+
+        if (itemname == "") {
+            swal('', 'Input is invalid ', 'error')
+        }
+        if (unit == "") {
+            swal('', 'Input is invalid ', 'error')
+        }
+        if (unitcost == "")
+        {
+            swal('', 'Input is invalid', 'error')
+        }
+
+        if (itemname != "" && unit != "" && unitcost != "") {
+
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("sv", "Plc")',
+                data: JSON.stringify(data),
+
+                contentType: "application/json;charset=utf-8",
+                processData: true,
+                success: function (data) {
+
+                    if (data == 1) {
+                        $(".my_audio").trigger('play');
+                        swal('', 'Entry Successfully Save!', 'success');
+                        $("#plcitems").data("kendoComboBox").dataSource.read();
+                    }
+                    else {
+                        swal('', data, 'error')
+                    }
+                },
+            })
+
+
+
+
+        }
+
+    }
+</script>
+
+
+<style>
+    .l {
+        font-size: 14px;
+        margin-left: 5px;
+        font-weight:bold;
+    }
+
+    #i {
+        background-color: #1fa67a;
+        border-radius: 5px;
+        color: white;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 12px;
+        text-align: center;
+        height: 25px;
+        font-weight: normal;
+    }
+</style>

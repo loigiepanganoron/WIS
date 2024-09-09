@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="IMSModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="transaction">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="eid" Type="int" />
+    <Property Name="item_id" Type="int" />
+    <Property Name="stock_date" Type="datetime" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="in_out" Type="nvarchar" MaxLength="50" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="description" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="role" Type="int" />
+    <Property Name="eid" Type="int" />
+  </EntityType>
+  <EntityType Name="userRole">
+    <Key>
+      <PropertyRef Name="roleid" />
+    </Key>
+    <Property Name="usertype" Type="nvarchar" MaxLength="50" />
+    <Property Name="roleid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwQtyOnHand' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwQtyOnHand">
+    <Key>
+      <PropertyRef Name="trnid" />
+    </Key>
+    <Property Name="officeid" Type="int" />
+    <Property Name="trnid" Type="bigint" Nullable="false" />
+    <Property Name="item_id" Type="int" />
+    <Property Name="IN_STOCK" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwTransactions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwTransactions">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="eid" Type="int" />
+    <Property Name="item_id" Type="int" />
+    <Property Name="stock_date" Type="datetime" />
+    <Property Name="quantity" Type="int" />
+    <Property Name="in_out" Type="nvarchar" MaxLength="50" />
+    <Property Name="eName" Type="nvarchar" MaxLength="67" />
+    <Property Name="officeid" Type="int" />
+    <Property Name="description" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMS.dbo.vwUsers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwUsers">
+    <Key>
+      <PropertyRef Name="d" />
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="SwipEmployeeID" Type="varchar" MaxLength="10" />
+    <Property Name="emailaddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="passcode" Type="varchar" MaxLength="30" />
+    <Property Name="eid" Type="bigint" />
+    <Property Name="d" Type="bigint" Nullable="false" />
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="usertype" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityContainer Name="IMSModel1StoreContainer">
+    <EntitySet Name="transaction" EntityType="Self.transaction" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="userRole" EntityType="Self.userRole" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="vwQtyOnHand" EntityType="Self.vwQtyOnHand" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwQtyOnHand].[officeid] AS [officeid], 
+[vwQtyOnHand].[trnid] AS [trnid], 
+[vwQtyOnHand].[item_id] AS [item_id], 
+[vwQtyOnHand].[IN_STOCK] AS [IN_STOCK]
+FROM [dbo].[vwQtyOnHand] AS [vwQtyOnHand]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwTransactions" EntityType="Self.vwTransactions" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwTransactions].[ID] AS [ID], 
+[vwTransactions].[eid] AS [eid], 
+[vwTransactions].[item_id] AS [item_id], 
+[vwTransactions].[stock_date] AS [stock_date], 
+[vwTransactions].[quantity] AS [quantity], 
+[vwTransactions].[in_out] AS [in_out], 
+[vwTransactions].[eName] AS [eName], 
+[vwTransactions].[officeid] AS [officeid], 
+[vwTransactions].[description] AS [description]
+FROM [dbo].[vwTransactions] AS [vwTransactions]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwUsers" EntityType="Self.vwUsers" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[vwUsers].[SwipEmployeeID] AS [SwipEmployeeID], 
+[vwUsers].[emailaddress] AS [emailaddress], 
+[vwUsers].[passcode] AS [passcode], 
+[vwUsers].[eid] AS [eid], 
+[vwUsers].[d] AS [d], 
+[vwUsers].[ID] AS [ID], 
+[vwUsers].[usertype] AS [usertype]
+FROM [dbo].[vwUsers] AS [vwUsers]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

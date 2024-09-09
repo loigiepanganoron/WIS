@@ -1,0 +1,327 @@
+﻿<script src="~/Scripts/datatables.js"></script>
+
+<style>
+    .highlighted-row {
+        background-color:  #DC143C;
+        color: white;
+    }
+
+    .hapitna {
+        background-color: #edaf05;
+        color: white;
+    }
+
+    .morestock {
+        background-color: #1ab394;
+        color: white;
+    }
+
+    .nm {
+        font-size: 15px;
+        margin-left: 4px;
+    }
+
+    .k-grid-edit-row > td > .text-box {
+        width: 100%;
+        color: black;
+    }
+    /*#btn-sub {
+        background-color: #1fa67a;
+        border-radius: 5px;
+        color: white;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 12px;
+        text-align: center;
+        height: 30px;
+        font-weight: normal;
+    }*/
+
+    .bk {
+        background-color: #f1f9f7;
+        border: 1px solid #e0f1e9;
+        color: #1d9d74;
+        /*border: 5px solid transparent;*/
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    #errmsg {
+        color: red;
+    }
+
+    .k-grid tbody tr {
+        height: 30px;
+    }
+
+    .k-grid td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .k-grid table {
+        table-layout: fixed;
+    }
+</style>
+
+<script>
+
+    function load() {
+        var officeid = $('#list_of_offices').val();
+        var from = $('#from').val();
+        var to = $('#to').val();
+        
+
+        $('#grid_util').data('kendoGrid').dataSource.read({ "officeid": officeid, "from": from, "to": to })
+        $('#remaining_per_office').data('kendoGrid').dataSource.read({ "officeid": officeid })
+    }
+   
+    function print_util() {
+        var date_from = $('#from').val();
+        var date_to = $('#to').val();
+        var officeid = $('#list_of_offices').val();
+        var officename = $('#list_of_offices').data("kendoComboBox").text();
+        window.open("@Url.Content("~/Reports/print_ris.aspx?repID=")" + 6 + "&date_from=" + date_from + "&date_to=" + date_to + "&officeid=" + officeid + "&officename=" + officename);
+    }
+    function dataBound(e) {
+        var grid = $("#running_balance").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        
+        for (var i = 0; i < gridData.length; i++) 
+        { 
+            if (gridData[i].total_remaining <= gridData[i].reorder_point)
+            { 
+                if (gridData[i].total_remaining == 0)
+                {
+                    grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("highlighted-row");
+                }
+                else
+                {
+                    grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("hapitna");
+                }
+            }
+            else
+            {
+                grid.table.find("tr[data-uid='" + gridData[i].uid + "']").addClass("morestock");
+            }
+          } 
+        } 
+</script>
+
+<script>
+    function get_officeid() {
+        var selection = this.select();
+        var rowData = this.dataItem(selection);
+        var officeid = rowData.OfficeID;
+        //alert(officeid)
+        $('#remaining_per_office').data('kendoGrid').dataSource.read({"officeid": officeid})
+    }
+</script>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col row">
+        <div class="col col-sm-4 col-md-4 col-lg-4">
+            <div class="col ibox-content" style="display:block">
+                <h2>Utilization Page</h2>
+                <div class="col row">
+                    <section class="col col-lg-12 col-sm-12 col-md-12">
+                        <br>
+                      <label>Office</label>
+                        @(Html.Kendo().ComboBox()
+                         .Name("list_of_offices")
+                         .DataTextField("OfficeName")
+                         .DataValueField("OfficeID")
+                        .Placeholder("Search...")
+                        .HtmlAttributes(new { @style = "width:100%" })
+                        .Filter("contains")
+                        .AutoBind(false)
+                        .MinLength(1)
+                        .DataSource(source => source.Read(read => read.Action("OfficeNew", "Responsive")))
+                       // .Events(a => a.Change("get_officeid"))
+                        )
+                    </section>
+                    <section class="col col-lg-12 col-sm-12 col-md-12">
+                        <br>
+                        <label >From</label>
+                         @(Html.Kendo().DatePicker()
+                          .Name("from")
+                          .Value(DateTime.Now)
+                          .HtmlAttributes(new { @style = "width:100%"})
+                          .Format("MM/dd/yyyy")
+                           //.Depth(CalendarView.Year)
+                           //.Start(CalendarView.Decade)
+                        )
+                    </section>
+                    <section class="col col-lg-12 col-sm-12 col-md-12">
+                        <br>
+                        <label>To</label>
+                        @(Html.Kendo().DatePicker()
+                          .Name("to")
+                          .Value(DateTime.Now)
+                          .Format("MM/dd/yyyy")
+                         //  .Depth(CalendarView.Year)
+                          .HtmlAttributes(new { @style = "width:100%" })
+                          // .Start(CalendarView.Decade)
+                        )
+                    </section>
+                    <section class="col col-lg-12 col-sm-12 col-md-12" style="margin-top:10px">
+                        <button class="btn btn-primary btn-sm" onclick="load()"><i class="fa fa-check"></i> &nbsp;Load..</button>
+                        <button class="btn btn-sm btn-primary" onclick="print_util()"> Print</button>
+                    </section>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+            </div>
+        </div>
+
+        <div class="col col-sm-8 col-md-8 col-lg-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h2>Office Item Consumption</h2>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="#">Config option 1</a>
+                            </li>
+                            <li>
+                                <a href="#">Config option 2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="table-responsive">
+                            
+                        @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("grid_util")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemid").Title("").Hidden();
+                        columns.Bound("itemname").Title("Item Name").Width(250);
+                        //     columns.Bound("eName").Title("Personel").Width(200);
+                        columns.Bound("quantity").Title("Quantity").Width(100);
+                        columns.Bound("unit").Title("Unit").Width(100);
+
+                    })
+                              .Pageable()
+                              .AutoBind(false) 
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:100%;height:auto;overflow-x:scroll" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(12)
+                                      .Read(read => read.Action("consume", "Responsive")))
+                              ) 
+                    </div>  
+                </div> 
+            </div>
+
+
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h2>Office Available Items</h2>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="#">Config option 1</a>
+                            </li>
+                            <li>
+                                <a href="#">Config option 2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        @(Html.Kendo().Grid<IMS.Models.item>()
+                    .Name("remaining_per_office")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemid").Title("").Hidden();
+                        columns.Bound("itemname").Title("Item Name").Width(250);
+                        columns.Bound("quantity").Title("Quantity").Width(100);
+                        columns.Bound("unit").Title("Unit").Width(100); 
+                    })
+                              .Pageable() 
+                              .Selectable()
+                              .AutoBind(false)
+                              .HtmlAttributes(new { style = "width:100%;height:auto" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(12)
+                              .Read(read => read.Action("utilize_available", "Responsive"))
+                              
+                              )
+                        )
+                    </div>
+                </div> 
+            </div> 
+        </div>
+    </div>
+
+
+    <div class="col row">
+        <div class="col col-sm-12 col-md-12 col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h2>Running Balance</h2>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="table-responsive">
+
+                    @(Html.Kendo().Grid<System.Data.DataRow>()
+                    .Name("running_balance")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("itemid").Title("").Hidden();
+                        columns.Bound("itemname").Title("Item Name").Width(250);
+                        //     columns.Bound("eName").Title("Personel").Width(200);
+                        columns.Bound("total_remaining").Title("Quantity").Width(100);//.Format("{0:n2}");
+                        columns.Bound("unit").Title("Unit").Width(100);
+                        columns.Bound("reorder_point").Title("Reorder Point").Width(100).Hidden();
+
+                    })
+                              .Pageable()
+                              .Selectable()
+                              .HtmlAttributes(new { style = "width:90%;height:auto" })
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .ServerOperation(false)
+                              .PageSize(30)
+                              .Read(read => read.Action("running_balance", "Responsive"))  
+                              )
+                             .Events(e => e.DataBound("dataBound"))    
+                        )
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

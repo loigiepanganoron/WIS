@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=301880
+-->
+<configuration>
+ 
+
+ 
+  <configSections>
+    
+  
+    <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
+    <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+   </configSections>
+   <appSettings>
+    <add key="webpages:Version" value="3.0.0.0" />
+    <add key="webpages:Enabled" value="false" />
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+    <add key="owin:appStartup" value="IMS.Startup.ConfigureAuth" />
+  </appSettings>
+ 
+  <system.web>
+    <httpHandlers> 
+      <add path="Telerik.ReportViewer.axd" verb="*" type="Telerik.ReportViewer.WebForms.HttpHandler, Telerik.ReportViewer.WebForms, Version=9.0.15.324, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" validate="true" />
+     
+    </httpHandlers>
+    <compilation debug="true" targetFramework="4.5">
+      <assemblies>
+        <add assembly="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
+        <add assembly="System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+      </assemblies>
+    </compilation>
+     <httpRuntime      maxRequestLength="2097151" targetFramework="4.5"/>
+    <pages>
+      <namespaces>
+        <add namespace="Kendo.Mvc.UI" />
+      </namespaces>
+    </pages>
+    <httpModules>
+      <add name="ApplicationInsightsWebTracking" type="Microsoft.ApplicationInsights.Web.ApplicationInsightsHttpModule, Microsoft.AI.Web" />
+    </httpModules>
+    <authentication mode="Forms">
+      <forms timeout="240" loginUrl="~/logIn/New_index" />
+    </authentication>
+    <sessionState timeout="240" />
+  </system.web>
+  <system.webServer>
+    <security>
+      <requestFiltering>
+        <requestLimits maxAllowedContentLength="1073741824" /> 
+      </requestFiltering>
+    </security>
+    <handlers>
+      <add name="Telerik.ReportViewer.axd_*" path="Telerik.ReportViewer.axd" verb="*" type="Telerik.ReportViewer.WebForms.HttpHandler, Telerik.ReportViewer.WebForms, Version=9.0.15.324, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" preCondition="integratedMode" />
+    </handlers>
+        <validation validateIntegratedModeConfiguration="false"/>
+       
+  </system.webServer>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Helpers" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.WebPages" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="WebGrease" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-1.5.2.14234" newVersion="1.5.2.14234" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-6.0.0.0" newVersion="6.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Http" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-5.2.2.0" newVersion="5.2.2.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+
+  <entityFramework>
+    <defaultConnectionFactory type="System.Data.Entity.Infrastructure.LocalDbConnectionFactory, EntityFramework">
+      <parameters>
+        <parameter value="v12.0" />
+      </parameters>
+    </defaultConnectionFactory>
+  </entityFramework>
+  <system.serviceModel>
+    <bindings>
+      <basicHttpBinding>
+        <binding name="serviceSoap" allowCookies="true" maxBufferPoolSize="20000000"
+          maxReceivedMessageSize="20000000">
+          <security mode="Transport" />
+        </binding>
+        <binding name="SMSWebServiceSoap" />
+        <binding name="serviceSoap1" />
+        <binding name="serviceSoap2">
+          <security mode="Transport" />
+        </binding>
+        <binding name="serviceSoap3" />
+      </basicHttpBinding>
+    </bindings>
+    <client>
+      <endpoint address="http://192.168.2.104/SMSWebService/SMSWebService.asmx"
+        binding="basicHttpBinding" bindingConfiguration="SMSWebServiceSoap"
+        contract="SMS.SMSWebServiceSoap" name="SMSWebServiceSoap" />
+      <endpoint address="https://pgas.ph/epsws/service.asmx" binding="basicHttpBinding"
+        bindingConfiguration="serviceSoap" contract="epsws.serviceSoap"
+        name="serviceSoap" />
+      <endpoint address="https://pgas.ph/epsws/service.asmx" binding="basicHttpBinding"
+        bindingConfiguration="serviceSoap2" contract="transmittal_ws.serviceSoap"
+        name="serviceSoap1" />
+    </client>
+  </system.serviceModel> 
+<connectionStrings>
+  
+  <!-- live-->
+
+  <!--<add name="MyConnection" connectionString="Provider=SQLOLEDB.1;Password=(@/51u0#2@3n8D0e1L1#0u1R;Persist Security Info=True;User ID=pgasIS;Data Source=192.168.2.1\PGAS;initial catalog=IMS" />
+  <add name="IMSEntities" connectionString="metadata=res://*/Models.Inventory.csdl|res://*/Models.Inventory.ssdl|res://*/Models.Inventory.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=192.168.2.1\PGAS;initial catalog=IMS;persist security info=True;user id=pgasIS;password=(@/51u0#2@3n8D0e1L1#0u1R;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+  <add name="pmisEntities" connectionString="metadata=res://*/Models.pmis.csdl|res://*/Models.pmis.ssdl|res://*/Models.pmis.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=192.168.2.1\PGAS;initial catalog=pmis;user id=pgasIS;password=(@/51u0#2@3n8D0e1L1#0u1R;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />-->
+
+
+  <add name="MyConnection" connectionString="Provider=SQLOLEDB.1;Password=pimo@123;Persist Security Info=True;User ID=sa;Data Source=192.168.101.52;initial catalog=IMS" />
+  <add name="IMSEntities" connectionString="metadata=res://*/Models.Inventory.csdl|res://*/Models.Inventory.ssdl|res://*/Models.Inventory.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=192.168.101.52;initial catalog=IMS;persist security info=True;user id=sa;password=pimo@123;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+  <add name="pmisEntities" connectionString="metadata=res://*/Models.pmis.csdl|res://*/Models.pmis.ssdl|res://*/Models.pmis.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=192.168.101.52;initial catalog=pmis;user id=sa;password=pimo@123;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+
+
+
+  <!--
+<add name="MyConnection" connectionString="Provider=SQLOLEDB.1;Password=12345;Persist Security Info=true;User ID=sa;Data Source=SMUGGLER-PC\SA;initial catalog=IMS" />
+<add name="pmisEntities" connectionString="metadata=res://*/Models.pmis.csdl|res://*/Models.pmis.ssdl|res://*/Models.pmis.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=192.168.2.1\PGAS;initial catalog=pmis;user id=pgasIS;password=(@/51u0#2@3n8D0e1L1#0u1R;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+<add name="IMSEntities" connectionString="metadata=res://*/Models.Inventory.csdl|res://*/Models.Inventory.ssdl|res://*/Models.Inventory.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=SMUGGLER-PC\SA;initial catalog=IMS;persist security info=True;user id=sa;password=12345;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+local-->
+
+<!--
+  <add name="IMSEntities" connectionString="metadata=res://*/Models.Inventory.csdl|res://*/Models.Inventory.ssdl|res://*/Models.Inventory.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=SMUGGLER-PC\SA;initial catalog=IMS;persist security info=True;user id=sa;password=12345;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+  <add name="pmisEntities" connectionString="metadata=res://*/Models.pmis.csdl|res://*/Models.pmis.ssdl|res://*/Models.pmis.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=192.168.2.1\PGAS;initial catalog=pmis;user id=pgasIS;password=(@/51u0#2@3n8D0e1L1#0u1R;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" /> -->
+ 
+</connectionStrings>
+</configuration>
